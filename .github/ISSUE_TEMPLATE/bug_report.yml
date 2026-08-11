@@ -1,0 +1,35 @@
+name: Bug report
+description: Report a reproducible routing, retrieval, installation, or contract problem.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include API keys, tokens, cookies, private content, or full request headers.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: v0.1.0
+    validations:
+      required: true
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Minimal scenario
+      description: Provide a short, non-sensitive query and the command or Skill invocation.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Redact personal data and credentials from output.
+    validations:
+      required: true
