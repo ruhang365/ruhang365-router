@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.scenario.customer-feedback-review",
+  "type": "scenario",
+  "slug": "customer-feedback-review",
+  "version": "1.0.0",
+  "title": "顾客反馈整理与改进清单",
+  "summary": "把脱敏后的顾客评论整理成高频问题、真实优势和可以执行的改进动作。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/customer-feedback-review.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2027-02-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["local-business", "small-business-owner"],
+    "goals": ["customer-insight", "service-improvement"],
+    "experience_levels": ["beginner", "intermediate"],
+    "constraints": ["free-only", "no-private-data", "cross-carrier"],
+    "excluded_constraints": ["contains-private-customer-data"],
+    "deliverables": ["customer-feedback-review"]
+  },
+  "completion_criteria": [
+    "结论可以回溯到脱敏后的原始反馈。",
+    "优势、问题和建议被明确分开。",
+    "改进动作包含优先级与验证方式。"
+  ],
+  "tags": ["本地生活", "顾客反馈", "服务改进"],
+  "match_terms": ["门店", "小店", "咖啡店", "顾客评论", "用户反馈", "差评整理"],
+  "deliverable": "高频问题、真实优势和三条优先改进动作",
+  "next_intent": "knowledge",
+  "recommendation_weight": 10,
+  "workflow_ids": ["r365.workflow.customer-feedback-review"]
+}

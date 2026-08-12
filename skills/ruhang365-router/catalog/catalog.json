@@ -1,0 +1,1368 @@
+{
+  "catalogVersion": "1.0.0",
+  "contentDigest": "b4f7fae7947938a13579e06ab50eecb4be5cf2b3fd982ab510f6323e3db15901",
+  "items": [
+    {
+      "applicability": {
+        "constraints": [
+          "evidence-aware",
+          "no-guaranteed-outcome",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "industry-cognition-map",
+          "seven-day-validation-task"
+        ],
+        "excluded_constraints": [
+          "guaranteed-growth-required"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "goals": [
+          "industry-cognition",
+          "career-entry",
+          "creator-positioning"
+        ],
+        "identities": [
+          "creator",
+          "career-switcher",
+          "brand-content-operator"
+        ]
+      },
+      "completion_criteria": [
+        "行业边界、价值链、核心机制与能力缺口均已形成判断。",
+        "三条可能路径包含取舍、风险和待验证问题。",
+        "只选择一个七天内可观察结果的验证任务。"
+      ],
+      "contentPath": "content/scenarios/creator-ip-industry-cognition.json",
+      "deliverable": "行业认知地图 + 唯一 7 天真实验证任务",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/creator-ip-industry-cognition.json"
+        },
+        "stale": false,
+        "stale_after": "2026-11-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.scenario.creator-ip-industry-cognition",
+      "match_terms": [
+        "自媒体",
+        "个人IP",
+        "IP 行业",
+        "一小时吃透行业",
+        "转行创作者",
+        "行业认知地图"
+      ],
+      "next_intent": "knowledge",
+      "recommendation_weight": 20,
+      "schema_version": "1.0.0",
+      "slug": "creator-ip-industry-cognition",
+      "status": "current",
+      "summary": "在投入内容生产前，用公开结构和 RHZL 当前 Workflow 建立行业认知并选择一个七天真实验证任务。",
+      "tags": [
+        "自媒体",
+        "个人 IP",
+        "行业认知",
+        "职业转型"
+      ],
+      "title": "一小时吃透自媒体 / IP 行业",
+      "type": "scenario",
+      "version": "1.0.0",
+      "workflow_ids": [
+        "r365.workflow.creator-ip-industry-cognition"
+      ]
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "free-only",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "customer-feedback-review"
+        ],
+        "excluded_constraints": [
+          "contains-private-customer-data"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "goals": [
+          "customer-insight",
+          "service-improvement"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ]
+      },
+      "completion_criteria": [
+        "结论可以回溯到脱敏后的原始反馈。",
+        "优势、问题和建议被明确分开。",
+        "改进动作包含优先级与验证方式。"
+      ],
+      "contentPath": "content/scenarios/customer-feedback-review.json",
+      "deliverable": "高频问题、真实优势和三条优先改进动作",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/customer-feedback-review.json"
+        },
+        "stale": false,
+        "stale_after": "2027-02-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.scenario.customer-feedback-review",
+      "match_terms": [
+        "门店",
+        "小店",
+        "咖啡店",
+        "顾客评论",
+        "用户反馈",
+        "差评整理"
+      ],
+      "next_intent": "knowledge",
+      "recommendation_weight": 10,
+      "schema_version": "1.0.0",
+      "slug": "customer-feedback-review",
+      "status": "current",
+      "summary": "把脱敏后的顾客评论整理成高频问题、真实优势和可以执行的改进动作。",
+      "tags": [
+        "本地生活",
+        "顾客反馈",
+        "服务改进"
+      ],
+      "title": "顾客反馈整理与改进清单",
+      "type": "scenario",
+      "version": "1.0.0",
+      "workflow_ids": [
+        "r365.workflow.customer-feedback-review"
+      ]
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "low-budget",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "product-visual-kit"
+        ],
+        "excluded_constraints": [
+          "missing-product-facts"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "goals": [
+          "visual-content",
+          "product-promotion"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ]
+      },
+      "completion_criteria": [
+        "三个方向都说明用途、比例、准确文字与视觉重点。",
+        "Prompt 只使用已确认的产品事实。",
+        "用户能选择一个方向继续生成或交给设计师。"
+      ],
+      "contentPath": "content/scenarios/product-visual-kit.json",
+      "deliverable": "3 个海报方向和 1 条可直接使用的任务专属 Prompt",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/product-visual-kit.json"
+        },
+        "stale": false,
+        "stale_after": "2027-02-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.scenario.product-visual-kit",
+      "match_terms": [
+        "门店",
+        "小店",
+        "咖啡店",
+        "产品海报",
+        "视觉素材",
+        "商品图片"
+      ],
+      "next_intent": "visual",
+      "recommendation_weight": 5,
+      "schema_version": "1.0.0",
+      "slug": "product-visual-kit",
+      "status": "current",
+      "summary": "围绕一个真实产品生成三个视觉方向和一条任务专属 Prompt，不虚构产品信息。",
+      "tags": [
+        "本地生活",
+        "产品视觉",
+        "海报",
+        "生图"
+      ],
+      "title": "本地小店产品视觉素材包",
+      "type": "scenario",
+      "version": "1.0.0",
+      "workflow_ids": [
+        "r365.workflow.product-visual-kit"
+      ]
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "free-only",
+          "low-budget",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "weekly-content-kit"
+        ],
+        "excluded_constraints": [],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "goals": [
+          "content-growth",
+          "customer-acquisition"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ]
+      },
+      "completion_criteria": [
+        "七条选题分别对应真实顾客问题或购买理由。",
+        "至少一篇文案可以继续编辑和发布。",
+        "封面方向包含准确文字、比例和视觉重点。"
+      ],
+      "contentPath": "content/scenarios/weekly-content-kit.json",
+      "deliverable": "7 条可发布选题、1 篇完整文案和 1 个封面方向",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/weekly-content-kit.json"
+        },
+        "stale": false,
+        "stale_after": "2027-02-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.scenario.weekly-content-kit",
+      "match_terms": [
+        "门店",
+        "小店",
+        "咖啡店",
+        "餐厅",
+        "零售",
+        "一周内容",
+        "获客内容"
+      ],
+      "next_intent": "writing",
+      "recommendation_weight": 20,
+      "schema_version": "1.0.0",
+      "slug": "weekly-content-kit",
+      "status": "current",
+      "summary": "把一家本地小店的真实卖点转成一周可发布内容，并明确首篇文案与封面方向。",
+      "tags": [
+        "本地生活",
+        "内容运营",
+        "获客",
+        "小店"
+      ],
+      "title": "本地小店一周获客内容包",
+      "type": "scenario",
+      "version": "1.0.0",
+      "workflow_ids": [
+        "r365.workflow.weekly-content-kit"
+      ]
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "evidence-aware",
+          "no-guaranteed-outcome",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "industry-cognition-map",
+          "seven-day-validation-task"
+        ],
+        "excluded_constraints": [
+          "guaranteed-growth-required"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "goals": [
+          "industry-cognition",
+          "career-entry",
+          "creator-positioning"
+        ],
+        "identities": [
+          "creator",
+          "career-switcher",
+          "brand-content-operator"
+        ]
+      },
+      "completion_criteria": [
+        "固定九部分认知地图齐全且关键结论可回溯。",
+        "没有把头部案例、市场增长或平台规则写成个体保证。",
+        "下一步只有一个，并能在七天内留下可观察证据。"
+      ],
+      "contentPath": "content/workflows/creator-ip-industry-cognition.json",
+      "estimated_minutes": 60,
+      "goal": "在 45–75 分钟内形成可信行业认知地图并进入一个七天真实验证任务。",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/creator-ip-industry-cognition.json"
+        },
+        "stale": false,
+        "stale_after": "2026-11-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.workflow.creator-ip-industry-cognition",
+      "match_terms": [
+        "自媒体",
+        "个人IP",
+        "一小时",
+        "行业认知",
+        "七天验证"
+      ],
+      "nodes": [
+        {
+          "action": "限定一个细分方向、一个主阵地候选和七天可验证问题。",
+          "completion_criteria": [
+            "方向、目标、主阵地、起点和待验证问题齐全。"
+          ],
+          "id": "define-entry-context",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.rhzl-creator-ip-industry-cognition"
+          ],
+          "title": "5 分钟：明确方向、目标与起点"
+        },
+        {
+          "action": "从受众问题出发，标出角色、投入、获得和可能承担的位置。",
+          "completion_criteria": [
+            "至少包含受众、创作者与平台，且商业模式没有被简化成粉丝数。"
+          ],
+          "id": "map-value-chain",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.rhzl-creator-ip-industry-cognition"
+          ],
+          "title": "10 分钟：看清价值链与价值交换"
+        },
+        {
+          "action": "围绕定位、内容、分发、信任与变现记录可回溯判断和适用边界。",
+          "completion_criteria": [
+            "关键结论有来源、局限或反证，且没有保证性表述。"
+          ],
+          "id": "learn-core-mechanisms",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.rhzl-creator-ip-industry-cognition"
+          ],
+          "title": "20 分钟：理解关键机制"
+        },
+        {
+          "action": "区分观察、因果与不可复制条件，记录自己的风险边界。",
+          "completion_criteria": [
+            "至少保留一条失败或反向证据及其不可复制条件。"
+          ],
+          "id": "calibrate-with-evidence",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.rhzl-creator-ip-industry-cognition"
+          ],
+          "title": "10 分钟：用案例、失败与反证校准"
+        },
+        {
+          "action": "收敛三条有取舍的路径，只选择一个低成本、可逆且反馈快的七天任务。",
+          "completion_criteria": [
+            "九部分齐全，唯一下一步可执行且成功证据可观察。"
+          ],
+          "id": "build-cognition-map",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.rhzl-creator-ip-industry-cognition"
+          ],
+          "title": "15 分钟：生成认知地图与 7 天验证任务"
+        }
+      ],
+      "scenario_ids": [
+        "r365.scenario.creator-ip-industry-cognition"
+      ],
+      "schema_version": "1.0.0",
+      "slug": "creator-ip-industry-cognition",
+      "status": "current",
+      "summary": "公开 Catalog 只保留跨载体五步合同；详细证据包、用户状态和成果保存由 RHZL 运行时承载。",
+      "tags": [
+        "自媒体",
+        "个人 IP",
+        "行业认知",
+        "Workflow"
+      ],
+      "title": "一小时吃透自媒体 / IP 行业 Workflow",
+      "type": "workflow",
+      "version": "1.0.0"
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "free-only",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "customer-feedback-review"
+        ],
+        "excluded_constraints": [
+          "contains-private-customer-data"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "goals": [
+          "customer-insight",
+          "service-improvement"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ]
+      },
+      "completion_criteria": [
+        "输入已移除姓名、联系方式、订单号和其他可识别信息。",
+        "每项结论有反馈证据且没有把少量样本写成普遍事实。",
+        "前三项动作包含优先级、负责人建议和验证方式。"
+      ],
+      "contentPath": "content/workflows/customer-feedback-review.json",
+      "estimated_minutes": 35,
+      "goal": "把脱敏反馈转成有证据的优势、问题和三条优先动作。",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/customer-feedback-review.json"
+        },
+        "stale": false,
+        "stale_after": "2027-02-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.workflow.customer-feedback-review",
+      "match_terms": [
+        "顾客评论",
+        "差评",
+        "用户反馈",
+        "门店改进",
+        "评论整理"
+      ],
+      "nodes": [
+        {
+          "action": "删除可识别信息，记录时间范围、渠道与样本量。",
+          "completion_criteria": [
+            "输入无可识别顾客信息，样本边界明确。"
+          ],
+          "id": "sanitize-input",
+          "prompt_ids": [],
+          "resource_ids": [],
+          "title": "脱敏并界定样本"
+        },
+        {
+          "action": "按优势、问题、期待和例外情况分类，并保留脱敏摘录。",
+          "completion_criteria": [
+            "分类互斥且每项结论至少有一条证据。"
+          ],
+          "id": "classify-feedback",
+          "prompt_ids": [
+            "r365.prompt.customer-feedback-review"
+          ],
+          "resource_ids": [],
+          "title": "分类并保留证据"
+        },
+        {
+          "action": "按影响、频率、成本和可逆性选择三条动作。",
+          "completion_criteria": [
+            "三条动作均有优先级和验证信号。"
+          ],
+          "id": "prioritize-actions",
+          "prompt_ids": [],
+          "resource_ids": [],
+          "title": "形成优先改进动作"
+        }
+      ],
+      "scenario_ids": [
+        "r365.scenario.customer-feedback-review"
+      ],
+      "schema_version": "1.0.0",
+      "slug": "customer-feedback-review",
+      "status": "current",
+      "summary": "先脱敏，再把顾客反馈编码、归类和转成可验证的优先改进动作。",
+      "tags": [
+        "顾客反馈",
+        "服务改进",
+        "Workflow"
+      ],
+      "title": "顾客反馈整理 Workflow",
+      "type": "workflow",
+      "version": "1.0.0"
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "low-budget",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "product-visual-kit"
+        ],
+        "excluded_constraints": [
+          "missing-product-facts"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "goals": [
+          "visual-content",
+          "product-promotion"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ]
+      },
+      "completion_criteria": [
+        "产品名称、卖点、限制和准确文字已经确认。",
+        "三个方向在构图或情绪上有明显取舍。",
+        "最终 Prompt 包含用途、比例、文字、禁用项和核验要求。"
+      ],
+      "contentPath": "content/workflows/product-visual-kit.json",
+      "estimated_minutes": 30,
+      "goal": "形成三个可比较的视觉方向和一条准确、可执行的生成 Prompt。",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/product-visual-kit.json"
+        },
+        "stale": false,
+        "stale_after": "2027-02-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.workflow.product-visual-kit",
+      "match_terms": [
+        "产品海报",
+        "门店视觉",
+        "商品图",
+        "封面",
+        "中文排版"
+      ],
+      "nodes": [
+        {
+          "action": "确认产品名称、卖点、准确文字、目标平台、比例和禁用项。",
+          "completion_criteria": [
+            "用途、比例、准确文字和禁用项齐全。"
+          ],
+          "id": "lock-product-facts",
+          "prompt_ids": [],
+          "resource_ids": [],
+          "title": "锁定产品事实与用途"
+        },
+        {
+          "action": "分别给出信息型、场景型和品牌型方向，说明各自取舍。",
+          "completion_criteria": [
+            "三个方向用途清楚且没有互相重复。"
+          ],
+          "id": "compare-directions",
+          "prompt_ids": [
+            "r365.prompt.local-business-visual-brief"
+          ],
+          "resource_ids": [
+            "r365.resource.visual-prompt-router"
+          ],
+          "title": "比较三个视觉方向"
+        },
+        {
+          "action": "把选中方向编译成一条包含准确文字与核验要求的 Prompt。",
+          "completion_criteria": [
+            "Prompt 可直接交给支持的视觉工具或设计师。"
+          ],
+          "id": "finalize-prompt",
+          "prompt_ids": [
+            "r365.prompt.local-business-visual-brief"
+          ],
+          "resource_ids": [
+            "r365.resource.visual-prompt-router"
+          ],
+          "title": "确定最终任务 Prompt"
+        }
+      ],
+      "scenario_ids": [
+        "r365.scenario.product-visual-kit"
+      ],
+      "schema_version": "1.0.0",
+      "slug": "product-visual-kit",
+      "status": "current",
+      "summary": "锁定真实产品事实后，生成三个有取舍的视觉方向和一个可执行任务 Prompt。",
+      "tags": [
+        "产品视觉",
+        "海报",
+        "生图",
+        "Workflow"
+      ],
+      "title": "产品视觉素材包 Workflow",
+      "type": "workflow",
+      "version": "1.0.0"
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "free-only",
+          "low-budget",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "weekly-content-kit"
+        ],
+        "excluded_constraints": [],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "goals": [
+          "content-growth",
+          "customer-acquisition"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ]
+      },
+      "completion_criteria": [
+        "七条选题、首篇文案和封面方向均已形成。",
+        "事实、优惠和产品信息均来自用户确认材料。",
+        "下一步发布或复核动作明确。"
+      ],
+      "contentPath": "content/workflows/weekly-content-kit.json",
+      "estimated_minutes": 60,
+      "goal": "在约 60 分钟内形成一套可继续发布的一周获客内容包。",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/weekly-content-kit.json"
+        },
+        "stale": false,
+        "stale_after": "2027-02-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.workflow.weekly-content-kit",
+      "match_terms": [
+        "咖啡店",
+        "门店",
+        "一周内容",
+        "获客内容",
+        "公众号",
+        "小红书"
+      ],
+      "nodes": [
+        {
+          "action": "列出目标顾客、三个高频问题、三个已确认卖点和本周目标。",
+          "completion_criteria": [
+            "目标顾客、问题、卖点和目标均有真实依据。"
+          ],
+          "id": "collect-facts",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.public-knowledge-search"
+          ],
+          "title": "收集真实卖点与顾客问题"
+        },
+        {
+          "action": "让七条内容分别承担解释、证明、比较、答疑和行动引导。",
+          "completion_criteria": [
+            "七条选题不重复，并分别对应顾客问题。"
+          ],
+          "id": "plan-seven-topics",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.ai-writing-humanizer"
+          ],
+          "title": "规划七条选题"
+        },
+        {
+          "action": "完成首篇草稿，再确定用途、比例、准确文字和视觉重点。",
+          "completion_criteria": [
+            "首篇草稿可编辑，封面方向可执行且没有虚构信息。"
+          ],
+          "id": "draft-and-visual",
+          "prompt_ids": [
+            "r365.prompt.local-business-visual-brief"
+          ],
+          "resource_ids": [
+            "r365.resource.ai-writing-humanizer",
+            "r365.resource.visual-prompt-router"
+          ],
+          "title": "完成首篇文案与封面方向"
+        }
+      ],
+      "scenario_ids": [
+        "r365.scenario.weekly-content-kit"
+      ],
+      "schema_version": "1.0.0",
+      "slug": "weekly-content-kit",
+      "status": "current",
+      "summary": "从顾客问题与真实卖点出发，收敛七条选题、首篇文案和封面方向。",
+      "tags": [
+        "内容运营",
+        "本地生活",
+        "Workflow"
+      ],
+      "title": "一周获客内容包 Workflow",
+      "type": "workflow",
+      "version": "1.0.0"
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "article-draft",
+          "weekly-content-kit",
+          "natural-chinese-copy"
+        ],
+        "excluded_constraints": [
+          "fabricate-facts"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ],
+        "goals": [
+          "writing",
+          "content-growth",
+          "rewrite"
+        ],
+        "identities": [
+          "creator",
+          "local-business",
+          "content-operator"
+        ]
+      },
+      "capabilities": [
+        "writing",
+        "rewriting",
+        "voice-preservation"
+      ],
+      "completion_criteria": [
+        "事实与来源边界未被改写。",
+        "作者立场和必要不确定性仍然清楚。",
+        "交付文本可由用户继续编辑和验收。"
+      ],
+      "contentPath": "content/resources/ai-writing-humanizer.json",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/ai-writing-humanizer.json"
+        },
+        "stale": false,
+        "stale_after": "2027-02-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.resource.ai-writing-humanizer",
+      "match_terms": [
+        "公众号",
+        "小红书",
+        "文章",
+        "文案",
+        "改写",
+        "去 AI 味"
+      ],
+      "purpose": "把已核实素材整理为更自然、保留作者判断的中文内容。",
+      "repository_url": "https://github.com/ruhang365/ruhang365-ai-writing-humanizer-skill",
+      "resource_kind": "skill",
+      "resource_version": "0c62b83cc20e",
+      "schema_version": "1.0.0",
+      "slug": "ai-writing-humanizer",
+      "source_url": "https://github.com/ruhang365/ruhang365-ai-writing-humanizer-skill",
+      "status": "current",
+      "summary": "在保留事实、立场和作者声音的前提下，减少中文内容中的模板化 AI 表达。",
+      "tags": [
+        "Skill",
+        "中文写作",
+        "改写",
+        "内容运营"
+      ],
+      "title": "AI Writing Humanizer Skill",
+      "type": "resource",
+      "upstream_license": "CC-BY-4.0",
+      "verified_at": "2026-08-12",
+      "version": "1.0.0"
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "read-only",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "evidence-list",
+          "weekly-content-kit",
+          "customer-feedback-review"
+        ],
+        "excluded_constraints": [
+          "offline-only",
+          "private-source-required"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ],
+        "goals": [
+          "research",
+          "knowledge",
+          "content-growth",
+          "customer-insight"
+        ],
+        "identities": [
+          "creator",
+          "local-business",
+          "office-worker",
+          "job-seeker"
+        ]
+      },
+      "capabilities": [
+        "public-search",
+        "evidence-retrieval"
+      ],
+      "completion_criteria": [
+        "查询只包含完成任务所需的短语。",
+        "只保留公开白名单字段和明显相关结果。",
+        "服务不可用时明确降级，不虚构检索结果。"
+      ],
+      "contentPath": "content/resources/public-knowledge-search.json",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/public-knowledge-search.json"
+        },
+        "stale": false,
+        "stale_after": "2026-11-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.resource.public-knowledge-search",
+      "match_terms": [
+        "资料",
+        "知识",
+        "教程",
+        "研究",
+        "证据",
+        "入行之路"
+      ],
+      "purpose": "为当前 Workflow 节点补充少量公开证据和下一步材料。",
+      "repository_url": null,
+      "resource_kind": "knowledge",
+      "resource_version": "public-v1",
+      "schema_version": "1.0.0",
+      "slug": "public-knowledge-search",
+      "source_url": "https://rhzl.ruhang365.cn/api/knowledge/search",
+      "status": "current",
+      "summary": "通过公开只读接口检索少量、与当前任务明显相关的知识资产摘要。",
+      "tags": [
+        "知识",
+        "公开接口",
+        "只读",
+        "检索"
+      ],
+      "title": "入行365公开知识检索",
+      "type": "resource",
+      "upstream_license": "per-result",
+      "version": "1.0.0"
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "account-required",
+          "stateful-web-runtime",
+          "no-guaranteed-outcome"
+        ],
+        "deliverables": [
+          "industry-cognition-map",
+          "seven-day-validation-task"
+        ],
+        "excluded_constraints": [
+          "offline-only"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "goals": [
+          "industry-cognition",
+          "career-entry",
+          "creator-positioning"
+        ],
+        "identities": [
+          "creator",
+          "career-switcher",
+          "brand-content-operator"
+        ]
+      },
+      "capabilities": [
+        "workflow-runtime",
+        "state-continuity",
+        "result-and-asset"
+      ],
+      "completion_criteria": [
+        "用户完成五个节点并形成行业认知地图。",
+        "用户明确选择唯一七天验证任务。",
+        "只有用户确认后才把 Result 保存为 Asset。"
+      ],
+      "contentPath": "content/resources/rhzl-creator-ip-industry-cognition.json",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/rhzl-creator-ip-industry-cognition.json"
+        },
+        "stale": false,
+        "stale_after": "2026-11-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.resource.rhzl-creator-ip-industry-cognition",
+      "match_terms": [
+        "入行之路",
+        "自媒体",
+        "个人IP",
+        "行业认知地图",
+        "七天验证"
+      ],
+      "purpose": "在 RHZL 中执行带状态恢复、证据包和成果保存的完整行业认知 Workflow。",
+      "repository_url": null,
+      "resource_kind": "service",
+      "resource_version": "current-production-contract",
+      "schema_version": "1.0.0",
+      "slug": "rhzl-creator-ip-industry-cognition",
+      "source_url": "https://rhzl.ruhang365.cn/core-loop?entry=creator-ip-industry-cognition",
+      "status": "current",
+      "summary": "承载当前五步 Workflow 的详细证据、节点状态、Result 与用户确认后的 Asset；公开 Catalog 不复制这些运行时数据。",
+      "tags": [
+        "RHZL",
+        "Web",
+        "自媒体",
+        "行业认知",
+        "Workflow 运行时"
+      ],
+      "title": "RHZL 自媒体 / IP 行业认知运行时",
+      "type": "resource",
+      "upstream_license": "service-terms",
+      "version": "1.0.0"
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "product-visual-kit",
+          "cover-direction",
+          "image-prompt"
+        ],
+        "excluded_constraints": [
+          "missing-product-facts"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ],
+        "goals": [
+          "visual-content",
+          "product-promotion",
+          "image-prompt"
+        ],
+        "identities": [
+          "creator",
+          "local-business",
+          "content-operator"
+        ]
+      },
+      "capabilities": [
+        "visual-brief",
+        "image-prompt",
+        "rights-aware-reference"
+      ],
+      "completion_criteria": [
+        "Prompt 明确用途、比例和准确文字。",
+        "参考素材与许可证边界被保留。",
+        "没有把生成成功描述成最终视觉已验收。"
+      ],
+      "contentPath": "content/resources/visual-prompt-router.json",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/visual-prompt-router.json"
+        },
+        "stale": false,
+        "stale_after": "2027-02-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.resource.visual-prompt-router",
+      "match_terms": [
+        "封面",
+        "海报",
+        "信息图",
+        "图片",
+        "生图",
+        "改图",
+        "视觉"
+      ],
+      "purpose": "为生成或改图任务准备权利感知、可核验的视觉 Prompt。",
+      "repository_url": "https://github.com/fzy2012/ruhang365-visual-prompt-skill",
+      "resource_kind": "skill",
+      "resource_version": "858d8dd1ab49",
+      "schema_version": "1.0.0",
+      "slug": "visual-prompt-router",
+      "source_url": "https://github.com/fzy2012/ruhang365-visual-prompt-skill",
+      "status": "current",
+      "summary": "先确定用途、比例、准确文字和素材边界，再形成任务专属视觉 Prompt。",
+      "tags": [
+        "Skill",
+        "视觉",
+        "Prompt",
+        "封面",
+        "海报"
+      ],
+      "title": "Ruhang365 Visual Prompt Router",
+      "type": "resource",
+      "upstream_license": "MIT",
+      "verified_at": "2026-08-12",
+      "version": "1.0.0"
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "customer-feedback-review"
+        ],
+        "excluded_constraints": [
+          "contains-private-customer-data"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "goals": [
+          "customer-insight",
+          "service-improvement"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ]
+      },
+      "completion_criteria": [
+        "输出区分优势、问题、期待和例外。",
+        "每条结论都引用脱敏证据编号。",
+        "动作优先级说明影响、频率、成本与验证方式。"
+      ],
+      "contentPath": "content/prompts/customer-feedback-review.json",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/prompts/customer-feedback-review.json"
+        },
+        "stale": false,
+        "stale_after": "2027-02-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.prompt.customer-feedback-review",
+      "match_terms": [
+        "评论整理",
+        "差评分析",
+        "用户反馈",
+        "顾客洞察"
+      ],
+      "purpose": "把脱敏反馈整理为有证据边界的结论和改进动作。",
+      "resource_ids": [],
+      "schema_version": "1.0.0",
+      "slug": "customer-feedback-review",
+      "status": "current",
+      "summary": "对脱敏顾客反馈做可回溯分类，不把样本频率夸大成普遍结论。",
+      "tags": [
+        "Prompt",
+        "顾客反馈",
+        "证据",
+        "服务改进"
+      ],
+      "template": "请分析以下已经脱敏的 {{feedback_items}}。样本边界是 {{sample_scope}}。先按优势、问题、期待、例外分类；每条结论引用反馈编号并标注出现次数，不得把小样本写成普遍事实。最后按影响、频率、成本和可逆性提出三条动作，并给出各自的验证信号。",
+      "title": "顾客反馈证据化整理 Prompt",
+      "type": "prompt",
+      "variables": [
+        "feedback_items",
+        "sample_scope"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "applicability": {
+        "constraints": [
+          "low-budget",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "product-visual-kit",
+          "cover-direction",
+          "weekly-content-kit"
+        ],
+        "excluded_constraints": [
+          "missing-product-facts"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ],
+        "goals": [
+          "visual-content",
+          "product-promotion",
+          "content-growth"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner",
+          "creator"
+        ]
+      },
+      "completion_criteria": [
+        "用途、比例、准确文字和视觉重点齐全。",
+        "产品事实与禁用项来自用户确认。",
+        "输出包含生成后文字与事实核验要求。"
+      ],
+      "contentPath": "content/prompts/local-business-visual-brief.json",
+      "governance": {
+        "license": {
+          "attribution": "入行365",
+          "spdx": "CC-BY-4.0"
+        },
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "review": {
+          "reviewed_at": "2026-08-12",
+          "status": "approved"
+        },
+        "source": {
+          "kind": "owned",
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/prompts/local-business-visual-brief.json"
+        },
+        "stale": false,
+        "stale_after": "2027-02-12",
+        "updated_at": "2026-08-12"
+      },
+      "id": "r365.prompt.local-business-visual-brief",
+      "match_terms": [
+        "门店海报",
+        "产品视觉",
+        "封面",
+        "中文排版",
+        "生图 Prompt"
+      ],
+      "purpose": "生成一条不虚构产品信息、包含准确文字与核验要求的视觉任务 Prompt。",
+      "resource_ids": [
+        "r365.resource.visual-prompt-router"
+      ],
+      "schema_version": "1.0.0",
+      "slug": "local-business-visual-brief",
+      "status": "current",
+      "summary": "把真实产品事实、用途和版式约束编译成可交给视觉工具或设计师的任务 Prompt。",
+      "tags": [
+        "Prompt",
+        "视觉",
+        "海报",
+        "封面",
+        "本地生活"
+      ],
+      "template": "为 {{business_type}} 的 {{product_name}} 制作 {{use_case}} 视觉，画面比例 {{aspect_ratio}}。必须准确出现文字：{{exact_text}}。核心卖点只使用：{{verified_claims}}。视觉重点：{{visual_focus}}。禁止：{{negative_constraints}}。生成后逐字核验文字，并检查产品信息、商标、人物和参考素材权利边界；不确定内容留空，不得补写。",
+      "title": "本地小店视觉任务 Brief",
+      "type": "prompt",
+      "variables": [
+        "business_type",
+        "product_name",
+        "use_case",
+        "aspect_ratio",
+        "exact_text",
+        "verified_claims",
+        "visual_focus",
+        "negative_constraints"
+      ],
+      "version": "1.0.0"
+    }
+  ],
+  "schemaVersion": "1.0.0",
+  "sourceRepository": "https://github.com/ruhang365/ruhang365-router"
+}

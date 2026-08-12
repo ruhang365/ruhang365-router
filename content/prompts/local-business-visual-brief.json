@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.prompt.local-business-visual-brief",
+  "type": "prompt",
+  "slug": "local-business-visual-brief",
+  "version": "1.0.0",
+  "title": "本地小店视觉任务 Brief",
+  "summary": "把真实产品事实、用途和版式约束编译成可交给视觉工具或设计师的任务 Prompt。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/prompts/local-business-visual-brief.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2027-02-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["local-business", "small-business-owner", "creator"],
+    "goals": ["visual-content", "product-promotion", "content-growth"],
+    "experience_levels": ["beginner", "intermediate", "advanced"],
+    "constraints": ["low-budget", "no-private-data", "cross-carrier"],
+    "excluded_constraints": ["missing-product-facts"],
+    "deliverables": ["product-visual-kit", "cover-direction", "weekly-content-kit"]
+  },
+  "completion_criteria": [
+    "用途、比例、准确文字和视觉重点齐全。",
+    "产品事实与禁用项来自用户确认。",
+    "输出包含生成后文字与事实核验要求。"
+  ],
+  "tags": ["Prompt", "视觉", "海报", "封面", "本地生活"],
+  "match_terms": ["门店海报", "产品视觉", "封面", "中文排版", "生图 Prompt"],
+  "purpose": "生成一条不虚构产品信息、包含准确文字与核验要求的视觉任务 Prompt。",
+  "template": "为 {{business_type}} 的 {{product_name}} 制作 {{use_case}} 视觉，画面比例 {{aspect_ratio}}。必须准确出现文字：{{exact_text}}。核心卖点只使用：{{verified_claims}}。视觉重点：{{visual_focus}}。禁止：{{negative_constraints}}。生成后逐字核验文字，并检查产品信息、商标、人物和参考素材权利边界；不确定内容留空，不得补写。",
+  "variables": ["business_type", "product_name", "use_case", "aspect_ratio", "exact_text", "verified_claims", "visual_focus", "negative_constraints"],
+  "resource_ids": ["r365.resource.visual-prompt-router"]
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.workflow.customer-feedback-review",
+  "type": "workflow",
+  "slug": "customer-feedback-review",
+  "version": "1.0.0",
+  "title": "顾客反馈整理 Workflow",
+  "summary": "先脱敏，再把顾客反馈编码、归类和转成可验证的优先改进动作。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/customer-feedback-review.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2027-02-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["local-business", "small-business-owner"],
+    "goals": ["customer-insight", "service-improvement"],
+    "experience_levels": ["beginner", "intermediate"],
+    "constraints": ["free-only", "no-private-data", "cross-carrier"],
+    "excluded_constraints": ["contains-private-customer-data"],
+    "deliverables": ["customer-feedback-review"]
+  },
+  "completion_criteria": [
+    "输入已移除姓名、联系方式、订单号和其他可识别信息。",
+    "每项结论有反馈证据且没有把少量样本写成普遍事实。",
+    "前三项动作包含优先级、负责人建议和验证方式。"
+  ],
+  "tags": ["顾客反馈", "服务改进", "Workflow"],
+  "match_terms": ["顾客评论", "差评", "用户反馈", "门店改进", "评论整理"],
+  "goal": "把脱敏反馈转成有证据的优势、问题和三条优先动作。",
+  "estimated_minutes": 35,
+  "scenario_ids": ["r365.scenario.customer-feedback-review"],
+  "nodes": [
+    {
+      "id": "sanitize-input",
+      "title": "脱敏并界定样本",
+      "action": "删除可识别信息，记录时间范围、渠道与样本量。",
+      "resource_ids": [],
+      "prompt_ids": [],
+      "completion_criteria": ["输入无可识别顾客信息，样本边界明确。"]
+    },
+    {
+      "id": "classify-feedback",
+      "title": "分类并保留证据",
+      "action": "按优势、问题、期待和例外情况分类，并保留脱敏摘录。",
+      "resource_ids": [],
+      "prompt_ids": ["r365.prompt.customer-feedback-review"],
+      "completion_criteria": ["分类互斥且每项结论至少有一条证据。"]
+    },
+    {
+      "id": "prioritize-actions",
+      "title": "形成优先改进动作",
+      "action": "按影响、频率、成本和可逆性选择三条动作。",
+      "resource_ids": [],
+      "prompt_ids": [],
+      "completion_criteria": ["三条动作均有优先级和验证信号。"]
+    }
+  ]
+}

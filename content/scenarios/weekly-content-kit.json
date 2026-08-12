@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.scenario.weekly-content-kit",
+  "type": "scenario",
+  "slug": "weekly-content-kit",
+  "version": "1.0.0",
+  "title": "本地小店一周获客内容包",
+  "summary": "把一家本地小店的真实卖点转成一周可发布内容，并明确首篇文案与封面方向。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/weekly-content-kit.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2027-02-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["local-business", "small-business-owner"],
+    "goals": ["content-growth", "customer-acquisition"],
+    "experience_levels": ["beginner", "intermediate"],
+    "constraints": ["free-only", "low-budget", "no-private-data", "cross-carrier"],
+    "excluded_constraints": [],
+    "deliverables": ["weekly-content-kit"]
+  },
+  "completion_criteria": [
+    "七条选题分别对应真实顾客问题或购买理由。",
+    "至少一篇文案可以继续编辑和发布。",
+    "封面方向包含准确文字、比例和视觉重点。"
+  ],
+  "tags": ["本地生活", "内容运营", "获客", "小店"],
+  "match_terms": ["门店", "小店", "咖啡店", "餐厅", "零售", "一周内容", "获客内容"],
+  "deliverable": "7 条可发布选题、1 篇完整文案和 1 个封面方向",
+  "next_intent": "writing",
+  "recommendation_weight": 20,
+  "workflow_ids": ["r365.workflow.weekly-content-kit"]
+}

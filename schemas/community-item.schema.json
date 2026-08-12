@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ruhang365/ruhang365-router/schemas/community-item.schema.json",
+  "title": "Ruhang365 Community Item",
+  "description": "Version 1.0.0 contract for reviewed public Community assets.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "type",
+    "slug",
+    "version",
+    "title",
+    "summary",
+    "status",
+    "governance",
+    "applicability",
+    "completion_criteria",
+    "tags",
+    "match_terms"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^r365\\.(scenario|workflow|resource|prompt)\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "type": {
+      "enum": ["scenario", "workflow", "resource", "prompt"]
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 2
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 8
+    },
+    "status": {
+      "enum": ["current", "needs_review", "archived"]
+    },
+    "governance": {
+      "type": "object",
+      "required": [
+        "source",
+        "license",
+        "maintainers",
+        "review",
+        "updated_at",
+        "stale_after",
+        "stale"
+      ]
+    },
+    "applicability": {
+      "type": "object",
+      "required": [
+        "identities",
+        "goals",
+        "experience_levels",
+        "constraints",
+        "excluded_constraints",
+        "deliverables"
+      ]
+    },
+    "completion_criteria": {
+      "type": "array",
+      "minItems": 1
+    },
+    "tags": {
+      "type": "array"
+    },
+    "match_terms": {
+      "type": "array"
+    },
+    "recommendation_weight": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}

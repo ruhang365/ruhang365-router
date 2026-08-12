@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.resource.visual-prompt-router",
+  "type": "resource",
+  "slug": "visual-prompt-router",
+  "version": "1.0.0",
+  "title": "Ruhang365 Visual Prompt Router",
+  "summary": "先确定用途、比例、准确文字和素材边界，再形成任务专属视觉 Prompt。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/visual-prompt-router.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2027-02-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["creator", "local-business", "content-operator"],
+    "goals": ["visual-content", "product-promotion", "image-prompt"],
+    "experience_levels": ["beginner", "intermediate", "advanced"],
+    "constraints": ["no-private-data", "cross-carrier"],
+    "excluded_constraints": ["missing-product-facts"],
+    "deliverables": ["product-visual-kit", "cover-direction", "image-prompt"]
+  },
+  "completion_criteria": [
+    "Prompt 明确用途、比例和准确文字。",
+    "参考素材与许可证边界被保留。",
+    "没有把生成成功描述成最终视觉已验收。"
+  ],
+  "tags": ["Skill", "视觉", "Prompt", "封面", "海报"],
+  "match_terms": ["封面", "海报", "信息图", "图片", "生图", "改图", "视觉"],
+  "resource_kind": "skill",
+  "purpose": "为生成或改图任务准备权利感知、可核验的视觉 Prompt。",
+  "capabilities": ["visual-brief", "image-prompt", "rights-aware-reference"],
+  "repository_url": "https://github.com/fzy2012/ruhang365-visual-prompt-skill",
+  "source_url": "https://github.com/fzy2012/ruhang365-visual-prompt-skill",
+  "resource_version": "858d8dd1ab49",
+  "verified_at": "2026-08-12",
+  "upstream_license": "MIT"
+}

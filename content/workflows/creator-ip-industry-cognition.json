@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.workflow.creator-ip-industry-cognition",
+  "type": "workflow",
+  "slug": "creator-ip-industry-cognition",
+  "version": "1.0.0",
+  "title": "一小时吃透自媒体 / IP 行业 Workflow",
+  "summary": "公开 Catalog 只保留跨载体五步合同；详细证据包、用户状态和成果保存由 RHZL 运行时承载。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/creator-ip-industry-cognition.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2026-11-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["creator", "career-switcher", "brand-content-operator"],
+    "goals": ["industry-cognition", "career-entry", "creator-positioning"],
+    "experience_levels": ["beginner", "intermediate"],
+    "constraints": ["evidence-aware", "no-guaranteed-outcome", "cross-carrier"],
+    "excluded_constraints": ["guaranteed-growth-required"],
+    "deliverables": ["industry-cognition-map", "seven-day-validation-task"]
+  },
+  "completion_criteria": [
+    "固定九部分认知地图齐全且关键结论可回溯。",
+    "没有把头部案例、市场增长或平台规则写成个体保证。",
+    "下一步只有一个，并能在七天内留下可观察证据。"
+  ],
+  "tags": ["自媒体", "个人 IP", "行业认知", "Workflow"],
+  "match_terms": ["自媒体", "个人IP", "一小时", "行业认知", "七天验证"],
+  "goal": "在 45–75 分钟内形成可信行业认知地图并进入一个七天真实验证任务。",
+  "estimated_minutes": 60,
+  "scenario_ids": ["r365.scenario.creator-ip-industry-cognition"],
+  "nodes": [
+    {
+      "id": "define-entry-context",
+      "title": "5 分钟：明确方向、目标与起点",
+      "action": "限定一个细分方向、一个主阵地候选和七天可验证问题。",
+      "resource_ids": ["r365.resource.rhzl-creator-ip-industry-cognition"],
+      "prompt_ids": [],
+      "completion_criteria": ["方向、目标、主阵地、起点和待验证问题齐全。"]
+    },
+    {
+      "id": "map-value-chain",
+      "title": "10 分钟：看清价值链与价值交换",
+      "action": "从受众问题出发，标出角色、投入、获得和可能承担的位置。",
+      "resource_ids": ["r365.resource.rhzl-creator-ip-industry-cognition"],
+      "prompt_ids": [],
+      "completion_criteria": ["至少包含受众、创作者与平台，且商业模式没有被简化成粉丝数。"]
+    },
+    {
+      "id": "learn-core-mechanisms",
+      "title": "20 分钟：理解关键机制",
+      "action": "围绕定位、内容、分发、信任与变现记录可回溯判断和适用边界。",
+      "resource_ids": ["r365.resource.rhzl-creator-ip-industry-cognition"],
+      "prompt_ids": [],
+      "completion_criteria": ["关键结论有来源、局限或反证，且没有保证性表述。"]
+    },
+    {
+      "id": "calibrate-with-evidence",
+      "title": "10 分钟：用案例、失败与反证校准",
+      "action": "区分观察、因果与不可复制条件，记录自己的风险边界。",
+      "resource_ids": ["r365.resource.rhzl-creator-ip-industry-cognition"],
+      "prompt_ids": [],
+      "completion_criteria": ["至少保留一条失败或反向证据及其不可复制条件。"]
+    },
+    {
+      "id": "build-cognition-map",
+      "title": "15 分钟：生成认知地图与 7 天验证任务",
+      "action": "收敛三条有取舍的路径，只选择一个低成本、可逆且反馈快的七天任务。",
+      "resource_ids": ["r365.resource.rhzl-creator-ip-industry-cognition"],
+      "prompt_ids": [],
+      "completion_criteria": ["九部分齐全，唯一下一步可执行且成功证据可观察。"]
+    }
+  ]
+}
