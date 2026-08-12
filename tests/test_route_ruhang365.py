@@ -61,6 +61,16 @@ class IntentTests(unittest.TestCase):
             with self.subTest(query=query):
                 self.assertEqual(router.infer_intent(query), expected)
 
+    def test_discovers_local_business_scenarios_without_remote_data(self):
+        scenarios = router.discovery_scenarios(
+            "我开一家本地咖啡店，不知道 AI 能帮我做什么"
+        )
+
+        self.assertEqual(scenarios["profile"], "local-business")
+        self.assertEqual(scenarios["recommendedScenarioId"], "weekly-content-kit")
+        self.assertEqual(len(scenarios["items"]), 3)
+        self.assertEqual(scenarios["items"][0]["nextIntent"], "writing")
+
 
 class RequestContractTests(unittest.TestCase):
     def test_rejects_invalid_query_limit_timeout_and_credentials(self):
@@ -83,10 +93,9 @@ class RequestContractTests(unittest.TestCase):
             3,
         )
 
-        self.assertEqual(set(requests), {"knowledge", "skills", "prompts"})
+        self.assertEqual(set(requests), {"knowledge", "prompts"})
         joined = "\n".join(requests.values()).lower()
         self.assertIn("q=", requests["knowledge"])
-        self.assertIn("goal=", requests["skills"])
         self.assertIn("assettype=image_prompt", requests["prompts"].lower())
         self.assertNotIn("token", joined)
         self.assertNotIn("apikey", joined)
@@ -167,6 +176,36 @@ class ProjectionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "prompt service"):
             router.project_prompts({"items": []}, 3)
 
+    def test_relevance_filter_removes_popular_but_unrelated_results(self):
+        items = [
+            {
+                "title": "ChatGPT",
+                "description": "通用 AI 助手",
+                "tags": ["AI 助手"],
+            },
+            {
+                "title": "咖啡店一周内容包",
+                "description": "门店获客内容",
+                "tags": ["咖啡", "门店"],
+            },
+        ]
+
+        result = router.filter_relevant(items, "我开一家本地咖啡店")
+
+        self.assertEqual([item["title"] for item in result], ["咖啡店一周内容包"])
+
+    def test_relevance_filter_keeps_matching_visual_prompt(self):
+        items = [
+            {
+                "title": "Chinese poster",
+                "tags": ["公众号封面", "中文排版"],
+            }
+        ]
+
+        result = router.filter_relevant(items, "给文章制作公众号封面")
+
+        self.assertEqual(len(result), 1)
+
 
 class RoutingTests(unittest.TestCase):
     def test_offline_route_is_useful_and_performs_no_remote_or_write_action(self):
@@ -174,6 +213,8 @@ class RoutingTests(unittest.TestCase):
 
         self.assertEqual(result["route"]["intent"], "discover")
         self.assertEqual(result["route"]["capabilities"], ["knowledge", "skills"])
+        self.assertEqual(result["route"]["scenarios"]["profile"], "local-business")
+        self.assertEqual(len(result["route"]["scenarios"]["items"]), 3)
         self.assertEqual(result["sources"]["knowledge"]["status"], "offline")
         self.assertFalse(result["execution"]["remoteModelCalled"])
         self.assertFalse(result["execution"]["writePerformed"])
@@ -216,7 +257,7 @@ class RoutingTests(unittest.TestCase):
 
         self.assertEqual(process.returncode, 0, process.stderr)
         payload = json.loads(process.stdout)
-        self.assertEqual(payload["schemaVersion"], "0.1")
+        self.assertEqual(payload["schemaVersion"], "0.2")
         self.assertEqual(payload["route"]["intent"], "discover")
 
 
@@ -229,6 +270,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertTrue(skill_text.startswith("---\nname: ruhang365-router\n"))
         self.assertIn("不接收、读取、存储或传输会员 Token", skill_text)
         self.assertIn("公开核心永久可执行", readme_text)
+        self.assertIn("过滤与查询没有明显匹配", readme_text)
         self.assertIn("字段白名单", security_text)
 
     def test_installer_is_non_overwriting(self):

@@ -10,8 +10,10 @@
 ## 能做什么
 
 - 从模糊需求中识别 `discover`、`writing`、`visual`、`tool` 或 `knowledge` 意图。
+- 针对门店、创作者、办公和求职场景，在离线状态下也给出 3 个可交付场景与 1 个推荐起点。
 - 通过公开只读接口检索最多 5 条知识、Skill 或授权感知的 Prompt 结果。
 - 只保留客户端白名单字段，不输出服务端未知字段或会员内容。
+- 过滤与查询没有明显匹配的热门结果，不用无关推荐凑数。
 - 为写作任务推荐 [`ai-writing-humanizer`](https://github.com/ruhang365/ruhang365-ai-writing-humanizer-skill)。
 - 为视觉任务推荐 [`ruhang365-visual-prompt-router`](https://github.com/fzy2012/ruhang365-visual-prompt-skill)。
 - 在离线或服务不可用时保留本地场景判断，不虚构远程检索结果。
@@ -58,7 +60,7 @@ python3 skills/ruhang365-router/scripts/route_ruhang365.py \
 
 公开核心永久可执行：本地意图判断、公开资料检索、专项 Skill 路由、失败降级和交付规则都在本仓库中。
 
-v0.1 有意不支持会员 Token：
+v0.2 有意不支持会员 Token：
 
 - 不读取或发送 API Key、Cookie、登录凭证和会员 Token。
 - 不接收图片、完整文章、客户资料或私人素材。

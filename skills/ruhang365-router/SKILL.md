@@ -20,7 +20,7 @@ description: Diagnose an AI task, discover practical AI application scenarios, r
      --format markdown
    ```
 
-4. 从返回结果中选择最少且足够的资料。普通任务最多使用 3 条知识、3 个 Skill 和 1 条视觉 Prompt；不得遍历或导出整个资料库。
+4. `discover` 任务先使用本地场景候选和推荐起点，再把远程结果作为补充证据。普通任务最多使用 3 条知识、3 个 Skill 和 1 条视觉 Prompt；不得遍历或导出整个资料库。
 5. 路由到专项 Skill：中文公开写作优先 `ai-writing-humanizer`，视觉生成或改图优先 `ruhang365-visual-prompt-router`。未安装专项 Skill 时，提供仓库链接和本地可完成的替代方案，不得自动安装。
 6. 交付用户要求的成果，例如场景清单、执行步骤、文章、视觉 Prompt 或工具选择建议。不要把检索结果列表当作最终交付。
 7. 说明使用了哪些公开结果、哪些能力未调用，以及仍需用户决定的事项。
@@ -33,7 +33,7 @@ description: Diagnose an AI task, discover practical AI application scenarios, r
 - 工具选择：围绕待完成的任务比较工具，不输出脱离场景的排行榜。
 - 知识学习：返回最少的学习材料和下一步练习，不把用户送进资料堆。
 
-详细意图、专项 Skill 注册表和交付合同见 `references/routing-policy.md`。接口字段、错误语义和公开投影见 `references/api-contracts.md`。
+详细意图、专项 Skill 注册表和交付合同见 `references/routing-policy.md`。场景 Profile 见 `references/scenario-discovery.md`。接口字段、错误语义和公开投影见 `references/api-contracts.md`。
 
 ## 执行边界
 
@@ -42,6 +42,7 @@ description: Diagnose an AI task, discover practical AI application scenarios, r
 - 仅使用客户端白名单字段。即使服务返回额外内部字段，也不得展示、缓存或据此推断会员内容。
 - `rights.status=full` 的 Prompt 可以按许可证改写；`reference_only` 只能使用标题、摘要、分类和来源，禁止补全或反推原文。
 - 服务失败时保留离线路由并明确标记远程检索不可用；不得声称已经使用入行365资料。
+- 远程结果与查询没有明显词项匹配时标记 `no_relevant_results`；不得用热门但无关的资料填充答案。
 - 检索成功不代表专项 Skill 已执行，Skill 执行不代表用户成果已经验收。分别报告这些状态。
 - 不执行发布、发送、购买、部署或其他外部写操作，除非用户在当前任务中明确授权并完成相应确认。
 

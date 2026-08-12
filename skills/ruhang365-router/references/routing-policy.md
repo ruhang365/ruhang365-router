@@ -5,8 +5,8 @@
 | 意图 | 典型表达 | 默认公开能力 | 可选专项 Skill |
 | --- | --- | --- | --- |
 | `discover` | 不知道 AI 能做什么、找应用场景 | 知识、Skill 推荐 | 按最终场景决定 |
-| `writing` | 文章、文案、脚本、改写、社媒发布 | 知识、Skill 推荐 | `ai-writing-humanizer` |
-| `visual` | 封面、海报、信息图、生图、改图 | 知识、Skill 推荐、Prompt | `ruhang365-visual-prompt-router` |
+| `writing` | 文章、文案、脚本、改写、社媒发布 | 知识 | `ai-writing-humanizer` |
+| `visual` | 封面、海报、信息图、生图、改图 | 知识、Prompt | `ruhang365-visual-prompt-router` |
 | `tool` | 工具选择、软件比较、工作流选型 | 知识、Skill 推荐 | 按任务决定 |
 | `knowledge` | 学习资料、教程、概念解释 | 知识 | 无 |
 

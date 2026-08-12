@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import urllib.error
 import urllib.parse
@@ -17,8 +18,8 @@ DEFAULT_BASE_URL = "https://rhzl.ruhang365.cn"
 INTENTS = ("auto", "discover", "writing", "visual", "tool", "knowledge")
 CAPABILITIES = {
     "discover": ("knowledge", "skills"),
-    "writing": ("knowledge", "skills"),
-    "visual": ("knowledge", "skills", "prompts"),
+    "writing": ("knowledge",),
+    "visual": ("knowledge", "prompts"),
     "tool": ("knowledge", "skills"),
     "knowledge": ("knowledge",),
 }
@@ -37,6 +38,144 @@ SPECIALISTS = {
             "reason": "Retrieve rights-aware visual references and prepare a task-specific image prompt.",
         },
     ),
+}
+
+SCENARIO_PROFILES = {
+    "local-business": {
+        "signals": ("门店", "小店", "咖啡", "餐厅", "零售", "工作室", "local shop"),
+        "recommendedScenarioId": "weekly-content-kit",
+        "scenarios": (
+            {
+                "id": "weekly-content-kit",
+                "title": "一周获客内容包",
+                "deliverable": "7 条可发布选题、1 篇完整文案和 1 个封面方向",
+                "nextIntent": "writing",
+            },
+            {
+                "id": "customer-feedback-review",
+                "title": "顾客反馈整理",
+                "deliverable": "把评论分成高频问题、优势和三条改进动作",
+                "nextIntent": "knowledge",
+            },
+            {
+                "id": "product-visual-kit",
+                "title": "产品视觉素材包",
+                "deliverable": "3 个海报方向和可直接生成的任务专属 Prompt",
+                "nextIntent": "visual",
+            },
+        ),
+    },
+    "creator": {
+        "signals": ("自媒体", "创作者", "博主", "公众号", "小红书", "视频号", "newsletter"),
+        "recommendedScenarioId": "topic-to-draft",
+        "scenarios": (
+            {
+                "id": "topic-to-draft",
+                "title": "选题到首稿",
+                "deliverable": "3 个选题、1 个大纲和 1 篇保留作者判断的首稿",
+                "nextIntent": "writing",
+            },
+            {
+                "id": "cross-platform-pack",
+                "title": "一稿多平台素材包",
+                "deliverable": "同一观点的公众号、小红书和短视频脚本版本",
+                "nextIntent": "writing",
+            },
+            {
+                "id": "cover-directions",
+                "title": "内容封面方向",
+                "deliverable": "3 个封面方向和 1 条可执行视觉 Prompt",
+                "nextIntent": "visual",
+            },
+        ),
+    },
+    "office": {
+        "signals": ("办公", "会议", "周报", "表格", "邮件", "汇报", "同事", "团队"),
+        "recommendedScenarioId": "meeting-actions",
+        "scenarios": (
+            {
+                "id": "meeting-actions",
+                "title": "会议行动清单",
+                "deliverable": "决策、负责人、截止时间和待确认项",
+                "nextIntent": "knowledge",
+            },
+            {
+                "id": "weekly-report",
+                "title": "结构化周报",
+                "deliverable": "基于真实工作记录生成的进展、风险和下周计划",
+                "nextIntent": "writing",
+            },
+            {
+                "id": "repeatable-sop",
+                "title": "重复工作 SOP",
+                "deliverable": "可复用步骤、输入输出和质量检查表",
+                "nextIntent": "tool",
+            },
+        ),
+    },
+    "job-seeker": {
+        "signals": ("求职", "简历", "面试", "转行", "岗位", "招聘", "job"),
+        "recommendedScenarioId": "job-fit-map",
+        "scenarios": (
+            {
+                "id": "job-fit-map",
+                "title": "岗位匹配地图",
+                "deliverable": "岗位要求、现有证据、能力缺口和补齐顺序",
+                "nextIntent": "knowledge",
+            },
+            {
+                "id": "resume-tailoring",
+                "title": "简历定向改写",
+                "deliverable": "不编造经历的岗位定向简历版本",
+                "nextIntent": "writing",
+            },
+            {
+                "id": "interview-practice",
+                "title": "面试模拟",
+                "deliverable": "10 个高概率问题、回答要点和改进反馈",
+                "nextIntent": "knowledge",
+            },
+        ),
+    },
+    "general": {
+        "signals": (),
+        "recommendedScenarioId": "daily-task-map",
+        "scenarios": (
+            {
+                "id": "daily-task-map",
+                "title": "日常任务机会地图",
+                "deliverable": "从重复、耗时和需要判断的工作中找出 3 个 AI 场景",
+                "nextIntent": "discover",
+            },
+            {
+                "id": "information-to-action",
+                "title": "资料到行动清单",
+                "deliverable": "把零散资料整理成结论、优先级和下一步",
+                "nextIntent": "knowledge",
+            },
+            {
+                "id": "first-draft",
+                "title": "第一个可用草稿",
+                "deliverable": "为当前最重要任务生成一版可继续修改的成果",
+                "nextIntent": "writing",
+            },
+        ),
+    },
+}
+
+RELEVANCE_STOP_TERMS = {
+    "ai",
+    "一个",
+    "不知道",
+    "人工智能",
+    "什么",
+    "使用",
+    "可以",
+    "如何",
+    "帮我",
+    "怎么",
+    "普通人",
+    "自己的",
 }
 
 KNOWLEDGE_FIELDS = (
@@ -133,6 +272,54 @@ def infer_intent(query: str) -> str:
     return "discover"
 
 
+def detect_scenario_profile(query: str) -> str:
+    normalized = query.casefold()
+    for profile, config in SCENARIO_PROFILES.items():
+        if profile == "general":
+            continue
+        if any(signal in normalized for signal in config["signals"]):
+            return profile
+    return "general"
+
+
+def discovery_scenarios(query: str) -> dict[str, Any]:
+    profile = detect_scenario_profile(query)
+    config = SCENARIO_PROFILES[profile]
+    return {
+        "profile": profile,
+        "recommendedScenarioId": config["recommendedScenarioId"],
+        "items": [dict(item) for item in config["scenarios"]],
+    }
+
+
+def relevance_terms(query: str) -> set[str]:
+    normalized = query.casefold()
+    terms = {
+        term
+        for term in re.findall(r"[a-z0-9][a-z0-9.+-]{1,}|[\u4e00-\u9fff]+", normalized)
+        if term not in RELEVANCE_STOP_TERMS
+    }
+    for chinese_sequence in re.findall(r"[\u4e00-\u9fff]+", normalized):
+        for size in (2, 3):
+            terms.update(
+                chinese_sequence[index : index + size]
+                for index in range(len(chinese_sequence) - size + 1)
+            )
+    return {term for term in terms if term not in RELEVANCE_STOP_TERMS}
+
+
+def filter_relevant(items: list[dict[str, Any]], query: str) -> list[dict[str, Any]]:
+    terms = relevance_terms(query)
+    if not terms:
+        return []
+    relevant = []
+    for item in items:
+        searchable = json.dumps(item, ensure_ascii=False).casefold()
+        if any(term in searchable for term in terms):
+            relevant.append(item)
+    return relevant
+
+
 def build_url(base_url: str, path: str, params: dict[str, str]) -> str:
     base = base_url.rstrip("/")
     return f"{base}{path}?{urllib.parse.urlencode(params)}"
@@ -164,7 +351,7 @@ def fetch_json(url: str, timeout: float) -> dict[str, Any]:
         url,
         headers={
             "Accept": "application/json",
-            "User-Agent": "ruhang365-router/0.1 community-read-only",
+            "User-Agent": "ruhang365-router/0.2 community-read-only",
         },
     )
     with urllib.request.urlopen(request, timeout=timeout) as response:
@@ -228,11 +415,19 @@ def error_status(error: urllib.error.HTTPError) -> str:
     return "unavailable"
 
 
-def retrieve_source(name: str, url: str, timeout: float, limit: int) -> dict[str, Any]:
+def retrieve_source(
+    name: str,
+    url: str,
+    timeout: float,
+    limit: int,
+    query: str,
+) -> dict[str, Any]:
     try:
         payload = fetch_json(url, timeout)
         items = PROJECTORS[name](payload, limit)
-        return {"status": "ok", "items": items}
+        relevant_items = filter_relevant(items, query)
+        status = "ok" if relevant_items else "no_relevant_results"
+        return {"status": status, "items": relevant_items}
     except urllib.error.HTTPError as error:
         return {"status": error_status(error), "items": []}
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError):
@@ -244,6 +439,7 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
     intent = infer_intent(query) if args.intent == "auto" else args.intent
     capabilities = list(CAPABILITIES[intent])
     specialists = [dict(item) for item in SPECIALISTS.get(intent, ())]
+    scenarios = discovery_scenarios(query) if intent == "discover" else None
     sources: dict[str, Any] = {}
 
     if args.offline:
@@ -251,7 +447,7 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
     else:
         urls = build_requests(args.base_url, query, intent, args.limit)
         sources = {
-            name: retrieve_source(name, url, args.timeout, args.limit)
+            name: retrieve_source(name, url, args.timeout, args.limit, query)
             for name, url in urls.items()
         }
 
@@ -262,12 +458,13 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
     ]
 
     return {
-        "schemaVersion": "0.1",
+        "schemaVersion": "0.2",
         "query": query,
         "route": {
             "intent": intent,
             "capabilities": capabilities,
             "specialists": specialists,
+            "scenarios": scenarios,
         },
         "sources": sources,
         "warnings": warnings,
@@ -290,6 +487,13 @@ def print_markdown(result: dict[str, Any]) -> None:
         print("\n## 建议专项 Skill")
         for item in route["specialists"]:
             print(f"- `{item['skill']}`：{item['reason']} ({item['repository']})")
+
+    scenarios = route.get("scenarios")
+    if scenarios:
+        print(f"\n## 场景候选（{scenarios['profile']}）")
+        for item in scenarios["items"]:
+            recommended = "，推荐先做" if item["id"] == scenarios["recommendedScenarioId"] else ""
+            print(f"- {item['title']}：{item['deliverable']}（下一意图：{item['nextIntent']}{recommended}）")
 
     labels = {"knowledge": "公开资料", "skills": "Skill 推荐", "prompts": "视觉 Prompt"}
     for source_name, source in result["sources"].items():

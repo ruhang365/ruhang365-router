@@ -33,4 +33,5 @@
 - 请求头只包含 `Accept` 和公开的 `User-Agent`；v0.1 不发送 `Authorization`、Cookie 或模型密钥。
 - 查询为 2–240 个字符，默认 3 条、最多 5 条。
 - 输出顶层记录 `remoteModelCalled=false`、`writePerformed=false`、`credentialsAccepted=false`。
+- 白名单投影后执行本地相关性过滤；没有明显匹配时返回 `no_relevant_results`，不透传热门但无关的结果。
 - 远程错误转换为结构化状态，不打印响应正文、堆栈、请求头或环境变量。
