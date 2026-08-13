@@ -27,7 +27,9 @@ jobs:
           python-version: "3.12"
 
       - name: Read and validate the current RHZL Catalog
-        run: python3 scripts/update_catalog_snapshot.py --url https://rhzl.ruhang365.cn/api/community/catalog
+        run: |
+          echo "previous_digest=$(python3 -c 'import json; print(json.load(open("skills/ruhang365-router/catalog/catalog.json"))["contentDigest"])')" >> "$GITHUB_ENV"
+          python3 scripts/update_catalog_snapshot.py --url https://rhzl.ruhang365.cn/api/community/catalog
 
       - name: Validate updated Skill distribution
         run: ./scripts/validate.sh
@@ -37,6 +39,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          current_digest="$(python3 -c 'import json; print(json.load(open("skills/ruhang365-router/catalog/catalog.json"))["contentDigest"])')"
+          if [ "$previous_digest" = "$current_digest" ]; then
+            echo "Router snapshot digest already matches the current RHZL Catalog."
+            exit 0
+          fi
           if git diff --quiet; then
             echo "Router snapshot already matches the current RHZL Catalog."
             exit 0
