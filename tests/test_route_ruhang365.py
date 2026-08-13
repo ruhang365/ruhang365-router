@@ -38,6 +38,12 @@ def arguments(**overrides):
         "timeout": 12.0,
         "format": "json",
         "offline": True,
+        "identity": None,
+        "goal": None,
+        "experience": None,
+        "constraint": [],
+        "deliverable": None,
+        "catalog": None,
     }
     values.update(overrides)
     return argparse.Namespace(**values)
@@ -71,8 +77,48 @@ class IntentTests(unittest.TestCase):
         self.assertEqual(len(scenarios["items"]), 3)
         self.assertEqual(scenarios["items"][0]["nextIntent"], "writing")
 
+    def test_discovers_current_creator_industry_workflow_without_copying_rhzl_content(self):
+        scenarios = router.discovery_scenarios(
+            "我准备转行做自媒体，先用一小时吃透这个行业"
+        )
+
+        self.assertEqual(
+            scenarios["recommendedScenarioId"],
+            "creator-ip-industry-cognition",
+        )
+        self.assertEqual(
+            scenarios["items"][0]["workflowIds"],
+            ["r365.workflow.creator-ip-industry-cognition"],
+        )
+
 
 class RequestContractTests(unittest.TestCase):
+    def test_route_sends_no_user_profile_or_query_to_rhzl(self):
+        online_args = arguments(
+            offline=False,
+            query="我的私人选题",
+            identity="creator",
+            goal="行业认知",
+            constraint=["低预算"],
+            deliverable="行业地图",
+        )
+        snapshot = router.load_catalog()
+        with mock.patch.object(
+            router,
+            "resolve_catalog",
+            return_value={"catalog": snapshot, "source": "online", "warning": None},
+        ) as resolve, mock.patch.object(router, "retrieve_source") as retrieve:
+            result = router.route_task(online_args)
+
+        resolve.assert_called_once_with(
+            online_args.base_url,
+            snapshot_path=online_args.catalog,
+            timeout=online_args.timeout,
+            offline=False,
+        )
+        retrieve.assert_not_called()
+        self.assertEqual(result["route"]["communityMatches"]["catalogSource"], "online")
+
     def test_rejects_invalid_query_limit_timeout_and_credentials(self):
         with self.assertRaisesRegex(ValueError, "2 to 240"):
             router.validate_args(arguments(query="x"))
@@ -84,6 +130,10 @@ class RequestContractTests(unittest.TestCase):
             router.validate_args(arguments(base_url="https://user:secret@example.com"))
         with self.assertRaisesRegex(ValueError, "query or fragment"):
             router.validate_args(arguments(base_url="https://example.com?token=secret"))
+        with self.assertRaisesRegex(ValueError, "constraint may be repeated"):
+            router.validate_args(arguments(constraint=["x"] * 11))
+        with self.assertRaisesRegex(ValueError, "identity must contain"):
+            router.validate_args(arguments(identity=" "))
 
     def test_build_requests_contains_only_public_search_parameters(self):
         requests = router.build_requests(
@@ -219,6 +269,7 @@ class RoutingTests(unittest.TestCase):
         self.assertFalse(result["execution"]["remoteModelCalled"])
         self.assertFalse(result["execution"]["writePerformed"])
         self.assertFalse(result["execution"]["credentialsAccepted"])
+        self.assertEqual(result["warnings"], [])
 
     def test_writing_route_recommends_public_specialist(self):
         result = router.route_task(
@@ -229,16 +280,22 @@ class RoutingTests(unittest.TestCase):
         self.assertEqual(specialist["skill"], "ai-writing-humanizer")
         self.assertIn("github.com/ruhang365/", specialist["repository"])
 
-    def test_retrieval_failure_becomes_structured_warning(self):
+    def test_catalog_failure_becomes_structured_offline_fallback_warning(self):
         online_args = arguments(offline=False, intent="knowledge")
+        snapshot = router.load_catalog()
         with mock.patch.object(
             router,
-            "retrieve_source",
-            return_value={"status": "unavailable", "items": []},
+            "resolve_catalog",
+            return_value={
+                "catalog": snapshot,
+                "source": "offline_fallback",
+                "warning": "Community Catalog API unavailable; using stable snapshot.",
+            },
         ):
             result = router.route_task(online_args)
 
-        self.assertEqual(result["sources"]["knowledge"]["status"], "unavailable")
+        self.assertEqual(result["route"]["communityMatches"]["catalogSource"], "offline_fallback")
+        self.assertEqual(result["sources"]["knowledge"]["status"], "catalog_local_match")
         self.assertEqual(len(result["warnings"]), 1)
 
     def test_offline_cli_returns_valid_json(self):
@@ -257,8 +314,65 @@ class RoutingTests(unittest.TestCase):
 
         self.assertEqual(process.returncode, 0, process.stderr)
         payload = json.loads(process.stdout)
-        self.assertEqual(payload["schemaVersion"], "0.2")
+        self.assertEqual(payload["schemaVersion"], "0.3")
         self.assertEqual(payload["route"]["intent"], "discover")
+
+    def test_offline_cli_exposes_content_driven_cross_carrier_matches(self):
+        process = subprocess.run(
+            [
+                sys.executable,
+                str(ROUTER_SCRIPT),
+                "--query",
+                "为咖啡店做一周获客内容",
+                "--identity",
+                "local-business",
+                "--goal",
+                "content-growth",
+                "--experience",
+                "beginner",
+                "--constraint",
+                "free-only",
+                "--deliverable",
+                "weekly-content-kit",
+                "--offline",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(process.returncode, 0, process.stderr)
+        payload = json.loads(process.stdout)
+        matches = payload["route"]["communityMatches"]
+        self.assertEqual(matches["catalogVersion"], "1.0.0")
+        self.assertEqual(
+            matches["scenarios"][0]["id"],
+            "r365.scenario.weekly-content-kit",
+        )
+
+    def test_markdown_cli_exposes_stable_catalog_ids(self):
+        process = subprocess.run(
+            [
+                sys.executable,
+                str(ROUTER_SCRIPT),
+                "--query",
+                "为咖啡店做一周获客内容",
+                "--identity",
+                "local-business",
+                "--deliverable",
+                "weekly-content-kit",
+                "--format",
+                "markdown",
+                "--offline",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(process.returncode, 0, process.stderr)
+        self.assertIn("r365.scenario.weekly-content-kit", process.stdout)
+        self.assertIn("r365.workflow.weekly-content-kit", process.stdout)
 
 
 class RepositoryContractTests(unittest.TestCase):
@@ -300,8 +414,32 @@ class RepositoryContractTests(unittest.TestCase):
                 / "ruhang365-router"
                 / "SKILL.md"
             )
+            installed_router = installed.parent / "scripts" / "route_ruhang365.py"
             self.assertEqual(first.returncode, 0, first.stderr)
             self.assertTrue(installed.is_file())
+            with tempfile.TemporaryDirectory() as unrelated_directory:
+                routed = subprocess.run(
+                    [
+                        sys.executable,
+                        str(installed_router),
+                        "--query",
+                        "为咖啡店做一周获客内容",
+                        "--identity",
+                        "local-business",
+                        "--deliverable",
+                        "weekly-content-kit",
+                        "--offline",
+                    ],
+                    cwd=unrelated_directory,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+            self.assertEqual(routed.returncode, 0, routed.stderr)
+            self.assertEqual(
+                json.loads(routed.stdout)["route"]["communityMatches"]["scenarios"][0]["id"],
+                "r365.scenario.weekly-content-kit",
+            )
             self.assertEqual(second.returncode, 3)
             self.assertIn("destination already exists", second.stderr)
 

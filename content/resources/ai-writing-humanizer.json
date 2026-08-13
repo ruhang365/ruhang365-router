@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.resource.ai-writing-humanizer",
+  "type": "resource",
+  "slug": "ai-writing-humanizer",
+  "version": "1.0.0",
+  "title": "AI Writing Humanizer Skill",
+  "summary": "在保留事实、立场和作者声音的前提下，减少中文内容中的模板化 AI 表达。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/ai-writing-humanizer.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "rights": {"status": "full"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2027-02-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["creator", "local-business", "content-operator"],
+    "goals": ["writing", "content-growth", "rewrite"],
+    "experience_levels": ["beginner", "intermediate", "advanced"],
+    "constraints": ["no-private-data", "cross-carrier"],
+    "excluded_constraints": ["fabricate-facts"],
+    "deliverables": ["article-draft", "weekly-content-kit", "natural-chinese-copy"]
+  },
+  "completion_criteria": [
+    "事实与来源边界未被改写。",
+    "作者立场和必要不确定性仍然清楚。",
+    "交付文本可由用户继续编辑和验收。"
+  ],
+  "tags": ["Skill", "中文写作", "改写", "内容运营"],
+  "match_terms": ["公众号", "小红书", "文章", "文案", "改写", "去 AI 味"],
+  "resource_kind": "skill",
+  "purpose": "把已核实素材整理为更自然、保留作者判断的中文内容。",
+  "capabilities": ["writing", "rewriting", "voice-preservation"],
+  "repository_url": "https://github.com/ruhang365/ruhang365-ai-writing-humanizer-skill",
+  "source_url": "https://github.com/ruhang365/ruhang365-ai-writing-humanizer-skill",
+  "resource_version": "0c62b83cc20e",
+  "verified_at": "2026-08-12",
+  "upstream_license": "CC-BY-4.0"
+}

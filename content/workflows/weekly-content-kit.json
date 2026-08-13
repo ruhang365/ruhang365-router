@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.workflow.weekly-content-kit",
+  "type": "workflow",
+  "slug": "weekly-content-kit",
+  "version": "1.0.0",
+  "title": "一周获客内容包 Workflow",
+  "summary": "从顾客问题与真实卖点出发，收敛七条选题、首篇文案和封面方向。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/weekly-content-kit.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "rights": {"status": "full"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2027-02-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["local-business", "small-business-owner"],
+    "goals": ["content-growth", "customer-acquisition"],
+    "experience_levels": ["beginner", "intermediate"],
+    "constraints": ["free-only", "low-budget", "no-private-data", "cross-carrier"],
+    "excluded_constraints": [],
+    "deliverables": ["weekly-content-kit"]
+  },
+  "completion_criteria": [
+    "七条选题、首篇文案和封面方向均已形成。",
+    "事实、优惠和产品信息均来自用户确认材料。",
+    "下一步发布或复核动作明确。"
+  ],
+  "tags": ["内容运营", "本地生活", "Workflow"],
+  "match_terms": ["咖啡店", "门店", "一周内容", "获客内容", "公众号", "小红书"],
+  "goal": "在约 60 分钟内形成一套可继续发布的一周获客内容包。",
+  "estimated_minutes": 60,
+  "scenario_ids": ["r365.scenario.weekly-content-kit"],
+  "nodes": [
+    {
+      "id": "collect-facts",
+      "title": "收集真实卖点与顾客问题",
+      "action": "列出目标顾客、三个高频问题、三个已确认卖点和本周目标。",
+      "resource_ids": ["r365.resource.public-knowledge-search"],
+      "prompt_ids": [],
+      "completion_criteria": ["目标顾客、问题、卖点和目标均有真实依据。"]
+    },
+    {
+      "id": "plan-seven-topics",
+      "title": "规划七条选题",
+      "action": "让七条内容分别承担解释、证明、比较、答疑和行动引导。",
+      "resource_ids": ["r365.resource.ai-writing-humanizer"],
+      "prompt_ids": [],
+      "completion_criteria": ["七条选题不重复，并分别对应顾客问题。"]
+    },
+    {
+      "id": "draft-and-visual",
+      "title": "完成首篇文案与封面方向",
+      "action": "完成首篇草稿，再确定用途、比例、准确文字和视觉重点。",
+      "resource_ids": ["r365.resource.ai-writing-humanizer", "r365.resource.visual-prompt-router"],
+      "prompt_ids": ["r365.prompt.local-business-visual-brief"],
+      "completion_criteria": ["首篇草稿可编辑，封面方向可执行且没有虚构信息。"]
+    }
+  ]
+}

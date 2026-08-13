@@ -6,12 +6,25 @@ from __future__ import annotations
 import argparse
 import json
 import os
+from pathlib import Path
 import re
 import sys
 import urllib.error
 import urllib.parse
 import urllib.request
 from typing import Any
+
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from community_catalog import (  # noqa: E402
+    DEFAULT_CATALOG_PATH,
+    load_catalog,
+    match_catalog,
+    resolve_catalog,
+)
 
 
 DEFAULT_BASE_URL = "https://rhzl.ruhang365.cn"
@@ -23,146 +36,6 @@ CAPABILITIES = {
     "tool": ("knowledge", "skills"),
     "knowledge": ("knowledge",),
 }
-SPECIALISTS = {
-    "writing": (
-        {
-            "skill": "ai-writing-humanizer",
-            "repository": "https://github.com/ruhang365/ruhang365-ai-writing-humanizer-skill",
-            "reason": "Preserve facts and author voice while removing templated Chinese AI writing patterns.",
-        },
-    ),
-    "visual": (
-        {
-            "skill": "ruhang365-visual-prompt-router",
-            "repository": "https://github.com/fzy2012/ruhang365-visual-prompt-skill",
-            "reason": "Retrieve rights-aware visual references and prepare a task-specific image prompt.",
-        },
-    ),
-}
-
-SCENARIO_PROFILES = {
-    "local-business": {
-        "signals": ("门店", "小店", "咖啡", "餐厅", "零售", "工作室", "local shop"),
-        "recommendedScenarioId": "weekly-content-kit",
-        "scenarios": (
-            {
-                "id": "weekly-content-kit",
-                "title": "一周获客内容包",
-                "deliverable": "7 条可发布选题、1 篇完整文案和 1 个封面方向",
-                "nextIntent": "writing",
-            },
-            {
-                "id": "customer-feedback-review",
-                "title": "顾客反馈整理",
-                "deliverable": "把评论分成高频问题、优势和三条改进动作",
-                "nextIntent": "knowledge",
-            },
-            {
-                "id": "product-visual-kit",
-                "title": "产品视觉素材包",
-                "deliverable": "3 个海报方向和可直接生成的任务专属 Prompt",
-                "nextIntent": "visual",
-            },
-        ),
-    },
-    "creator": {
-        "signals": ("自媒体", "创作者", "博主", "公众号", "小红书", "视频号", "newsletter"),
-        "recommendedScenarioId": "topic-to-draft",
-        "scenarios": (
-            {
-                "id": "topic-to-draft",
-                "title": "选题到首稿",
-                "deliverable": "3 个选题、1 个大纲和 1 篇保留作者判断的首稿",
-                "nextIntent": "writing",
-            },
-            {
-                "id": "cross-platform-pack",
-                "title": "一稿多平台素材包",
-                "deliverable": "同一观点的公众号、小红书和短视频脚本版本",
-                "nextIntent": "writing",
-            },
-            {
-                "id": "cover-directions",
-                "title": "内容封面方向",
-                "deliverable": "3 个封面方向和 1 条可执行视觉 Prompt",
-                "nextIntent": "visual",
-            },
-        ),
-    },
-    "office": {
-        "signals": ("办公", "会议", "周报", "表格", "邮件", "汇报", "同事", "团队"),
-        "recommendedScenarioId": "meeting-actions",
-        "scenarios": (
-            {
-                "id": "meeting-actions",
-                "title": "会议行动清单",
-                "deliverable": "决策、负责人、截止时间和待确认项",
-                "nextIntent": "knowledge",
-            },
-            {
-                "id": "weekly-report",
-                "title": "结构化周报",
-                "deliverable": "基于真实工作记录生成的进展、风险和下周计划",
-                "nextIntent": "writing",
-            },
-            {
-                "id": "repeatable-sop",
-                "title": "重复工作 SOP",
-                "deliverable": "可复用步骤、输入输出和质量检查表",
-                "nextIntent": "tool",
-            },
-        ),
-    },
-    "job-seeker": {
-        "signals": ("求职", "简历", "面试", "转行", "岗位", "招聘", "job"),
-        "recommendedScenarioId": "job-fit-map",
-        "scenarios": (
-            {
-                "id": "job-fit-map",
-                "title": "岗位匹配地图",
-                "deliverable": "岗位要求、现有证据、能力缺口和补齐顺序",
-                "nextIntent": "knowledge",
-            },
-            {
-                "id": "resume-tailoring",
-                "title": "简历定向改写",
-                "deliverable": "不编造经历的岗位定向简历版本",
-                "nextIntent": "writing",
-            },
-            {
-                "id": "interview-practice",
-                "title": "面试模拟",
-                "deliverable": "10 个高概率问题、回答要点和改进反馈",
-                "nextIntent": "knowledge",
-            },
-        ),
-    },
-    "general": {
-        "signals": (),
-        "recommendedScenarioId": "daily-task-map",
-        "scenarios": (
-            {
-                "id": "daily-task-map",
-                "title": "日常任务机会地图",
-                "deliverable": "从重复、耗时和需要判断的工作中找出 3 个 AI 场景",
-                "nextIntent": "discover",
-            },
-            {
-                "id": "information-to-action",
-                "title": "资料到行动清单",
-                "deliverable": "把零散资料整理成结论、优先级和下一步",
-                "nextIntent": "knowledge",
-            },
-            {
-                "id": "first-draft",
-                "title": "第一个可用草稿",
-                "deliverable": "为当前最重要任务生成一版可继续修改的成果",
-                "nextIntent": "writing",
-            },
-        ),
-    },
-}
-
 RELEVANCE_STOP_TERMS = {
     "ai",
     "一个",
@@ -231,6 +104,22 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--timeout", type=float, default=12.0)
     parser.add_argument("--format", choices=("json", "markdown"), default="json")
+    parser.add_argument("--identity", help="Role or identity used for Community matching.")
+    parser.add_argument("--goal", help="Structured goal used for Community matching.")
+    parser.add_argument("--experience", help="Experience level used for Community matching.")
+    parser.add_argument(
+        "--constraint",
+        action="append",
+        default=[],
+        help="Repeatable constraint used for Community matching.",
+    )
+    parser.add_argument("--deliverable", help="Desired deliverable used for Community matching.")
+    parser.add_argument(
+        "--catalog",
+        type=Path,
+        default=DEFAULT_CATALOG_PATH,
+        help="Versioned Community catalog JSON path.",
+    )
     parser.add_argument(
         "--offline",
         action="store_true",
@@ -255,6 +144,15 @@ def validate_args(args: argparse.Namespace) -> None:
         raise ValueError("base URL must not embed credentials")
     if parsed.query or parsed.fragment:
         raise ValueError("base URL must not include a query or fragment")
+    for field in ("identity", "goal", "experience", "deliverable"):
+        value = getattr(args, field, None)
+        if value is not None and (not isinstance(value, str) or not 1 <= len(value.strip()) <= 120):
+            raise ValueError(f"{field} must contain 1 to 120 characters")
+    constraints = getattr(args, "constraint", []) or []
+    if not isinstance(constraints, list) or len(constraints) > 10:
+        raise ValueError("constraint may be repeated at most 10 times")
+    if any(not isinstance(value, str) or not 1 <= len(value.strip()) <= 80 for value in constraints):
+        raise ValueError("each constraint must contain 1 to 80 characters")
 
 
 def infer_intent(query: str) -> str:
@@ -272,24 +170,80 @@ def infer_intent(query: str) -> str:
     return "discover"
 
 
-def detect_scenario_profile(query: str) -> str:
-    normalized = query.casefold()
-    for profile, config in SCENARIO_PROFILES.items():
-        if profile == "general":
-            continue
-        if any(signal in normalized for signal in config["signals"]):
-            return profile
-    return "general"
-
-
-def discovery_scenarios(query: str) -> dict[str, Any]:
-    profile = detect_scenario_profile(query)
-    config = SCENARIO_PROFILES[profile]
+def build_matching_profile(args: argparse.Namespace, query: str) -> dict[str, Any]:
     return {
-        "profile": profile,
-        "recommendedScenarioId": config["recommendedScenarioId"],
-        "items": [dict(item) for item in config["scenarios"]],
+        "identity": getattr(args, "identity", None) or "",
+        "goal": getattr(args, "goal", None) or query,
+        "experience": getattr(args, "experience", None) or "",
+        "constraints": getattr(args, "constraint", []) or [],
+        "deliverable": getattr(args, "deliverable", None) or "",
     }
+
+
+def legacy_scenarios(matches: dict[str, Any]) -> dict[str, Any]:
+    scenario_matches = matches["scenarios"]
+    if not scenario_matches:
+        return {
+            "profile": "general",
+            "recommendedScenarioId": None,
+            "items": [],
+            "catalogVersion": matches["catalogVersion"],
+            "contentDigest": matches["contentDigest"],
+        }
+    recommended = scenario_matches[0]
+    identities = recommended.get("applicableIdentities") or ["general"]
+    return {
+        "profile": identities[0],
+        "recommendedScenarioId": recommended["slug"],
+        "items": [
+            {
+                "id": item["slug"],
+                "stableId": item["id"],
+                "version": item["version"],
+                "title": item["title"],
+                "deliverable": item["deliverable"],
+                "nextIntent": item["nextIntent"],
+                "workflowIds": item["workflowIds"],
+                "completionCriteria": item["completionCriteria"],
+                "score": item["score"],
+            }
+            for item in scenario_matches
+        ],
+        "catalogVersion": matches["catalogVersion"],
+        "contentDigest": matches["contentDigest"],
+    }
+
+
+def discovery_scenarios(
+    query: str,
+    catalog_path: str | Path | None = None,
+) -> dict[str, Any]:
+    catalog = load_catalog(catalog_path)
+    matches = match_catalog(
+        catalog,
+        {
+            "identity": "",
+            "goal": query,
+            "experience": "",
+            "constraints": [],
+            "deliverable": "",
+        },
+    )
+    return legacy_scenarios(matches)
+
+
+def specialist_matches(matches: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        {
+            "id": item["id"],
+            "skill": item["slug"],
+            "version": item["resourceVersion"],
+            "repository": item["repositoryUrl"],
+            "reason": item["purpose"],
+        }
+        for item in matches["resources"]
+        if item["resourceKind"] == "skill" and item.get("repositoryUrl")
+    ]
 
 
 def relevance_terms(query: str) -> set[str]:
@@ -351,7 +305,7 @@ def fetch_json(url: str, timeout: float) -> dict[str, Any]:
         url,
         headers={
             "Accept": "application/json",
-            "User-Agent": "ruhang365-router/0.2 community-read-only",
+            "User-Agent": "ruhang365-router/0.3 legacy-public-read-only",
         },
     )
     with urllib.request.urlopen(request, timeout=timeout) as response:
@@ -438,33 +392,36 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
     query = args.query.strip()
     intent = infer_intent(query) if args.intent == "auto" else args.intent
     capabilities = list(CAPABILITIES[intent])
-    specialists = [dict(item) for item in SPECIALISTS.get(intent, ())]
-    scenarios = discovery_scenarios(query) if intent == "discover" else None
+    resolution = resolve_catalog(
+        args.base_url,
+        snapshot_path=getattr(args, "catalog", None),
+        timeout=args.timeout,
+        offline=args.offline,
+    )
+    catalog = resolution["catalog"]
+    community_matches = match_catalog(
+        catalog,
+        build_matching_profile(args, query),
+        limit_per_type=args.limit,
+    )
+    community_matches["catalogSource"] = resolution["source"]
+    specialists = specialist_matches(community_matches)
+    scenarios = legacy_scenarios(community_matches) if intent == "discover" else None
     sources: dict[str, Any] = {}
 
-    if args.offline:
-        sources = {name: {"status": "offline", "items": []} for name in capabilities}
-    else:
-        urls = build_requests(args.base_url, query, intent, args.limit)
-        sources = {
-            name: retrieve_source(name, url, args.timeout, args.limit, query)
-            for name, url in urls.items()
-        }
-
-    warnings = [
-        f"{name} retrieval is {source['status']}; use the local route only."
-        for name, source in sources.items()
-        if source["status"] != "ok"
-    ]
+    source_status = "offline" if args.offline else "catalog_local_match"
+    sources = {name: {"status": source_status, "items": []} for name in capabilities}
+    warnings = [resolution["warning"]] if resolution["warning"] else []
 
     return {
-        "schemaVersion": "0.2",
+        "schemaVersion": "0.3",
         "query": query,
         "route": {
             "intent": intent,
             "capabilities": capabilities,
             "specialists": specialists,
             "scenarios": scenarios,
+            "communityMatches": community_matches,
         },
         "sources": sources,
         "warnings": warnings,
@@ -494,6 +451,22 @@ def print_markdown(result: dict[str, Any]) -> None:
         for item in scenarios["items"]:
             recommended = "，推荐先做" if item["id"] == scenarios["recommendedScenarioId"] else ""
             print(f"- {item['title']}：{item['deliverable']}（下一意图：{item['nextIntent']}{recommended}）")
+
+    community_matches = route["communityMatches"]
+    print(f"\n## Community Catalog 匹配（{community_matches['catalogVersion']}）")
+    group_labels = {
+        "scenarios": "Scenario",
+        "workflows": "Workflow",
+        "resources": "Resource",
+        "prompts": "Prompt",
+    }
+    for group, label in group_labels.items():
+        for item in community_matches[group]:
+            reasons = ", ".join(item["matchReasons"]) or "catalog"
+            print(
+                f"- {label}：{item['title']} "
+                f"(`{item['id']}` @ `{item['version']}`；匹配：{reasons})"
+            )
 
     labels = {"knowledge": "公开资料", "skills": "Skill 推荐", "prompts": "视觉 Prompt"}
     for source_name, source in result["sources"].items():

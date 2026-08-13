@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.resource.rhzl-creator-ip-industry-cognition",
+  "type": "resource",
+  "slug": "rhzl-creator-ip-industry-cognition",
+  "version": "1.0.0",
+  "title": "RHZL 自媒体 / IP 行业认知运行时",
+  "summary": "承载当前五步 Workflow 的详细证据、节点状态、Result 与用户确认后的 Asset；公开 Catalog 不复制这些运行时数据。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/rhzl-creator-ip-industry-cognition.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "rights": {"status": "full"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2026-11-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["creator", "career-switcher", "brand-content-operator"],
+    "goals": ["industry-cognition", "career-entry", "creator-positioning"],
+    "experience_levels": ["beginner", "intermediate"],
+    "constraints": ["account-required", "stateful-web-runtime", "no-guaranteed-outcome"],
+    "excluded_constraints": ["offline-only"],
+    "deliverables": ["industry-cognition-map", "seven-day-validation-task"]
+  },
+  "completion_criteria": [
+    "用户完成五个节点并形成行业认知地图。",
+    "用户明确选择唯一七天验证任务。",
+    "只有用户确认后才把 Result 保存为 Asset。"
+  ],
+  "tags": ["RHZL", "Web", "自媒体", "行业认知", "Workflow 运行时"],
+  "match_terms": ["入行之路", "自媒体", "个人IP", "行业认知地图", "七天验证"],
+  "resource_kind": "service",
+  "purpose": "在 RHZL 中执行带状态恢复、证据包和成果保存的完整行业认知 Workflow。",
+  "capabilities": ["workflow-runtime", "state-continuity", "result-and-asset"],
+  "repository_url": null,
+  "source_url": "https://rhzl.ruhang365.cn/core-loop?entry=creator-ip-industry-cognition",
+  "resource_version": "current-production-contract",
+  "upstream_license": "service-terms"
+}

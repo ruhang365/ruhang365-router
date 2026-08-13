@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.workflow.product-visual-kit",
+  "type": "workflow",
+  "slug": "product-visual-kit",
+  "version": "1.0.0",
+  "title": "产品视觉素材包 Workflow",
+  "summary": "锁定真实产品事实后，生成三个有取舍的视觉方向和一个可执行任务 Prompt。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/product-visual-kit.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "rights": {"status": "full"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2027-02-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["local-business", "small-business-owner"],
+    "goals": ["visual-content", "product-promotion"],
+    "experience_levels": ["beginner", "intermediate"],
+    "constraints": ["low-budget", "no-private-data", "cross-carrier"],
+    "excluded_constraints": ["missing-product-facts"],
+    "deliverables": ["product-visual-kit"]
+  },
+  "completion_criteria": [
+    "产品名称、卖点、限制和准确文字已经确认。",
+    "三个方向在构图或情绪上有明显取舍。",
+    "最终 Prompt 包含用途、比例、文字、禁用项和核验要求。"
+  ],
+  "tags": ["产品视觉", "海报", "生图", "Workflow"],
+  "match_terms": ["产品海报", "门店视觉", "商品图", "封面", "中文排版"],
+  "goal": "形成三个可比较的视觉方向和一条准确、可执行的生成 Prompt。",
+  "estimated_minutes": 30,
+  "scenario_ids": ["r365.scenario.product-visual-kit"],
+  "nodes": [
+    {
+      "id": "lock-product-facts",
+      "title": "锁定产品事实与用途",
+      "action": "确认产品名称、卖点、准确文字、目标平台、比例和禁用项。",
+      "resource_ids": [],
+      "prompt_ids": [],
+      "completion_criteria": ["用途、比例、准确文字和禁用项齐全。"]
+    },
+    {
+      "id": "compare-directions",
+      "title": "比较三个视觉方向",
+      "action": "分别给出信息型、场景型和品牌型方向，说明各自取舍。",
+      "resource_ids": ["r365.resource.visual-prompt-router"],
+      "prompt_ids": ["r365.prompt.local-business-visual-brief"],
+      "completion_criteria": ["三个方向用途清楚且没有互相重复。"]
+    },
+    {
+      "id": "finalize-prompt",
+      "title": "确定最终任务 Prompt",
+      "action": "把选中方向编译成一条包含准确文字与核验要求的 Prompt。",
+      "resource_ids": ["r365.resource.visual-prompt-router"],
+      "prompt_ids": ["r365.prompt.local-business-visual-brief"],
+      "completion_criteria": ["Prompt 可直接交给支持的视觉工具或设计师。"]
+    }
+  ]
+}

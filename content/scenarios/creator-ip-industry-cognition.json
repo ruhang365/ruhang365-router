@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.scenario.creator-ip-industry-cognition",
+  "type": "scenario",
+  "slug": "creator-ip-industry-cognition",
+  "version": "1.0.0",
+  "title": "一小时吃透自媒体 / IP 行业",
+  "summary": "在投入内容生产前，用公开结构和 RHZL 当前 Workflow 建立行业认知并选择一个七天真实验证任务。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/creator-ip-industry-cognition.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "rights": {"status": "full"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2026-11-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["creator", "career-switcher", "brand-content-operator"],
+    "goals": ["industry-cognition", "career-entry", "creator-positioning"],
+    "experience_levels": ["beginner", "intermediate"],
+    "constraints": ["evidence-aware", "no-guaranteed-outcome", "cross-carrier"],
+    "excluded_constraints": ["guaranteed-growth-required"],
+    "deliverables": ["industry-cognition-map", "seven-day-validation-task"]
+  },
+  "completion_criteria": [
+    "行业边界、价值链、核心机制与能力缺口均已形成判断。",
+    "三条可能路径包含取舍、风险和待验证问题。",
+    "只选择一个七天内可观察结果的验证任务。"
+  ],
+  "tags": ["自媒体", "个人 IP", "行业认知", "职业转型"],
+  "match_terms": ["自媒体", "个人IP", "IP 行业", "一小时吃透行业", "转行创作者", "行业认知地图"],
+  "deliverable": "行业认知地图 + 唯一 7 天真实验证任务",
+  "next_intent": "knowledge",
+  "recommendation_weight": 20,
+  "workflow_ids": ["r365.workflow.creator-ip-industry-cognition"]
+}

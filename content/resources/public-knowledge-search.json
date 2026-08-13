@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.resource.public-knowledge-search",
+  "type": "resource",
+  "slug": "public-knowledge-search",
+  "version": "1.0.0",
+  "title": "入行365公开知识检索",
+  "summary": "通过公开只读接口检索少量、与当前任务明显相关的知识资产摘要。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/public-knowledge-search.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "rights": {"status": "full"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2026-11-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["creator", "local-business", "office-worker", "job-seeker"],
+    "goals": ["research", "knowledge", "content-growth", "customer-insight"],
+    "experience_levels": ["beginner", "intermediate", "advanced"],
+    "constraints": ["read-only", "no-private-data", "cross-carrier"],
+    "excluded_constraints": ["offline-only", "private-source-required"],
+    "deliverables": ["evidence-list", "weekly-content-kit", "customer-feedback-review"]
+  },
+  "completion_criteria": [
+    "查询只包含完成任务所需的短语。",
+    "只保留公开白名单字段和明显相关结果。",
+    "服务不可用时明确降级，不虚构检索结果。"
+  ],
+  "tags": ["知识", "公开接口", "只读", "检索"],
+  "match_terms": ["资料", "知识", "教程", "研究", "证据", "入行之路"],
+  "resource_kind": "knowledge",
+  "purpose": "为当前 Workflow 节点补充少量公开证据和下一步材料。",
+  "capabilities": ["public-search", "evidence-retrieval"],
+  "repository_url": null,
+  "source_url": "https://rhzl.ruhang365.cn/api/knowledge/search",
+  "resource_version": "public-v1",
+  "upstream_license": "per-result"
+}

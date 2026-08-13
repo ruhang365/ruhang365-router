@@ -9,37 +9,43 @@ description: Diagnose an AI task, discover practical AI application scenarios, r
 
 ## 工作流
 
-1. 从用户描述中提取目标、对象、交付物、平台和限制。信息不足时最多问一个会改变路线的问题。
+1. 从用户描述中提取身份、目标、经验、约束、期望交付物和平台。信息不足时最多问一个会改变路线的问题。
 2. 把任务归入 `discover`、`writing`、`visual`、`tool` 或 `knowledge`。拿不准时使用 `discover`。
 3. 运行只读路由脚本：
 
    ```bash
    python3 "$SKILL_DIR/scripts/route_ruhang365.py" \
      --query "我不知道 AI 能帮我的小店做什么" \
+     --identity local-business \
+     --goal customer-acquisition \
+     --experience beginner \
+     --constraint low-budget \
+     --deliverable weekly-content-kit \
      --intent discover \
      --format markdown
    ```
 
-4. `discover` 任务先使用本地场景候选和推荐起点，再把远程结果作为补充证据。普通任务最多使用 3 条知识、3 个 Skill 和 1 条视觉 Prompt；不得遍历或导出整个资料库。
-5. 路由到专项 Skill：中文公开写作优先 `ai-writing-humanizer`，视觉生成或改图优先 `ruhang365-visual-prompt-router`。未安装专项 Skill 时，提供仓库链接和本地可完成的替代方案，不得自动安装。
+4. 先请求 RHZL 的公开 Catalog API；请求只含固定 URL、`Accept` 和公开 `User-Agent`，不发送用户问题或 Profile。Schema、版本和摘要有效时在线消费；超时、5xx、无效 JSON、未知 Schema 或摘要不匹配时自动使用随 Skill 安装的稳定快照并标记 `offline_fallback`。在线和离线都用同一套本地匹配算法。
+5. 专项 Skill 的稳定 ID、版本、适用性与仓库链接以 Catalog 的 Resource 为准。未安装专项 Skill 时，提供仓库链接和本地可完成的替代方案，不得自动安装。
 6. 交付用户要求的成果，例如场景清单、执行步骤、文章、视觉 Prompt 或工具选择建议。不要把检索结果列表当作最终交付。
 7. 说明使用了哪些公开结果、哪些能力未调用，以及仍需用户决定的事项。
 
 ## 路由规则
 
-- 用户不知道 AI 能做什么：优先给 3 个与其身份和目标匹配的场景，并推荐一个当天可完成的首个成果。
+- 用户不知道 AI 能做什么：最多给 3 个与其身份和目标匹配的已收录场景，并推荐一个当天可完成的首个成果；不足 3 个时如实返回，不补造候选。
 - 写作任务：保留用户立场和事实边界；需要公开发布时路由到 `ai-writing-humanizer`。
 - 视觉任务：先确定用途、比例和准确文字；需要案例检索时路由到 `ruhang365-visual-prompt-router`。
 - 工具选择：围绕待完成的任务比较工具，不输出脱离场景的排行榜。
 - 知识学习：返回最少的学习材料和下一步练习，不把用户送进资料堆。
 
-详细意图、专项 Skill 注册表和交付合同见 `references/routing-policy.md`。场景 Profile 见 `references/scenario-discovery.md`。接口字段、错误语义和公开投影见 `references/api-contracts.md`。
+详细意图和交付合同见 `references/routing-policy.md`。内容驱动的场景匹配见 `references/scenario-discovery.md`。Catalog、接口字段、错误语义和公开投影见 `references/api-contracts.md`。
 
 ## 执行边界
 
-- 只调用公开、只读的 Community 接口。v0.1 不接收、读取、存储或传输会员 Token、API Key、Cookie 或登录凭证。
-- 查询只包含完成检索所需的短语；不得发送图片、完整文章、客户资料、账号信息或其他私人素材。
+- 只调用无鉴权、只读的 `/api/community/catalog`。当前公开核心不接收、读取、存储或传输会员 Token，也不接收用户问题、Profile、API Key、Cookie 或登录凭证。
+- 身份、目标、经验、约束、交付物和原始问题全部在本地匹配；不得发送图片、完整文章、客户资料、账号信息或其他私人素材。
 - 仅使用客户端白名单字段。即使服务返回额外内部字段，也不得展示、缓存或据此推断会员内容。
+- Community Catalog 只包含 Supabase 当前已发布 release 的公开投影；Router PR 只是离线快照，不得反向覆盖 Supabase。
 - `rights.status=full` 的 Prompt 可以按许可证改写；`reference_only` 只能使用标题、摘要、分类和来源，禁止补全或反推原文。
 - 服务失败时保留离线路由并明确标记远程检索不可用；不得声称已经使用入行365资料。
 - 远程结果与查询没有明显词项匹配时标记 `no_relevant_results`；不得用热门但无关的资料填充答案。

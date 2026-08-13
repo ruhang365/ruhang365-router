@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "id": "r365.scenario.product-visual-kit",
+  "type": "scenario",
+  "slug": "product-visual-kit",
+  "version": "1.0.0",
+  "title": "本地小店产品视觉素材包",
+  "summary": "围绕一个真实产品生成三个视觉方向和一条任务专属 Prompt，不虚构产品信息。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "owned",
+      "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/product-visual-kit.json"
+    },
+    "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "rights": {"status": "full"},
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "updated_at": "2026-08-12",
+    "stale_after": "2027-02-12",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["local-business", "small-business-owner"],
+    "goals": ["visual-content", "product-promotion"],
+    "experience_levels": ["beginner", "intermediate"],
+    "constraints": ["low-budget", "no-private-data", "cross-carrier"],
+    "excluded_constraints": ["missing-product-facts"],
+    "deliverables": ["product-visual-kit"]
+  },
+  "completion_criteria": [
+    "三个方向都说明用途、比例、准确文字与视觉重点。",
+    "Prompt 只使用已确认的产品事实。",
+    "用户能选择一个方向继续生成或交给设计师。"
+  ],
+  "tags": ["本地生活", "产品视觉", "海报", "生图"],
+  "match_terms": ["门店", "小店", "咖啡店", "产品海报", "视觉素材", "商品图片"],
+  "deliverable": "3 个海报方向和 1 条可直接使用的任务专属 Prompt",
+  "next_intent": "visual",
+  "recommendation_weight": 5,
+  "workflow_ids": ["r365.workflow.product-visual-kit"]
+}
