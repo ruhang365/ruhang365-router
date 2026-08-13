@@ -7,6 +7,35 @@
 
 它不是资料库镜像，也不会合并其他项目。写作、视觉等专项能力继续保留各自的独立仓库；Router 只负责诊断、发现、检索和编排。
 
+## English overview
+
+Ruhang365 Router is an Apache-2.0 public capability router and versioned Community Catalog for practical AI workflows. It turns an ambiguous need into a locally matched Scenario, Workflow, Resource, or Prompt, then routes the task to a suitable specialist Skill. The same public core works through a Codex Skill, CLI, JSON output, and a deterministic offline snapshot.
+
+The client sends no user query or profile to the public Catalog API. It validates the public projection and content digest, drops unknown or private fields, and falls back to the release snapshot when the service is unavailable. Community contributions are reviewed for schema compatibility, provenance, rights, privacy, and executable completion criteria before release.
+
+### Five-minute quick start
+
+Python 3.10 or newer is the only runtime dependency for the offline path:
+
+```bash
+git clone https://github.com/ruhang365/ruhang365-router.git
+cd ruhang365-router
+python3 skills/ruhang365-router/scripts/route_ruhang365.py \
+  --query "Create a one-week customer acquisition content kit for a local coffee shop" \
+  --identity local-business \
+  --goal content-growth \
+  --experience beginner \
+  --constraint free-only \
+  --deliverable weekly-content-kit \
+  --offline
+```
+
+Run the complete repository validation with:
+
+```bash
+./scripts/validate.sh
+```
+
 ## 能做什么
 
 - 从模糊需求中识别 `discover`、`writing`、`visual`、`tool` 或 `knowledge` 意图。
