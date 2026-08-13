@@ -13,6 +13,7 @@
       "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/ai-writing-humanizer.json"
     },
     "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+    "rights": {"status": "full"},
     "maintainers": ["ruhang365-maintainers"],
     "review": {"status": "approved", "reviewed_at": "2026-08-12"},
     "updated_at": "2026-08-12",

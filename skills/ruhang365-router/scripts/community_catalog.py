@@ -8,6 +8,9 @@ import json
 from pathlib import Path
 import re
 from typing import Any
+import urllib.error
+import urllib.parse
+import urllib.request
 
 
 DEFAULT_CATALOG_PATH = Path(__file__).resolve().parents[1] / "catalog" / "catalog.json"
@@ -30,14 +33,7 @@ def _canonical_digest(items: list[dict[str, Any]]) -> str:
     return hashlib.sha256(canonical).hexdigest()
 
 
-def load_catalog(path: str | Path | None = None) -> dict[str, Any]:
-    catalog_path = Path(path) if path else DEFAULT_CATALOG_PATH
-    try:
-        payload = json.loads(catalog_path.read_text(encoding="utf-8"))
-    except FileNotFoundError as error:
-        raise ValueError(f"Community catalog not found: {catalog_path}") from error
-    except json.JSONDecodeError as error:
-        raise ValueError(f"Community catalog is invalid JSON: {catalog_path}") from error
+def validate_catalog(payload: Any) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError("Community catalog must be a JSON object")
     if payload.get("schemaVersion") != "1.0.0":
@@ -51,6 +47,59 @@ def load_catalog(path: str | Path | None = None) -> dict[str, Any]:
     if not isinstance(digest, str) or digest != _canonical_digest(items):
         raise ValueError("Community catalog contentDigest mismatch")
     return payload
+
+
+def load_catalog(path: str | Path | None = None) -> dict[str, Any]:
+    catalog_path = Path(path) if path else DEFAULT_CATALOG_PATH
+    try:
+        payload = json.loads(catalog_path.read_text(encoding="utf-8"))
+    except FileNotFoundError as error:
+        raise ValueError(f"Community catalog not found: {catalog_path}") from error
+    except json.JSONDecodeError as error:
+        raise ValueError(f"Community catalog is invalid JSON: {catalog_path}") from error
+    return validate_catalog(payload)
+
+
+def resolve_catalog(
+    base_url: str,
+    *,
+    snapshot_path: str | Path | None = None,
+    timeout: float = 12.0,
+    offline: bool = False,
+    opener: Any = urllib.request.urlopen,
+) -> dict[str, Any]:
+    snapshot = load_catalog(snapshot_path)
+    if offline:
+        return {"catalog": snapshot, "source": "offline_snapshot", "warning": None}
+
+    catalog_url = f"{base_url.rstrip('/')}/api/community/catalog"
+    request = urllib.request.Request(
+        catalog_url,
+        headers={
+            "Accept": "application/json",
+            "User-Agent": "ruhang365-router/0.3 catalog-read-only",
+        },
+    )
+    try:
+        with opener(request, timeout=timeout) as response:
+            online = validate_catalog(json.loads(response.read()))
+        return {"catalog": online, "source": "online", "warning": None}
+    except (
+        urllib.error.HTTPError,
+        urllib.error.URLError,
+        TimeoutError,
+        OSError,
+        json.JSONDecodeError,
+        UnicodeDecodeError,
+        ValueError,
+    ) as error:
+        if isinstance(error, urllib.error.HTTPError):
+            error.close()
+        return {
+            "catalog": snapshot,
+            "source": "offline_fallback",
+            "warning": f"Community Catalog API unavailable or invalid; using stable snapshot ({type(error).__name__}).",
+        }
 
 
 def _normalize_text(value: Any) -> str:

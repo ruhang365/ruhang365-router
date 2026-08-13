@@ -158,7 +158,7 @@ def validate_governance(asset: dict[str, Any], path: Path) -> None:
     governance = asset.get("governance")
     if not isinstance(governance, dict):
         raise CatalogValidationError(f"missing governance object in {path}")
-    for field in ("source", "license", "maintainers", "review", "updated_at", "stale_after", "stale"):
+    for field in ("source", "license", "rights", "maintainers", "review", "updated_at", "stale_after", "stale"):
         if field not in governance:
             raise CatalogValidationError(f"missing governance {field} in {path}")
 
@@ -174,6 +174,9 @@ def validate_governance(asset: dict[str, Any], path: Path) -> None:
         raise CatalogValidationError(f"missing governance license in {path}")
     require_string(license_data.get("spdx"), "governance license SPDX")
     require_string(license_data.get("attribution"), "governance license attribution")
+    rights = governance["rights"]
+    if not isinstance(rights, dict) or rights.get("status") not in {"full", "reference_only"}:
+        raise CatalogValidationError(f"invalid governance rights in {path}")
     require_string_list(governance["maintainers"], "governance maintainers", minimum=1)
 
     review = governance["review"]

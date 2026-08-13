@@ -2,9 +2,9 @@
 
 ## 权威与角色
 
-`ruhang365/ruhang365-router` 是公开、跨载体结构化资产的唯一内容真相源。Contributor 提交候选 PR；Reviewer 核验 Schema、来源、许可证、可执行性和边界；Maintainer 决定合并、版本升级、失效或归档。正式资产必须至少有一名明确 Maintainer。
+Supabase 是公开、跨载体结构化资产的唯一可编辑内容真相源。Contributor 可在 Router 提交内容建议；Reviewer 核验 Schema、来源、权利、可执行性和边界；Maintainer 把通过审核的变更录入 Supabase 并发布不可变 release。Router 只保存公开离线快照。
 
-GitHub 合并记录是审核凭证。CI 通过只证明自动合同成立，不代替维护者审核；PR 未合并前不能被描述为正式 Community 内容。
+Supabase release 和对应审核记录是发布凭证。CI 通过只证明自动合同成立，不代替维护者审核；Router PR 未合并前不能被描述为正式离线分发版本。
 
 ## 变更级别
 
@@ -20,8 +20,8 @@ Catalog 版本和单项资产版本分别治理。任何会改变现有消费者
 
 ## 边界与回退
 
-- 发布链固定为 Community GitHub → CI Catalog → RHZL 运行时索引；没有 RHZL → GitHub 的自动反向编辑。
+- 发布链固定为 Supabase → RHZL Public Catalog API → Router 自动快照 PR → Skill；Router 不能反向覆盖 Supabase。
 - 专项 Skill / 工具保留独立仓库，本仓只维护注册信息。
 - RHZL 独占用户状态、个性化、Run / Result / Asset / Feedback、权限和 Pro 服务。
-- 发现错误时优先回退 Catalog 消费版本或恢复上一资产版本；禁止用生产数据回填公开仓。
+- 发现错误时优先把 Supabase current 指针切回上一不可变 release；Router 保留旧 Tag 并通过补丁版本更新快照。
 - Marketplace、分润、自助直发和企业私有 Workflow 不属于当前试点。

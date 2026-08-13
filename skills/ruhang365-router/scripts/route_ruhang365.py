@@ -19,7 +19,12 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from community_catalog import DEFAULT_CATALOG_PATH, load_catalog, match_catalog  # noqa: E402
+from community_catalog import (  # noqa: E402
+    DEFAULT_CATALOG_PATH,
+    load_catalog,
+    match_catalog,
+    resolve_catalog,
+)
 
 
 DEFAULT_BASE_URL = "https://rhzl.ruhang365.cn"
@@ -300,7 +305,7 @@ def fetch_json(url: str, timeout: float) -> dict[str, Any]:
         url,
         headers={
             "Accept": "application/json",
-            "User-Agent": "ruhang365-router/0.2 community-read-only",
+            "User-Agent": "ruhang365-router/0.3 legacy-public-read-only",
         },
     )
     with urllib.request.urlopen(request, timeout=timeout) as response:
@@ -387,33 +392,29 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
     query = args.query.strip()
     intent = infer_intent(query) if args.intent == "auto" else args.intent
     capabilities = list(CAPABILITIES[intent])
-    catalog = load_catalog(getattr(args, "catalog", None))
+    resolution = resolve_catalog(
+        args.base_url,
+        snapshot_path=getattr(args, "catalog", None),
+        timeout=args.timeout,
+        offline=args.offline,
+    )
+    catalog = resolution["catalog"]
     community_matches = match_catalog(
         catalog,
         build_matching_profile(args, query),
         limit_per_type=args.limit,
     )
+    community_matches["catalogSource"] = resolution["source"]
     specialists = specialist_matches(community_matches)
     scenarios = legacy_scenarios(community_matches) if intent == "discover" else None
     sources: dict[str, Any] = {}
 
-    if args.offline:
-        sources = {name: {"status": "offline", "items": []} for name in capabilities}
-    else:
-        urls = build_requests(args.base_url, query, intent, args.limit)
-        sources = {
-            name: retrieve_source(name, url, args.timeout, args.limit, query)
-            for name, url in urls.items()
-        }
-
-    warnings = [
-        f"{name} retrieval is {source['status']}; use the local route only."
-        for name, source in sources.items()
-        if source["status"] not in {"ok", "offline"}
-    ]
+    source_status = "offline" if args.offline else "catalog_local_match"
+    sources = {name: {"status": source_status, "items": []} for name in capabilities}
+    warnings = [resolution["warning"]] if resolution["warning"] else []
 
     return {
-        "schemaVersion": "0.2",
+        "schemaVersion": "0.3",
         "query": query,
         "route": {
             "intent": intent,

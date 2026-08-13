@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import urllib.error
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +32,7 @@ def governance(source_path: str) -> dict[str, object]:
             ),
         },
         "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
+        "rights": {"status": "full"},
         "maintainers": ["ruhang365-maintainers"],
         "review": {"status": "approved", "reviewed_at": "2026-08-12"},
         "updated_at": "2026-08-12",
@@ -254,6 +256,7 @@ class CatalogBuildTests(unittest.TestCase):
     def test_rejects_missing_governance_duplicate_ids_and_dangling_references(self):
         mutations: list[tuple[str, str, object]] = [
             ("missing license", "license", None),
+            ("missing rights", "rights", None),
             ("dangling reference", "workflow_ids", ["r365.workflow.missing"]),
             ("internal path", "source_url", "file:///private/example.md"),
             ("sensitive field", "user_id", "00000000-0000-0000-0000-000000000000"),
@@ -263,8 +266,8 @@ class CatalogBuildTests(unittest.TestCase):
             with self.subTest(label=label), tempfile.TemporaryDirectory() as temporary_directory:
                 root = Path(temporary_directory)
                 assets = valid_assets()
-                if field == "license":
-                    del assets[2]["governance"]["license"]  # type: ignore[index]
+                if field in {"license", "rights"}:
+                    del assets[2]["governance"][field]  # type: ignore[index]
                 elif field == "workflow_ids":
                     assets[2][field] = value
                 elif field == "user_id":
@@ -293,6 +296,95 @@ class CatalogBuildTests(unittest.TestCase):
 
 
 class CatalogMatcherTests(unittest.TestCase):
+    def test_online_catalog_request_contains_no_profile_or_private_data(self):
+        matcher = load_matcher()
+        snapshot = matcher.load_catalog()
+        requests = []
+
+        class Response:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return None
+
+            def read(self):
+                return json.dumps(snapshot, ensure_ascii=False).encode("utf-8")
+
+        def opener(request, timeout):
+            requests.append((request, timeout))
+            return Response()
+
+        resolved = matcher.resolve_catalog(
+            "https://rhzl.ruhang365.cn",
+            timeout=3,
+            opener=opener,
+        )
+
+        self.assertEqual(resolved["source"], "online")
+        self.assertEqual(len(requests), 1)
+        request, timeout = requests[0]
+        self.assertEqual(request.full_url, "https://rhzl.ruhang365.cn/api/community/catalog")
+        self.assertEqual(timeout, 3)
+        serialized = json.dumps(dict(request.header_items()), ensure_ascii=False).casefold()
+        for forbidden in ("identity", "goal", "constraint", "deliverable", "cookie", "authorization"):
+            self.assertNotIn(forbidden, serialized)
+
+    def test_catalog_network_and_contract_failures_use_the_stable_snapshot(self):
+        matcher = load_matcher()
+        snapshot = matcher.load_catalog()
+
+        failures = {
+            "timeout": lambda *_args, **_kwargs: (_ for _ in ()).throw(TimeoutError()),
+            "5xx": lambda request, *_args, **_kwargs: (_ for _ in ()).throw(
+                urllib.error.HTTPError(request.full_url, 503, "down", {}, None)
+            ),
+            "invalid_json": lambda *_args, **_kwargs: _Response(b"not json"),
+            "unknown_schema": lambda *_args, **_kwargs: _Response(
+                json.dumps({**snapshot, "schemaVersion": "9.0.0"}).encode()
+            ),
+            "tampered_digest": lambda *_args, **_kwargs: _Response(
+                json.dumps({**snapshot, "contentDigest": "0" * 64}).encode()
+            ),
+        }
+
+        for label, opener in failures.items():
+            with self.subTest(label=label):
+                resolved = matcher.resolve_catalog(
+                    "https://rhzl.ruhang365.cn",
+                    timeout=1,
+                    opener=opener,
+                )
+                self.assertEqual(resolved["source"], "offline_fallback")
+                self.assertEqual(resolved["catalog"], snapshot)
+                self.assertTrue(resolved["warning"])
+
+    def test_online_and_snapshot_catalogs_use_the_identical_matcher(self):
+        matcher = load_matcher()
+        snapshot = matcher.load_catalog()
+        online = matcher.resolve_catalog(
+            "https://rhzl.ruhang365.cn",
+            opener=lambda *_args, **_kwargs: _Response(
+                json.dumps(snapshot, ensure_ascii=False).encode("utf-8")
+            ),
+        )
+        offline = matcher.resolve_catalog(
+            "https://rhzl.ruhang365.cn",
+            offline=True,
+        )
+        profile = {
+            "identity": "local-business",
+            "goal": "content-growth",
+            "experience": "beginner",
+            "constraints": ["free-only"],
+            "deliverable": "weekly-content-kit",
+        }
+
+        self.assertEqual(
+            matcher.match_catalog(online["catalog"], profile),
+            matcher.match_catalog(offline["catalog"], profile),
+        )
+
     def test_matches_all_asset_types_from_profile_fields(self):
         matcher = load_matcher()
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -426,3 +518,17 @@ class CatalogMatcherTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class _Response:
+    def __init__(self, body: bytes):
+        self.body = body
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return None
+
+    def read(self):
+        return self.body

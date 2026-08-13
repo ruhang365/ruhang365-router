@@ -25,7 +25,7 @@ description: Diagnose an AI task, discover practical AI application scenarios, r
      --format markdown
    ```
 
-4. 先读取随 Skill 安装的版本化 Community Catalog，按身份、目标、经验、约束和交付物匹配 Scenario / Workflow / Resource / Prompt；Catalog 没有匹配时明确说明，不用硬编码 Profile 或热门资产填充。远程结果只作补充证据。普通任务最多使用 3 条知识、3 个 Skill 和 1 条视觉 Prompt；不得遍历或导出整个资料库。
+4. 先请求 RHZL 的公开 Catalog API；请求只含固定 URL、`Accept` 和公开 `User-Agent`，不发送用户问题或 Profile。Schema、版本和摘要有效时在线消费；超时、5xx、无效 JSON、未知 Schema 或摘要不匹配时自动使用随 Skill 安装的稳定快照并标记 `offline_fallback`。在线和离线都用同一套本地匹配算法。
 5. 专项 Skill 的稳定 ID、版本、适用性与仓库链接以 Catalog 的 Resource 为准。未安装专项 Skill 时，提供仓库链接和本地可完成的替代方案，不得自动安装。
 6. 交付用户要求的成果，例如场景清单、执行步骤、文章、视觉 Prompt 或工具选择建议。不要把检索结果列表当作最终交付。
 7. 说明使用了哪些公开结果、哪些能力未调用，以及仍需用户决定的事项。
@@ -42,10 +42,10 @@ description: Diagnose an AI task, discover practical AI application scenarios, r
 
 ## 执行边界
 
-- 只调用公开、只读的 Community 接口。当前公开核心不接收、读取、存储或传输会员 Token、API Key、Cookie 或登录凭证。
-- 查询只包含完成检索所需的短语；不得发送图片、完整文章、客户资料、账号信息或其他私人素材。
+- 只调用无鉴权、只读的 `/api/community/catalog`。当前公开核心不接收、读取、存储或传输会员 Token，也不接收用户问题、Profile、API Key、Cookie 或登录凭证。
+- 身份、目标、经验、约束、交付物和原始问题全部在本地匹配；不得发送图片、完整文章、客户资料、账号信息或其他私人素材。
 - 仅使用客户端白名单字段。即使服务返回额外内部字段，也不得展示、缓存或据此推断会员内容。
-- Community Catalog 只包含审核合并的公开资产；不得把本地候选文件、RHZL 运行时数据或未合并 PR 当作正式内容。
+- Community Catalog 只包含 Supabase 当前已发布 release 的公开投影；Router PR 只是离线快照，不得反向覆盖 Supabase。
 - `rights.status=full` 的 Prompt 可以按许可证改写；`reference_only` 只能使用标题、摘要、分类和来源，禁止补全或反推原文。
 - 服务失败时保留离线路由并明确标记远程检索不可用；不得声称已经使用入行365资料。
 - 远程结果与查询没有明显词项匹配时标记 `no_relevant_results`；不得用热门但无关的资料填充答案。

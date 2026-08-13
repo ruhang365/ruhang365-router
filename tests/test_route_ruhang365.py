@@ -93,6 +93,32 @@ class IntentTests(unittest.TestCase):
 
 
 class RequestContractTests(unittest.TestCase):
+    def test_route_sends_no_user_profile_or_query_to_rhzl(self):
+        online_args = arguments(
+            offline=False,
+            query="我的私人选题",
+            identity="creator",
+            goal="行业认知",
+            constraint=["低预算"],
+            deliverable="行业地图",
+        )
+        snapshot = router.load_catalog()
+        with mock.patch.object(
+            router,
+            "resolve_catalog",
+            return_value={"catalog": snapshot, "source": "online", "warning": None},
+        ) as resolve, mock.patch.object(router, "retrieve_source") as retrieve:
+            result = router.route_task(online_args)
+
+        resolve.assert_called_once_with(
+            online_args.base_url,
+            snapshot_path=online_args.catalog,
+            timeout=online_args.timeout,
+            offline=False,
+        )
+        retrieve.assert_not_called()
+        self.assertEqual(result["route"]["communityMatches"]["catalogSource"], "online")
+
     def test_rejects_invalid_query_limit_timeout_and_credentials(self):
         with self.assertRaisesRegex(ValueError, "2 to 240"):
             router.validate_args(arguments(query="x"))
@@ -254,16 +280,22 @@ class RoutingTests(unittest.TestCase):
         self.assertEqual(specialist["skill"], "ai-writing-humanizer")
         self.assertIn("github.com/ruhang365/", specialist["repository"])
 
-    def test_retrieval_failure_becomes_structured_warning(self):
+    def test_catalog_failure_becomes_structured_offline_fallback_warning(self):
         online_args = arguments(offline=False, intent="knowledge")
+        snapshot = router.load_catalog()
         with mock.patch.object(
             router,
-            "retrieve_source",
-            return_value={"status": "unavailable", "items": []},
+            "resolve_catalog",
+            return_value={
+                "catalog": snapshot,
+                "source": "offline_fallback",
+                "warning": "Community Catalog API unavailable; using stable snapshot.",
+            },
         ):
             result = router.route_task(online_args)
 
-        self.assertEqual(result["sources"]["knowledge"]["status"], "unavailable")
+        self.assertEqual(result["route"]["communityMatches"]["catalogSource"], "offline_fallback")
+        self.assertEqual(result["sources"]["knowledge"]["status"], "catalog_local_match")
         self.assertEqual(len(result["warnings"]), 1)
 
     def test_offline_cli_returns_valid_json(self):
@@ -282,7 +314,7 @@ class RoutingTests(unittest.TestCase):
 
         self.assertEqual(process.returncode, 0, process.stderr)
         payload = json.loads(process.stdout)
-        self.assertEqual(payload["schemaVersion"], "0.2")
+        self.assertEqual(payload["schemaVersion"], "0.3")
         self.assertEqual(payload["route"]["intent"], "discover")
 
     def test_offline_cli_exposes_content_driven_cross_carrier_matches(self):

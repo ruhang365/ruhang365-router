@@ -1,6 +1,6 @@
 {
   "catalogVersion": "1.0.0",
-  "contentDigest": "b4f7fae7947938a13579e06ab50eecb4be5cf2b3fd982ab510f6323e3db15901",
+  "contentDigest": "215d7ea85d81a01dfbcc2477403b2df8b5f5b967c05d93825165bdd43decf321",
   "items": [
     {
       "applicability": {
@@ -49,6 +49,9 @@
         "review": {
           "reviewed_at": "2026-08-12",
           "status": "approved"
+        },
+        "rights": {
+          "status": "full"
         },
         "source": {
           "kind": "owned",
@@ -131,6 +134,9 @@
           "reviewed_at": "2026-08-12",
           "status": "approved"
         },
+        "rights": {
+          "status": "full"
+        },
         "source": {
           "kind": "owned",
           "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/customer-feedback-review.json"
@@ -211,6 +217,9 @@
           "reviewed_at": "2026-08-12",
           "status": "approved"
         },
+        "rights": {
+          "status": "full"
+        },
         "source": {
           "kind": "owned",
           "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/product-visual-kit.json"
@@ -290,6 +299,9 @@
         "review": {
           "reviewed_at": "2026-08-12",
           "status": "approved"
+        },
+        "rights": {
+          "status": "full"
         },
         "source": {
           "kind": "owned",
@@ -376,6 +388,9 @@
         "review": {
           "reviewed_at": "2026-08-12",
           "status": "approved"
+        },
+        "rights": {
+          "status": "full"
         },
         "source": {
           "kind": "owned",
@@ -518,6 +533,9 @@
           "reviewed_at": "2026-08-12",
           "status": "approved"
         },
+        "rights": {
+          "status": "full"
+        },
         "source": {
           "kind": "owned",
           "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/customer-feedback-review.json"
@@ -629,6 +647,9 @@
         "review": {
           "reviewed_at": "2026-08-12",
           "status": "approved"
+        },
+        "rights": {
+          "status": "full"
         },
         "source": {
           "kind": "owned",
@@ -747,6 +768,9 @@
         "review": {
           "reviewed_at": "2026-08-12",
           "status": "approved"
+        },
+        "rights": {
+          "status": "full"
         },
         "source": {
           "kind": "owned",
@@ -875,6 +899,9 @@
           "reviewed_at": "2026-08-12",
           "status": "approved"
         },
+        "rights": {
+          "status": "full"
+        },
         "source": {
           "kind": "owned",
           "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/ai-writing-humanizer.json"
@@ -969,6 +996,9 @@
           "reviewed_at": "2026-08-12",
           "status": "approved"
         },
+        "rights": {
+          "status": "full"
+        },
         "source": {
           "kind": "owned",
           "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/public-knowledge-search.json"
@@ -1057,6 +1087,9 @@
         "review": {
           "reviewed_at": "2026-08-12",
           "status": "approved"
+        },
+        "rights": {
+          "status": "full"
         },
         "source": {
           "kind": "owned",
@@ -1148,6 +1181,9 @@
           "reviewed_at": "2026-08-12",
           "status": "approved"
         },
+        "rights": {
+          "status": "full"
+        },
         "source": {
           "kind": "owned",
           "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/visual-prompt-router.json"
@@ -1230,6 +1266,9 @@
         "review": {
           "reviewed_at": "2026-08-12",
           "status": "approved"
+        },
+        "rights": {
+          "status": "full"
         },
         "source": {
           "kind": "owned",
@@ -1315,6 +1354,9 @@
         "review": {
           "reviewed_at": "2026-08-12",
           "status": "approved"
+        },
+        "rights": {
+          "status": "full"
         },
         "source": {
           "kind": "owned",

@@ -54,6 +54,7 @@
       "required": [
         "source",
         "license",
+        "rights",
         "maintainers",
         "review",
         "updated_at",
