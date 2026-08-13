@@ -1,5 +1,11 @@
 # Community 治理
 
+## 当前维护者
+
+- [`fzy2012`](https://github.com/fzy2012) — Primary Maintainer。负责项目方向、公开 API 与 Schema 合同、版本发布、安全与兼容性审核，以及最终合并决策。
+
+贡献代码或内容不会自动获得 Maintainer 权限。新增 Maintainer 必须具有持续、可验证的评审与发布贡献，并由现有 Maintainer 在公开 PR 中确认。
+
 ## 权威与角色
 
 Supabase 是公开、跨载体结构化资产的唯一可编辑内容真相源。Contributor 可在 Router 提交内容建议；Reviewer 核验 Schema、来源、权利、可执行性和边界；Maintainer 把通过审核的变更录入 Supabase 并发布不可变 release。Router 只保存公开离线快照。
