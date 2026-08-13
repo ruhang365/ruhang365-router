@@ -14,6 +14,8 @@ Supabase release 和对应审核记录是发布凭证。CI 通过只证明自动
 
 Catalog 版本和单项资产版本分别治理。任何会改变现有消费者结果的修改都必须同步测试与生成 Catalog。
 
+Catalog 结构演进必须使用新的 `schemaVersion`，并在成为 current 前完成在线、离线和旧 Tag 兼容验证。现有客户端遇到未知 Schema 必须回退稳定快照；不能通过放宽校验或直接修改快照绕过版本门禁。
+
 ## 新鲜度与失效
 
 每项资产明确 `updated_at`、`stale_after` 和 `stale`。超过复核日期不会由构建器按当前时间自动改写，以保持确定性；Maintainer 必须在 PR 中复核并显式更新状态。失效但仍有迁移价值的资产标记 `needs_review` 或 `archived`，不得静默删除稳定 ID。
@@ -25,3 +27,7 @@ Catalog 版本和单项资产版本分别治理。任何会改变现有消费者
 - RHZL 独占用户状态、个性化、Run / Result / Asset / Feedback、权限和 Pro 服务。
 - 发现错误时优先把 Supabase current 指针切回上一不可变 release；Router 保留旧 Tag 并通过补丁版本更新快照。
 - Marketplace、分润、自助直发和企业私有 Workflow 不属于当前试点。
+
+## 生产收口后的治理
+
+2026-08-13 的技术与生产闭环已经收口。后续优先处理 API / digest / 快照工作流告警、前滚与回滚演练、公共投影 deny-list 负向测试和兼容门禁；这些属于稳定运行治理，不改变 Supabase 唯一可编辑主源和 Router 只读派生物的职责。
