@@ -91,6 +91,8 @@ Supabase 审核通过的 Community 内容
 
 Router PR 不会触发数据库导入，也不能反向覆盖 Supabase。用户状态、Run、Result、Asset、Feedback、会员与 Pro 数据只留在 RHZL。
 
+`.github/workflows/community-snapshot-sync.yml` 每小时读取一次当前公开 Catalog；只有摘要变化且完整验证通过时，才使用 Router 本仓的短期 `GITHUB_TOKEN` 创建快照 PR。RHZL 不持有 Router 写权限或 Supabase 之外的跨仓凭据。
+
 ## RHZL Public Catalog 合同
 
 本仓不会连接或写入数据库。运行时只请求固定的公开地址，不发送用户问题或 Profile：

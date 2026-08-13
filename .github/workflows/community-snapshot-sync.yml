@@ -1,0 +1,62 @@
+name: Community Snapshot Sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: community-snapshot-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out Router
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Read and validate the current RHZL Catalog
+        run: python3 scripts/update_catalog_snapshot.py --url https://rhzl.ruhang365.cn/api/community/catalog
+
+      - name: Validate updated Skill distribution
+        run: ./scripts/validate.sh
+
+      - name: Open snapshot pull request when the digest changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "Router snapshot already matches the current RHZL Catalog."
+            exit 0
+          fi
+
+          version="$(python3 -c 'import json; print(json.load(open("skills/ruhang365-router/catalog/catalog.json"))["catalogVersion"])')"
+          digest="$(python3 -c 'import json; print(json.load(open("skills/ruhang365-router/catalog/catalog.json"))["contentDigest"][:12])')"
+          branch="automation/community-catalog-${version}-${digest}"
+
+          if gh pr list --repo ruhang365/ruhang365-router --state open --head "$branch" --json number --jq 'length' | grep -qx '1'; then
+            echo "Snapshot pull request already exists for ${version}/${digest}."
+            exit 0
+          fi
+
+          git config user.name "ruhang365-snapshot-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git switch -c "$branch"
+          git add skills/ruhang365-router/catalog/catalog.json
+          git commit -m "chore: update Community Catalog snapshot to ${version}"
+          git push origin "$branch"
+          gh pr create --repo ruhang365/ruhang365-router --base main --head "$branch" \
+            --title "chore: update Community Catalog snapshot to ${version}" \
+            --body "Generated from the current RHZL public Catalog API after an atomic Supabase release. Digest: ${digest}. The same workflow validated the complete Skill distribution before opening this PR."
