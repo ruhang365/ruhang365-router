@@ -1,4 +1,4 @@
 interface:
   display_name: "入行365能力路由器"
-  short_description: "发现 AI 应用场景并调用入行365资料与专项 Skill"
-  default_prompt: "Use $ruhang365-router 帮我判断这个问题适合调用哪些入行365资料和专项 Skill，并给出可执行成果。"
+  short_description: "发现 AI 场景并用单一路线引导用户完成首个可验收成果"
+  default_prompt: "Use $ruhang365-router 为我的需求选择一条最合适的路线，并直接带我完成第一个可验收成果。"

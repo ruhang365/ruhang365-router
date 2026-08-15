@@ -41,6 +41,7 @@ Run the complete repository validation with:
 - 从模糊需求中识别 `discover`、`writing`、`visual`、`tool` 或 `knowledge` 意图。
 - 从版本化 Community Catalog 匹配 Scenario、Workflow、Resource 和 Prompt；匹配逻辑不再维护硬编码 Profile 内容。
 - 针对已收录的门店与创作者场景，在离线状态下给出可交付场景与 1 个推荐起点。
+- 默认只给一条推荐路线，当场带用户完成第一个 3–10 分钟动作；多轮任务持续显示进度、完成标志和唯一下一步，不把 Catalog 与工具选择负担暴露给用户。
 - 在线优先读取 RHZL 的无鉴权只读 Catalog API，故障时自动使用随 Tag 发布的稳定快照。
 - 只保留客户端白名单字段，不输出服务端未知字段或会员内容。
 - 过滤与查询没有明显匹配的热门结果，不用无关推荐凑数。
@@ -68,6 +69,14 @@ cd ruhang365-router
 Use $ruhang365-router 我不知道 AI 能为自己的小店做什么。
 请给三个真实场景，推荐一个今天可以完成的成果，并直接带我开始。
 ```
+
+如果不想在候选中选择，可以直接说：
+
+```text
+Use $ruhang365-router 我只有半小时，不要给我资料清单或多个选项，直接推荐一条路线并带我完成第一步。
+```
+
+默认回复会先交付任务结果；Catalog 版本、匹配分数和在线/离线状态只在影响结果或用户追问时说明。
 
 也可以单独运行只读客户端：
 

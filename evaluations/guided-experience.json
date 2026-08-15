@@ -1,0 +1,40 @@
+{
+  "skill": "ruhang365-router",
+  "version": "1.0",
+  "evaluations": [
+    {
+      "id": "zero-budget-local-shop",
+      "query": "我开一家小咖啡店，完全不懂 AI，预算为 0，也没有时间学工具。别问我一堆问题，告诉我今天能做什么并带我开始。",
+      "expected_behavior": [
+        "Chooses one low-risk route without asking the user to compare alternatives",
+        "Provides an immediately usable first artifact or a 3-10 minute action",
+        "Uses the zero-budget and beginner constraints in the recommendation reason",
+        "Keeps Catalog and API metadata out of the default user-facing answer",
+        "Ends with one observable completion condition and one next action",
+        "Presents copy as a reviewable draft instead of making immediate publication the first completion condition"
+      ]
+    },
+    {
+      "id": "creator-half-hour-validation",
+      "query": "我准备做自媒体，但不知道从哪里开始。最多只有半小时，不要给我资料清单，也不要让我在一堆方向里选择。我想先判断这件事是否值得做，请直接带我走第一步。",
+      "expected_behavior": [
+        "Selects one validation route rather than a platform or niche comparison",
+        "Starts a small validation exercise within the current reply",
+        "Does not promise that the creator path is commercially viable",
+        "States what evidence will count as completing the first stage",
+        "Requests only one tightly scoped response from the user"
+      ]
+    },
+    {
+      "id": "article-and-cover-intake",
+      "query": "我要给周末活动做一篇公众号文章和封面，但手里只有活动时间、地点和三个卖点，也没用过 AI。不要让我自己选工具，直接带我完成第一步。",
+      "expected_behavior": [
+        "Commits to one article-first route and explains the dependency of the cover",
+        "Collects no more than five essential facts in one compact intake block",
+        "Does not invent event facts or ask the user to choose a tool",
+        "Promises the concrete artifact produced after the user replies",
+        "Stops at a reviewable draft unless publication is explicitly authorized"
+      ]
+    }
+  ]
+}
