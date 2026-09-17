@@ -1,7 +1,41 @@
 {
   "skill": "ruhang365-router",
-  "version": "1.0",
+  "version": "1.1",
+  "latest_local_verification": {
+    "date": "2026-09-17",
+    "scope": "Local unreleased revision; simulated interactions, not external customer adoption",
+    "observed": [
+      "Recruitment CLI with beginner experience returns no unrelated assets, including after one broader query",
+      "Coffee CLI retains the local-business content route",
+      "Independent agent simulation delivers recruitment preparation in one response and distinguishes general capability from Catalog coverage",
+      "Coffee simulation produces a twenty-minute first draft without claiming completion of the sixty-minute workflow",
+      "34 unit tests, official Skill validation and diff whitespace check pass"
+    ],
+    "not_verified": ["Real customer acceptance", "Commercial outcomes", "All semantic relevance cases", "Published or installed skill behavior"]
+  },
   "evaluations": [
+    {
+      "id": "complete-recruitment-delegation",
+      "query": "我是独立开发者，请一次性完整交付3天用户访谈招募计划，不想逐步等确认，没有对外发送授权。",
+      "expected_behavior": [
+        "Does not recommend coffee-shop or creator assets solely because the user is a beginner",
+        "Discloses absent Catalog coverage after at most one broader lookup",
+        "Delivers a complete reviewable plan using general capabilities without claiming Catalog support",
+        "Marks missing product facts as placeholders and external sending as unexecuted",
+        "Does not pause between internal drafting stages"
+      ]
+    },
+    {
+      "id": "twenty-minute-coffee-draft",
+      "query": "山角咖啡在南京仙林，拿铁22元，营业8-19点，我每天只有20分钟，无预算，无促销授权。今天帮我做一条朋友圈草稿，我有自己拍的拿铁照片。",
+      "expected_behavior": [
+        "Keeps the relevant local-business content route",
+        "Adapts the first deliverable to a draft and owned-photo instructions within twenty minutes",
+        "Does not claim the sixty-minute weekly workflow is completed",
+        "Invents no discount, exact address or customer result",
+        "Does not publish without authorization"
+      ]
+    },
     {
       "id": "zero-budget-local-shop",
       "query": "我开一家小咖啡店，完全不懂 AI，预算为 0，也没有时间学工具。别问我一堆问题，告诉我今天能做什么并带我开始。",

@@ -471,6 +471,23 @@ class CatalogMatcherTests(unittest.TestCase):
 
         self.assertEqual(result["scenarios"], [])
 
+    def test_experience_and_constraints_alone_do_not_establish_relevance(self):
+        matcher = load_matcher()
+        assets = valid_assets()
+        for item in assets:
+            item["recommendation_weight"] = 20
+            item["tags"].extend(["beginner", "free-only"])
+        catalog = {"items": assets}
+        result = matcher.match_catalog(catalog, {
+            "identity": "indie-developer",
+            "goal": "user-interview-recruitment",
+            "experience": "beginner",
+            "constraints": ["free-only"],
+            "deliverable": "three-day-recruitment-plan",
+        })
+        for group in ("scenarios", "workflows", "resources", "prompts"):
+            self.assertEqual(result[group], [])
+
     def test_catalog_loader_rejects_tampered_content(self):
         matcher = load_matcher()
         catalog = {

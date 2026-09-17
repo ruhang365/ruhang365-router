@@ -187,7 +187,8 @@ def _score_item(item: dict[str, Any], profile: dict[str, Any]) -> tuple[int, lis
         score += min(20, len(constraint_matches) * 10)
         reasons.append("constraints")
 
-    profile_terms = _tokens(" ".join(str(profile[field]) for field in PROFILE_FIELDS))
+    # Experience and constraints refine relevance; they cannot establish it.
+    profile_terms = _tokens(" ".join(profile[field] for field in ("identity", "goal", "deliverable")))
     searchable = " ".join(
         [
             str(item.get("title", "")),
@@ -201,7 +202,7 @@ def _score_item(item: dict[str, Any], profile: dict[str, Any]) -> tuple[int, lis
         score += min(20, len(term_matches) * 2)
         reasons.append("terms")
 
-    if score == 0:
+    if not set(reasons) & {"identity", "goal", "deliverable", "terms"}:
         return None
     recommendation_weight = item.get("recommendation_weight", 0)
     if isinstance(recommendation_weight, int) and not isinstance(recommendation_weight, bool):
