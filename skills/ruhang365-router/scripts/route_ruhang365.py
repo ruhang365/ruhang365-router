@@ -467,7 +467,7 @@ def route_guidance(args: argparse.Namespace) -> dict[str, Any]:
     audience = getattr(args, "guide", None) or "welcome"
     execution = {"mode": "community", "remoteModelCalled": False, "writePerformed": False, "credentialsAccepted": False}
     welcome = "我可以帮你看懂职业变化、梳理已有经验，找到适合自己的方向和学习资料；也可以结合你当前的工作，看看哪里值得改善。"
-    if audience == "welcome":
+    if audience == "welcome" and not getattr(args, "read", None):
         return {"schemaVersion": "0.4", "displayName": "入行365｜职业成长向导", "introduction": welcome,
             "guidance": {"status": "welcome", "question": {"id": "audience", "prompt": "你现在更接近哪种情况？", "options": [
                 {"value": "career-change", "label": "想了解新方向"},
@@ -478,8 +478,12 @@ def route_guidance(args: argparse.Namespace) -> dict[str, Any]:
     guidance_snapshot = args.catalog if args.catalog != DEFAULT_CATALOG_PATH else FULL_CATALOG_PATH
     resolution = resolve_catalog(args.base_url, snapshot_path=guidance_snapshot, timeout=args.timeout, offline=args.offline)
     catalog = resolution["catalog"]
-    guidance = evaluate_guidance(catalog, audience, answers)
+    guidance = ({"status": "reading", "question": None, "recommendations": [],
+                 "coverageNote": "按资料 ID 继续阅读，无需重新完成引导。"}
+                if audience == "welcome" else evaluate_guidance(catalog, audience, answers))
     references = {ref for rec in guidance["recommendations"] for ref in rec["resourceIds"]}
+    if getattr(args, "read", None):
+        references.add(args.read)
     resources = [{"id": item["id"], "title": item["title"], "summary": item["summary"],
                   "sourceUrl": item.get("governance", {}).get("source", {}).get("url"),
                   "guidance": item.get("guidance")}

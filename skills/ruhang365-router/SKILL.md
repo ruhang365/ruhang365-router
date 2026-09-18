@@ -13,7 +13,7 @@ description: "Use 入行365's reviewed knowledge to guide career exploration, gr
 2. 使用目录引导：career-change（探索/转行）、work-growth（在岗成长）、cross-border（跨境入行）。先读 JSON 获得实际问题与选项，每轮复用会话答案。只问会改变推荐的问题，允许不确定、跳过、修改、自由补充和直接看内容。自由表达含义明确时才映射成已有选项；其余保留未知，不推测用户资历、预算。
 3. 运行只读脚本：`python3 "$SKILL_DIR/scripts/route_ruhang365.py" --guide career-change --format json`。继续时按返回的 question.id 与 option.value 使用可重复的 `--answer question_id=option_value`；未知和跳过分别用 unknown、skip，修改答案时替换旧值。无参数运行可查看欢迎入口。问题与个人答案只在本地处理。
    已有具体任务时，为了接入完整 Community 内容，附加 `--catalog "$SKILL_DIR/catalog/community-full-1.1.0.json"`；需要保持旧协议兼容时才显式使用 `catalog/catalog.json`。
-4. 先请求 RHZL 公开 Catalog API，仅固定 URL、Accept 与公开 User-Agent；不发送用户问题或 Profile。Schema 1.0.0/1.1.0 与摘要有效时在线消费；超时、错误、未知版本或损坏时使用稳定快照。在线和离线使用同一匹配算法。目录现在覆盖文章、知识、术语、Prompt、视觉案例、工具、Skill、场景、学习路径和日报；匹配先返回少量起点，不把整库塞给用户。
+4. 先请求 RHZL 公开 Catalog API，仅固定 URL、Accept、Accept-Encoding 与公开 User-Agent；不发送用户问题或 Profile。Schema 1.0.0/1.1.0 与摘要有效时在线消费；超时、错误、未知版本或损坏时使用稳定快照。在线和离线使用同一匹配算法。目录现在覆盖文章、知识、术语、Prompt、视觉案例、工具、Skill、场景、学习路径和日报；匹配先返回少量起点，不把整库塞给用户。
 5. 用户要继续阅读某一项时，使用结果中的稳定 `id` 调用 `--read r365.resource...`；该请求只发送固定的资源 ID，不发送问题、Profile、Cookie 或凭据。正文受注册、会员或授权限制时只返回摘要和原始来源；离线模式只读快照摘要。
 6. 解释用到了哪些条件、为何值得了解、什么情况下不适合、先看哪份真实资料。资料名称附目录实际 URL，使用可点击链接；相对路径补全为 https://rhzl.ruhang365.cn，不只给标题或编造链接。默认突出一个起点；需要比较时展开实际命中的最多三个方向。条件不足先解释差异，不强行选出职业或平台。
 7. 当场交付有帮助的解释和资料内容，保留来源、核验时间、地区及缺口。只想了解时不强制练习、文案或任务；需要行动时再进入实际可用的专项能力。专项 Skill 未安装时先提供可行替代，再按授权安装。
@@ -33,7 +33,7 @@ description: "Use 入行365's reviewed knowledge to guide career exploration, gr
 
 ## 执行边界
 
-- 仅消费无鉴权、只读的 /api/community/catalog；不接收、读取、存储或传输会员 Token、API Key、Cookie、登录凭据、原始问题、Profile、文章、客户资料或私人素材。
+- 仅消费无鉴权、只读的 /api/community/catalog 和按资源 ID 读取的 /api/community/assets/<id>；不接收、读取、存储或传输会员 Token、API Key、Cookie、登录凭据、原始问题、Profile、客户资料或私人素材。
 - 只使用公开白名单字段；不展示或缓存额外内部字段，不推断会员正文。职业/平台 guidance 的嵌套字段同样必须通过校验。
 - Supabase 是 Community 可编辑主源；公开 release 与离线快照是分发产物。候选版本明确标为本地体验，不伪装成正式在线资料。
 - rights.status=full 的内容按许可证复用；reference_only 仅使用允许的标题、摘要、分类和来源，不补全原文。
