@@ -4,16 +4,24 @@
 from __future__ import annotations
 
 import hashlib
+import gzip
+import io
 import json
 from pathlib import Path
 import re
+import sys
 from typing import Any
 import urllib.error
 import urllib.parse
 import urllib.request
 
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+from guidance import validate_guidance, current_item
+
 
 DEFAULT_CATALOG_PATH = Path(__file__).resolve().parents[1] / "catalog" / "catalog.json"
+FULL_CATALOG_PATH = Path(__file__).resolve().parents[1] / "catalog" / "community-full-1.1.0.json"
 GROUPS = {
     "scenario": "scenarios",
     "workflow": "workflows",
@@ -21,6 +29,20 @@ GROUPS = {
     "prompt": "prompts",
 }
 PROFILE_FIELDS = ("identity", "goal", "experience", "constraints", "deliverable")
+MAX_CATALOG_BYTES = 32 * 1024 * 1024
+
+
+def _read_catalog_response(response: Any) -> Any:
+    raw = response.read(MAX_CATALOG_BYTES + 1)
+    if len(raw) > MAX_CATALOG_BYTES:
+        raise ValueError("Community catalog response is too large")
+    headers = getattr(response, "headers", {})
+    if headers.get("Content-Encoding", "").lower() == "gzip":
+        with gzip.GzipFile(fileobj=io.BytesIO(raw)) as stream:
+            raw = stream.read(MAX_CATALOG_BYTES + 1)
+        if len(raw) > MAX_CATALOG_BYTES:
+            raise ValueError("Community catalog decompressed response is too large")
+    return json.loads(raw)
 
 
 def _canonical_digest(items: list[dict[str, Any]]) -> str:
@@ -36,7 +58,7 @@ def _canonical_digest(items: list[dict[str, Any]]) -> str:
 def validate_catalog(payload: Any) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError("Community catalog must be a JSON object")
-    if payload.get("schemaVersion") != "1.0.0":
+    if payload.get("schemaVersion") not in {"1.0.0", "1.1.0"}:
         raise ValueError("unsupported Community catalog schemaVersion")
     if not isinstance(payload.get("catalogVersion"), str):
         raise ValueError("Community catalogVersion is missing")
@@ -46,6 +68,11 @@ def validate_catalog(payload: Any) -> dict[str, Any]:
     digest = payload.get("contentDigest")
     if not isinstance(digest, str) or digest != _canonical_digest(items):
         raise ValueError("Community catalog contentDigest mismatch")
+    for item in items:
+        if "guidance" in item:
+            if payload["schemaVersion"] != "1.1.0":
+                raise ValueError("guidance requires Community schemaVersion 1.1.0")
+            validate_guidance(item["guidance"])
     return payload
 
 
@@ -77,12 +104,13 @@ def resolve_catalog(
         catalog_url,
         headers={
             "Accept": "application/json",
+            "Accept-Encoding": "gzip",
             "User-Agent": "ruhang365-router/0.3 catalog-read-only",
         },
     )
     try:
         with opener(request, timeout=timeout) as response:
-            online = validate_catalog(json.loads(response.read()))
+            online = validate_catalog(_read_catalog_response(response))
         return {"catalog": online, "source": "online", "warning": None}
     except (
         urllib.error.HTTPError,
@@ -91,6 +119,7 @@ def resolve_catalog(
         OSError,
         json.JSONDecodeError,
         UnicodeDecodeError,
+        EOFError,
         ValueError,
     ) as error:
         if isinstance(error, urllib.error.HTTPError):
@@ -100,6 +129,25 @@ def resolve_catalog(
             "source": "offline_fallback",
             "warning": f"Community Catalog API unavailable or invalid; using stable snapshot ({type(error).__name__}).",
         }
+
+
+def fetch_asset_detail(base_url: str, item: dict[str, Any], *, timeout: float = 12.0, opener: Any = urllib.request.urlopen) -> dict[str, Any]:
+    """Read one public detail by stable id; no query, profile, or credentials are sent."""
+    detail_ref = item.get("detail_ref")
+    if not isinstance(detail_ref, str) or not detail_ref.startswith("/"):
+        raise ValueError("catalog item has no safe public detail_ref")
+    url = urllib.parse.urljoin(f"{base_url.rstrip('/')}/", detail_ref.lstrip('/'))
+    request = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": "ruhang365-router/0.4 detail-read-only"})
+    with opener(request, timeout=timeout) as response:
+        payload = json.loads(response.read())
+    if (
+        not isinstance(payload, dict)
+        or payload.get("id") != item.get("id")
+        or payload.get("version") != item.get("version")
+        or (payload.get("contentHash") is not None and payload.get("contentHash") != item.get("content_hash"))
+    ):
+        raise ValueError("community detail identity/version mismatch")
+    return payload
 
 
 def _normalize_text(value: Any) -> str:
@@ -135,11 +183,14 @@ def _matches_value(profile_value: str, candidates: list[str]) -> bool:
 def _profile(profile: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(profile, dict):
         raise ValueError("matching profile must be an object")
+    experience = _normalize_text(profile.get("experience", profile.get("level")))
     normalized = {
         "identity": _normalize_text(profile.get("identity")),
         "goal": _normalize_text(profile.get("goal")),
-        "experience": _normalize_text(profile.get("experience")),
+        "experience": experience,
+        "level": _normalize_text(profile.get("level", experience)),
         "deliverable": _normalize_text(profile.get("deliverable")),
+        "query": _normalize_text(profile.get("query")),
     }
     constraints = profile.get("constraints", [])
     if not isinstance(constraints, list) or any(not isinstance(item, str) for item in constraints):
@@ -151,6 +202,8 @@ def _profile(profile: dict[str, Any]) -> dict[str, Any]:
 
 
 def _score_item(item: dict[str, Any], profile: dict[str, Any]) -> tuple[int, list[str]] | None:
+    if not current_item(item):
+        return None
     governance = item.get("governance")
     if (
         item.get("status") != "current"
@@ -170,7 +223,7 @@ def _score_item(item: dict[str, Any], profile: dict[str, Any]) -> tuple[int, lis
     dimensions = (
         ("identity", "identities", 40),
         ("goal", "goals", 30),
-        ("experience", "experience_levels", 15),
+        ("level", "experience_levels", 15),
         ("deliverable", "deliverables", 35),
     )
     for profile_field, asset_field, weight in dimensions:
@@ -188,11 +241,12 @@ def _score_item(item: dict[str, Any], profile: dict[str, Any]) -> tuple[int, lis
         reasons.append("constraints")
 
     # Experience and constraints refine relevance; they cannot establish it.
-    profile_terms = _tokens(" ".join(profile[field] for field in ("identity", "goal", "deliverable")))
+    profile_terms = _tokens(" ".join(profile[field] for field in ("identity", "goal", "deliverable", "query")))
     searchable = " ".join(
         [
             str(item.get("title", "")),
             str(item.get("summary", "")),
+            " ".join(item.get("tags", [])),
             " ".join(item.get("tags", [])),
             " ".join(item.get("match_terms", [])),
         ]
@@ -226,41 +280,49 @@ def _project_match(item: dict[str, Any], score: int, reasons: list[str]) -> dict
         "completionCriteria": item["completion_criteria"],
         "sourceUrl": source.get("url"),
         "applicableIdentities": item["applicability"]["identities"],
+        "access": item.get("access", "public"),
+        "sourceKind": item.get("source_kind"),
+        "sourceId": item.get("source_id"),
+        "contentKind": item.get("content_kind"),
+        "detailRef": item.get("detail_ref"),
+        "contentHash": item.get("content_hash"),
     }
+    if "guidance" in item:
+        projected["guidance"] = item["guidance"]
     if item["type"] == "scenario":
         projected.update(
             {
-                "deliverable": item["deliverable"],
-                "nextIntent": item["next_intent"],
-                "workflowIds": item["workflow_ids"],
+                "deliverable": item.get("deliverable"),
+                "nextIntent": item.get("next_intent"),
+                "workflowIds": item.get("workflow_ids", []),
                 "recommendationWeight": item.get("recommendation_weight", 0),
             }
         )
     elif item["type"] == "workflow":
         projected.update(
             {
-                "goal": item["goal"],
-                "estimatedMinutes": item["estimated_minutes"],
-                "scenarioIds": item["scenario_ids"],
+                "goal": item.get("goal", item.get("summary", "")),
+                "estimatedMinutes": item.get("estimated_minutes"),
+                "scenarioIds": item.get("scenario_ids", []),
             }
         )
     elif item["type"] == "resource":
         projected.update(
             {
-                "resourceKind": item["resource_kind"],
-                "purpose": item["purpose"],
-                "capabilities": item["capabilities"],
+                "resourceKind": item.get("resource_kind", item.get("content_kind", "resource")),
+                "purpose": item.get("purpose", item.get("summary", "")),
+                "capabilities": item.get("capabilities", []),
                 "repositoryUrl": item.get("repository_url"),
-                "resourceVersion": item["resource_version"],
+                "resourceVersion": item.get("resource_version", item.get("version")),
             }
         )
     elif item["type"] == "prompt":
         projected.update(
             {
-                "purpose": item["purpose"],
-                "template": item["template"],
-                "variables": item["variables"],
-                "resourceIds": item["resource_ids"],
+                "purpose": item.get("purpose", item.get("summary", "")),
+                "template": item.get("template"),
+                "variables": item.get("variables", {}),
+                "resourceIds": item.get("resource_ids", []),
             }
         )
     return projected

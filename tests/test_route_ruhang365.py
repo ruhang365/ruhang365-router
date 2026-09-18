@@ -383,8 +383,9 @@ class RepositoryContractTests(unittest.TestCase):
 
         self.assertTrue(skill_text.startswith("---\nname: ruhang365-router\n"))
         self.assertIn("不接收、读取、存储或传输会员 Token", skill_text)
-        self.assertIn("公开核心永久可执行", readme_text)
-        self.assertIn("过滤与查询没有明显匹配", readme_text)
+        self.assertIn("https://github.com/ruhang365/ruhang365-router/tree/main/skills/ruhang365-router", readme_text)
+        self.assertNotIn("/Users/", readme_text)
+        self.assertIn("不向 Catalog API 发送问题或用户画像", readme_text)
         self.assertIn("字段白名单", security_text)
 
     def test_installer_is_non_overwriting(self):
