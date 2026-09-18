@@ -1,57 +1,102 @@
-# 入行365能力路由器
+# 入行365｜职业成长向导
 
 [![Validate](https://github.com/ruhang365/ruhang365-router/actions/workflows/validate.yml/badge.svg)](https://github.com/ruhang365/ruhang365-router/actions/workflows/validate.yml)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+[![Apache 2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 
-`ruhang365-router` 是入行实验室的 Public Core / Community 离线分发与公开能力入口。它把“我不知道 AI 能做什么”或“我该调用哪种能力”转成一个明确场景，按身份、目标、经验、约束和交付物在本地匹配已发布的 Scenario / Workflow / Resource / Prompt。
+结合你的现状，看懂职业变化，找到适合的方向、成长路径与资料。
 
-它不是资料库镜像，也不会合并其他项目。写作、视觉等专项能力继续保留各自的独立仓库；Router 只负责诊断、发现、检索和编排。
+职业成长不必从“给 AI 一个任务”开始。入行365帮助你先认识现状、理解选择，再找到值得深入的内容；需要实践时，也可以进入工具或专项 Skill。
 
-## English overview
+`ruhang365-router` 保留现有安装与调用兼容。Codex 是一个载体，而不是唯一入口：公开核心也提供 Python CLI、JSON 输出和离线目录。
 
-Ruhang365 Router is an Apache-2.0 public capability router and versioned Community Catalog for practical AI workflows. It turns an ambiguous need into a locally matched Scenario, Workflow, Resource, or Prompt, then routes the task to a suitable specialist Skill. The same public core works through a Codex Skill, CLI, JSON output, and a deterministic offline snapshot.
+> 发布状态：职业成长引导与全内容目录 1.1.0 仍是本地候选，尚未完成生产发布。线上目录版本以 API 返回为准。
 
-The client sends no user query or profile to the public Catalog API. It validates the public projection and content digest, drops unknown or private fields, and falls back to the release snapshot when the service is unavailable. Community contributions are reviewed for schema compatibility, provenance, rights, privacy, and executable completion criteria before release.
+## 能提供什么帮助
 
-### Five-minute quick start
+| 你的情况 | 得到的帮助 |
+| --- | --- |
+| 探索或转行 | 梳理已有经验，比较方向、门槛与起步资料 |
+| 在岗成长 | 认识工作状态，寻找适用方法与能力补足资料 |
+| 跨境入行 | 按经验和投入条件理解入口，不强行指定平台 |
+| 明确需求 | 查找 Prompt、工具、案例、学习内容或专项能力 |
 
-Python 3.10 or newer is the only runtime dependency for the offline path:
+通用 AI 可以回答问题；本项目着重解决“从哪里开始，以及哪些资料适合我”。引导规则、内容版本和资源引用让推荐依据可检查，让社区可以持续修正内容。
 
-```bash
-git clone https://github.com/ruhang365/ruhang365-router.git
-cd ruhang365-router
-python3 skills/ruhang365-router/scripts/route_ruhang365.py \
-  --query "Create a one-week customer acquisition content kit for a local coffee shop" \
-  --identity local-business \
-  --goal content-growth \
-  --experience beginner \
-  --constraint free-only \
-  --deliverable weekly-content-kit \
-  --offline
+理解、比较、阅读和行动都可以成为结果。允许不确定、跳过、修改和自由补充，不要求完成固定问卷或提交成果。资料不足时保留缺口，不把 AI 即时建议冒充为社区已审核知识；没有可靠适用标签的内容可以检索，但不能伪装成有依据的个性化推荐。
+
+## 快速开始
+
+### 1. 把链接交给 Codex 安装
+
+在 Codex 聊天框粘贴下面这段话，无需自己下载仓库或执行终端命令：
+
+```text
+帮我安装这个 Skill：
+https://github.com/ruhang365/ruhang365-router/tree/main/skills/ruhang365-router
+如果已经安装，请先检查版本并保留本机修改，不要直接覆盖。
 ```
 
-Run the complete repository validation with:
+这不是网页上的“一键安装”按钮：Codex 需要能够访问 GitHub 和本机 Skill 目录，并会在需要权限时提示你。链接安装的是公开 main 分支中的版本，不包含尚未发布的本地候选。
 
-```bash
-./scripts/validate.sh
+### 2. 新建任务，开始使用
+
+安装完成后新建一个 Codex 任务，让 Skill 被重新识别，然后输入：
+
+```text
+使用 $ruhang365-router，你能为我做什么？
 ```
 
-## 能做什么
+也可以直接描述现状：
 
-- 从模糊需求中识别 `discover`、`writing`、`visual`、`tool` 或 `knowledge` 意图。
-- 从版本化 Community Catalog 匹配 Scenario、Workflow、Resource 和 Prompt；匹配逻辑不再维护硬编码 Profile 内容。
-- 针对已收录的门店与创作者场景，在离线状态下给出可交付场景与 1 个推荐起点。
-- 默认只给一条推荐路线，当场带用户完成第一个 3–10 分钟动作；多轮任务持续显示进度、完成标志和唯一下一步，不把 Catalog 与工具选择负担暴露给用户。
-- 在线优先读取 RHZL 的无鉴权只读 Catalog API，故障时自动使用随 Tag 发布的稳定快照。
-- 只保留客户端白名单字段，不输出服务端未知字段或会员内容。
-- 过滤与查询没有明显匹配的热门结果，不用无关推荐凑数。
-- 为写作任务推荐 [`ai-writing-humanizer`](https://github.com/ruhang365/ruhang365-ai-writing-humanizer-skill)。
-- 为视觉任务推荐 [`ruhang365-visual-prompt-router`](https://github.com/fzy2012/ruhang365-visual-prompt-skill)。
-- 在离线或服务不可用时保留本地场景判断，不虚构远程检索结果。
+```text
+使用 $ruhang365-router，我以前做产品经理，想了解 AI 产品经理。
+先帮我理解能力差异，再找适合我的学习和面试资料。
+```
 
-## 安装
+已有明确需求时不必重复欢迎和诊断。推荐专项能力不代表已经安装或实际执行。
 
-需要 macOS、Linux 或 WSL，并已安装 Git、Bash 和 Python 3.10 或更高版本。
+如果已经安装并能识别 `$ruhang365-router`，直接开始使用，无需重复安装。
+
+## 内容与权限
+
+1.1.0 候选索引文章、知识与术语、文字与生图 Prompt、案例、探索教程、工具、Skill、场景与工作流、学习内容与路径、职业方向及公开日报。接入范围需要逐来源核验；收录不等于每个方向已经拥有完整课程或面试题库。
+
+目录保存精简摘要和来源引用，正文继续在原处维护。候选正文接口按 ID、目录版本与哈希检查内容；来源变化可能导致暂时不可读，不保证历史正文永久可用。
+
+- 公开且获准提供正文的资料可按需读取。
+- 注册或会员内容保留原访问限制，只显示获准公开的介绍和原站入口。
+- 授权不明的第三方资料只引用来源；公开可看不等于允许再分发。
+- 内部内容不进入公开目录，本地开关不能绕过鉴权或服务限额。
+
+## 隐私与可靠性
+
+个人回答与匹配留在当前环境，不向 Catalog API 发送问题或用户画像，不读取会员 Token、Cookie 或 API Key。
+
+客户端校验协议、公开字段和摘要；在线失败时使用有效离线快照。未知协议或损坏数据不能覆盖有效旧快照。离线内容不代表实时规则，平台条件仍需核验时效。
+
+```text
+GET https://rhzl.ruhang365.cn/api/community/catalog
+```
+
+候选正文接口为 `/api/community/assets/<stable_id>`，生产可用性取决于对应 Web 版本发布。详见 [Catalog 合同](contracts/rhzl-catalog-v1.md)。
+
+## 社区与治理
+
+Web 与 Skill 的目标是消费共同的审核发布版本，而不是维护两套正文：
+
+```text
+原来源 → 公开投影与审核 → 版本化 Catalog → Web / Skill / CLI
+```
+
+来源更新先形成候选，不自动等于社区认可。欢迎补充案例、修正过期资料、推荐资源和改善引导；贡献不是使用前提。代码 PR 不直接写入生产库，也不能改变原内容会员或发布状态。
+
+参见 [贡献指南](CONTRIBUTING.md)、[维护治理](GOVERNANCE.md) 和 [安全报告](SECURITY.md)。
+
+## 开发与验证
+
+### 手动安装与 CLI（可选）
+
+以下方式面向开发者和希望自行操作的用户，不是使用 Codex Skill 的前置步骤。需要 Git、Bash 与 Python 3.10 或更新版本：
 
 ```bash
 git clone https://github.com/ruhang365/ruhang365-router.git
@@ -59,126 +104,46 @@ cd ruhang365-router
 ./scripts/install.sh
 ```
 
-安装脚本不会覆盖已有 Skill。安装后新建一个 Codex 任务，让 Skill 元数据重新加载。
+脚本发现已有安装会停止，不会覆盖。更新已有版本时，应先检查差异并保留可恢复副本。
 
-## 使用
+只体验 CLI、不安装 Skill：
 
-直接在 Codex 中说：
-
-```text
-Use $ruhang365-router 我不知道 AI 能为自己的小店做什么。
-请给三个真实场景，推荐一个今天可以完成的成果，并直接带我开始。
+```bash
+python3 skills/ruhang365-router/scripts/route_ruhang365.py --offline --format markdown
 ```
 
-如果不想在候选中选择，可以直接说：
-
-```text
-Use $ruhang365-router 我只有半小时，不要给我资料清单或多个选项，直接推荐一条路线并带我完成第一步。
-```
-
-默认回复会先交付任务结果；Catalog 版本、匹配分数和在线/离线状态只在影响结果或用户追问时说明。
-
-也可以单独运行只读客户端：
+本地候选目录存在时，可以体验职业成长引导：
 
 ```bash
 python3 skills/ruhang365-router/scripts/route_ruhang365.py \
-  --query "给我的公众号文章找写作和配图能力" \
-  --intent auto \
+  --guide work-growth --offline \
+  --catalog skills/ruhang365-router/catalog/community-full-1.1.0.json \
   --format markdown
 ```
 
-提供结构化匹配条件时，CLI / JSON 会消费与 Codex 相同的 Catalog：
+CLI 提供可检查的引导和匹配结果，多轮自然语言交互由宿主 AI 承载。
 
-```bash
-python3 skills/ruhang365-router/scripts/route_ruhang365.py \
-  --query "为咖啡店做一周获客内容" \
-  --identity local-business \
-  --goal content-growth \
-  --experience beginner \
-  --constraint free-only \
-  --deliverable weekly-content-kit \
-  --offline
-```
-
-只运行本地路由，不访问网络：
-
-```bash
-python3 skills/ruhang365-router/scripts/route_ruhang365.py \
-  --query "我不知道 AI 能做什么" \
-  --offline
-```
-
-## Community 内容与发布链
-
-本仓 `content/` 保留首发种子和公开审计材料；正式可编辑内容位于 Supabase，随 Skill 分发的稳定快照位于：
-
-```text
-skills/ruhang365-router/catalog/catalog.json
-```
-
-每项资产使用稳定 ID、语义版本和治理元数据。RHZL 只从 Supabase 当前不可变 release 提供公开 Catalog；`scripts/update_catalog_snapshot.py` 只接受 Schema 和摘要都有效的 API 响应。生成结果没有动态时间戳，并带有内容 SHA-256，因此相同内容总是得到相同字节。
-
-发布链只有一个方向：
-
-```text
-Supabase 审核通过的 Community 内容
-  -> RHZL 不可变 release 与 Public Catalog API
-  -> Router 自动快照 PR
-  -> Codex / CLI / JSON / Web / 后续 MCP 离线分发
-```
-
-Router PR 不会触发数据库导入，也不能反向覆盖 Supabase。用户状态、Run、Result、Asset、Feedback、会员与 Pro 数据只留在 RHZL。
-
-`.github/workflows/community-snapshot-sync.yml` 每小时读取一次当前公开 Catalog；只有摘要变化且完整验证通过时，才使用 Router 本仓的短期 `GITHUB_TOKEN` 创建快照 PR。RHZL 不持有 Router 写权限或 Supabase 之外的跨仓凭据。
-
-## RHZL Public Catalog 合同
-
-本仓不会连接或写入数据库。运行时只请求固定的公开地址，不发送用户问题或 Profile：
-
-```bash
-GET https://rhzl.ruhang365.cn/api/community/catalog
-```
-
-详细字段、摘要校验和故障降级见 [`contracts/rhzl-catalog-v1.md`](contracts/rhzl-catalog-v1.md)。在线失败会明确标记 `offline_fallback`；本地匹配不会向 RHZL 发送身份、目标、约束或交付物。
-
-## Community 边界
-
-公开核心永久可执行：本地意图判断、Catalog 匹配、公开资料检索、专项 Skill 路由、失败降级和交付规则都在本仓库中。Catalog 匹配当前仅覆盖已审核种子；未收录场景会返回空结果，不虚构“全职业覆盖”。
-
-当前公开核心有意不支持会员 Token：
-
-- 不读取或发送 API Key、Cookie、登录凭证和会员 Token。
-- 不接收图片、完整文章、客户资料或私人素材。
-- 不批量导出入行365资料库。
-- 不自动安装专项 Skill，不执行发布、发送、购买或部署。
-
-未来会员服务仍由 RHZL 服务端负责鉴权、配额和内容授权，不能通过本地开关绕过。
-
-## 公开接口
-
-默认只读基地址为 `https://rhzl.ruhang365.cn`：
-
-- `/api/community/catalog`
-
-本地或 Preview 验证可以设置 `RUHANG365_API_BASE_URL`。覆盖地址不得包含用户名、密码、查询参数或 fragment。
-
-## 开发与验证
+### 验证
 
 ```bash
 ./scripts/validate.sh
 ```
 
-验证包括 Python 编译、单元测试、非覆盖式安装测试和可用时的 Codex 官方 Skill 校验。
+验证包含 Python 编译、单元测试、非覆盖式安装测试及环境可用时的官方 Skill 校验。模拟测试不计作真实外部用户采用。
 
-维护首发审计种子时可运行构建器；正式离线快照必须由 RHZL API 更新：
+更新稳定快照：
 
 ```bash
 python3 scripts/update_catalog_snapshot.py
 ./scripts/validate.sh
 ```
 
-贡献流程、审核标准和维护职责见 [`CONTRIBUTING.md`](CONTRIBUTING.md) 与 [`GOVERNANCE.md`](GOVERNANCE.md)。
+## English overview
+
+Ruhang365 Career Guide is an open-source guidance and content-discovery layer for career exploration and professional growth. It combines explicit guidance rules with a versioned catalog to help users understand choices and find relevant resources without requiring a predefined task. Codex is one host; Python CLI, JSON output, and offline snapshots are also supported.
+
+Career guidance and the full-content 1.1.0 experience remain local release candidates. User queries and profiles are not sent to the catalog API. Access restrictions, provenance, licensing, and evidence gaps remain explicit.
 
 ## 许可证
 
-本仓库代码、脚本和 Codex Skill 采用 [Apache License 2.0](LICENSE)。`content/`、Schema 文档与由其生成的 Catalog 默认采用 [CC BY 4.0](CONTENT_LICENSE.md)，每项资产仍必须声明自己的来源、许可证和署名。远程检索结果继续遵守结果中声明的来源和许可证；`reference_only` 内容不得被补全、反推或复制。
+代码、脚本与 Skill 使用 [Apache 2.0](LICENSE)。原创内容许可见 [内容许可证](CONTENT_LICENSE.md)。外部资料保留逐项来源、署名与许可，本仓许可证不覆盖第三方或受限正文。
