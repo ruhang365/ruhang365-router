@@ -9,7 +9,7 @@
 
 `ruhang365-router` 保留现有安装与调用兼容。Codex 是一个载体，而不是唯一入口：公开核心也提供 Python CLI、JSON 输出和离线目录。
 
-> 发布状态：职业成长引导与全内容目录 1.1.0 仍是本地候选，尚未完成生产发布。线上目录版本以 API 返回为准。
+> 发布状态：职业成长引导与全内容目录 1.1.0 已上线。公开 Web 入口：[入行365｜职业成长向导](https://rhzl.ruhang365.cn/career/guide)。
 
 ## 能提供什么帮助
 
@@ -36,7 +36,7 @@ https://github.com/ruhang365/ruhang365-router/tree/main/skills/ruhang365-router
 如果已经安装，请先检查版本并保留本机修改，不要直接覆盖。
 ```
 
-这不是网页上的“一键安装”按钮：Codex 需要能够访问 GitHub 和本机 Skill 目录，并会在需要权限时提示你。链接安装的是公开 main 分支中的版本，不包含尚未发布的本地候选。
+这不是网页上的“一键安装”按钮：Codex 需要能够访问 GitHub 和本机 Skill 目录，并会在需要权限时提示你。链接安装的是公开 main 分支中的稳定版本。
 
 ### 2. 新建任务，开始使用
 
@@ -59,9 +59,9 @@ https://github.com/ruhang365/ruhang365-router/tree/main/skills/ruhang365-router
 
 ## 内容与权限
 
-1.1.0 候选索引文章、知识与术语、文字与生图 Prompt、案例、探索教程、工具、Skill、场景与工作流、学习内容与路径、职业方向及公开日报。接入范围需要逐来源核验；收录不等于每个方向已经拥有完整课程或面试题库。
+1.1.0 索引文章、知识与术语、文字与生图 Prompt、案例、探索教程、工具、Skill、场景与工作流、学习内容与路径、职业方向及公开日报。接入范围已经逐来源核验；收录不等于每个方向已经拥有完整课程或面试题库。
 
-目录保存精简摘要和来源引用，正文继续在原处维护。候选正文接口按 ID、目录版本与哈希检查内容；来源变化可能导致暂时不可读，不保证历史正文永久可用。
+目录保存精简摘要和来源引用，正文继续在原处维护。正文接口按 ID、目录版本与哈希检查内容；来源变化可能导致暂时不可读，不保证历史正文永久可用。
 
 - 公开且获准提供正文的资料可按需读取。
 - 注册或会员内容保留原访问限制，只显示获准公开的介绍和原站入口。
@@ -78,7 +78,7 @@ https://github.com/ruhang365/ruhang365-router/tree/main/skills/ruhang365-router
 GET https://rhzl.ruhang365.cn/api/community/catalog
 ```
 
-候选正文接口为 `/api/community/assets/<stable_id>`，生产可用性取决于对应 Web 版本发布。详见 [Catalog 合同](contracts/rhzl-catalog-v1.md)。
+正文接口为 `/api/community/assets/<stable_id>`。详见 [Catalog 合同](contracts/rhzl-catalog-v1.md)。
 
 ## 社区与治理
 
@@ -112,7 +112,7 @@ cd ruhang365-router
 python3 skills/ruhang365-router/scripts/route_ruhang365.py --offline --format markdown
 ```
 
-本地候选目录存在时，可以体验职业成长引导：
+使用完整离线目录体验职业成长引导：
 
 ```bash
 python3 skills/ruhang365-router/scripts/route_ruhang365.py \
@@ -142,7 +142,7 @@ python3 scripts/update_catalog_snapshot.py
 
 Ruhang365 Career Guide is an open-source guidance and content-discovery layer for career exploration and professional growth. It combines explicit guidance rules with a versioned catalog to help users understand choices and find relevant resources without requiring a predefined task. Codex is one host; Python CLI, JSON output, and offline snapshots are also supported.
 
-Career guidance and the full-content 1.1.0 experience remain local release candidates. User queries and profiles are not sent to the catalog API. Access restrictions, provenance, licensing, and evidence gaps remain explicit.
+Career guidance and the full-content 1.1.0 Catalog are live. The public Web entry is [Ruhang365 Career Guide](https://rhzl.ruhang365.cn/career/guide). User queries and profiles are not sent to the Catalog API. Access restrictions, provenance, licensing, and evidence gaps remain explicit.
 
 ## 许可证
 
