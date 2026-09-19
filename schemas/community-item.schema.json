@@ -21,7 +21,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "1.0.0"
+      "enum": ["1.0.0", "1.1.0"]
     },
     "id": {
       "type": "string",
@@ -85,7 +85,18 @@
     },
     "recommendation_weight": {
       "type": "integer"
-    }
+    },
+    "guidance": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {"kind": {"enum": ["career", "platform", "intake"]}}
+    },
+    "source_kind": {"type": "string", "minLength": 1},
+    "source_id": {"type": "string", "minLength": 1},
+    "content_kind": {"type": "string", "minLength": 1},
+    "access": {"enum": ["public", "registration", "member", "reference_only"]},
+    "detail_ref": {"type": "string", "pattern": "^/api/community/assets/[a-zA-Z0-9._/-]+(?:\\?catalogVersion=[0-9]+\\.[0-9]+\\.[0-9]+)?$"},
+    "content_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
   },
   "additionalProperties": true
 }

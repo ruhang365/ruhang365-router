@@ -67,6 +67,41 @@ class IntentTests(unittest.TestCase):
             with self.subTest(query=query):
                 self.assertEqual(router.infer_intent(query), expected)
 
+
+class DirectReadingTests(unittest.TestCase):
+    def test_read_id_without_query_or_guide_reads_instead_of_restarting_welcome(self):
+        item = {"id": "r365.resource.example", "title": "Example", "summary": "Public summary",
+                "status": "current", "governance": {"stale": False}}
+        catalog = {"catalogVersion": "1.1.0", "contentDigest": "a" * 64, "items": [item]}
+        with mock.patch.object(router, "resolve_catalog", return_value={
+            "catalog": catalog, "source": "online", "warning": None,
+        }), mock.patch.object(router, "fetch_asset_detail", return_value={
+            "id": item["id"], "body": "Approved public body",
+        }) as fetch_detail:
+            result = router.route_guidance(arguments(query="", guide=None,
+                catalog=router.DEFAULT_CATALOG_PATH, read=item["id"], offline=False))
+        self.assertEqual(result["guidance"]["status"], "reading")
+        self.assertIsNone(result["guidance"]["question"])
+        self.assertEqual(result["detail"]["body"], "Approved public body")
+        self.assertEqual(result["resources"][0]["summary"], "Public summary")
+        fetch_detail.assert_called_once_with("https://rhzl.ruhang365.cn", item, timeout=12.0)
+
+    def test_offline_direct_read_retains_summary_without_network(self):
+        item = {"id": "r365.resource.example", "title": "Example", "summary": "Public summary",
+                "status": "current", "governance": {"stale": False}}
+        with mock.patch.object(router, "resolve_catalog", return_value={
+            "catalog": {"catalogVersion": "1.1.0", "contentDigest": "a" * 64, "items": [item]},
+            "source": "offline_snapshot", "warning": None,
+        }), mock.patch.object(router, "fetch_asset_detail") as fetch_detail:
+            result = router.route_guidance(arguments(query="", catalog=router.DEFAULT_CATALOG_PATH,
+                read=item["id"], offline=True))
+        self.assertEqual(result["resources"][0]["summary"], "Public summary")
+        self.assertIsNone(result["detail"])
+        fetch_detail.assert_not_called()
+
+
+class DiscoveryIntentTests(unittest.TestCase):
+
     def test_discovers_local_business_scenarios_without_remote_data(self):
         scenarios = router.discovery_scenarios(
             "我开一家本地咖啡店，不知道 AI 能帮我做什么"
@@ -383,8 +418,9 @@ class RepositoryContractTests(unittest.TestCase):
 
         self.assertTrue(skill_text.startswith("---\nname: ruhang365-router\n"))
         self.assertIn("不接收、读取、存储或传输会员 Token", skill_text)
-        self.assertIn("公开核心永久可执行", readme_text)
-        self.assertIn("过滤与查询没有明显匹配", readme_text)
+        self.assertIn("https://github.com/ruhang365/ruhang365-router/tree/main/skills/ruhang365-router", readme_text)
+        self.assertNotIn("/Users/", readme_text)
+        self.assertIn("不向 Catalog API 发送问题或用户画像", readme_text)
         self.assertIn("字段白名单", security_text)
 
     def test_installer_is_non_overwriting(self):

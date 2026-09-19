@@ -1,0 +1,4355 @@
+{
+  "schemaVersion": "1.1.0",
+  "catalogVersion": "1.1.0",
+  "contentDigest": "b39007f7f309544f828d7bce9b39d8f86e86e48bf391423514bc6c52268a9c31",
+  "items": [
+    {
+      "id": "r365.scenario.creator-ip-industry-cognition",
+      "slug": "creator-ip-industry-cognition",
+      "tags": [
+        "自媒体",
+        "个人 IP",
+        "行业认知",
+        "职业转型"
+      ],
+      "type": "scenario",
+      "title": "一小时吃透自媒体 / IP 行业",
+      "status": "current",
+      "summary": "在投入内容生产前，用公开结构和 RHZL 当前 Workflow 建立行业认知并选择一个七天真实验证任务。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/creator-ip-industry-cognition.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2026-11-12"
+      },
+      "contentPath": "content/scenarios/creator-ip-industry-cognition.json",
+      "deliverable": "行业认知地图 + 唯一 7 天真实验证任务",
+      "match_terms": [
+        "自媒体",
+        "个人IP",
+        "IP 行业",
+        "一小时吃透行业",
+        "转行创作者",
+        "行业认知地图"
+      ],
+      "next_intent": "knowledge",
+      "workflow_ids": [
+        "r365.workflow.creator-ip-industry-cognition"
+      ],
+      "applicability": {
+        "goals": [
+          "industry-cognition",
+          "career-entry",
+          "creator-positioning"
+        ],
+        "identities": [
+          "creator",
+          "career-switcher",
+          "brand-content-operator"
+        ],
+        "constraints": [
+          "evidence-aware",
+          "no-guaranteed-outcome",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "industry-cognition-map",
+          "seven-day-validation-task"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "excluded_constraints": [
+          "guaranteed-growth-required"
+        ]
+      },
+      "schema_version": "1.0.0",
+      "completion_criteria": [
+        "行业边界、价值链、核心机制与能力缺口均已形成判断。",
+        "三条可能路径包含取舍、风险和待验证问题。",
+        "只选择一个七天内可观察结果的验证任务。"
+      ],
+      "recommendation_weight": 20
+    },
+    {
+      "id": "r365.scenario.customer-feedback-review",
+      "slug": "customer-feedback-review",
+      "tags": [
+        "本地生活",
+        "顾客反馈",
+        "服务改进"
+      ],
+      "type": "scenario",
+      "title": "顾客反馈整理与改进清单",
+      "status": "current",
+      "summary": "把脱敏后的顾客评论整理成高频问题、真实优势和可以执行的改进动作。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/customer-feedback-review.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2027-02-12"
+      },
+      "contentPath": "content/scenarios/customer-feedback-review.json",
+      "deliverable": "高频问题、真实优势和三条优先改进动作",
+      "match_terms": [
+        "门店",
+        "小店",
+        "咖啡店",
+        "顾客评论",
+        "用户反馈",
+        "差评整理"
+      ],
+      "next_intent": "knowledge",
+      "workflow_ids": [
+        "r365.workflow.customer-feedback-review"
+      ],
+      "applicability": {
+        "goals": [
+          "customer-insight",
+          "service-improvement"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ],
+        "constraints": [
+          "free-only",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "customer-feedback-review"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "excluded_constraints": [
+          "contains-private-customer-data"
+        ]
+      },
+      "schema_version": "1.0.0",
+      "completion_criteria": [
+        "结论可以回溯到脱敏后的原始反馈。",
+        "优势、问题和建议被明确分开。",
+        "改进动作包含优先级与验证方式。"
+      ],
+      "recommendation_weight": 10
+    },
+    {
+      "id": "r365.scenario.guide-career-change",
+      "type": "scenario",
+      "slug": "guide-career-change",
+      "title": "转行探索｜先看清工作，再比较方向",
+      "summary": "不必先做测评，也不用立即决定转行。我可以帮你看清九个方向做什么、已有经验怎么迁移、限制在哪里。选项可以修改，没想清楚也可以跳过；理解和比较就是一次有效帮助。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "intake",
+        "audience": "career-change",
+        "introduction": "不必先做测评，也不用立即决定转行。我可以帮你看清九个方向做什么、已有经验怎么迁移、限制在哪里。选项可以修改，没想清楚也可以跳过；理解和比较就是一次有效帮助。",
+        "coverageNote": "目前覆盖 AI 新岗位、产品/运营/跨境岗位升级和三类独立服务方向，不覆盖所有职业。暂未匹配时可以直接浏览九方向；未知答案不会被当成能力不足，也不会被猜测成确定选择。",
+        "questions": [
+          {
+            "id": "route",
+            "prompt": "你现在更想比较哪一类变化？",
+            "options": [
+              {
+                "value": "new-role",
+                "label": "了解 AI 新岗位 / 新分工"
+              },
+              {
+                "value": "upgrade",
+                "label": "先看原有职业怎么升级"
+              },
+              {
+                "value": "service",
+                "label": "了解创业或独立服务"
+              },
+              {
+                "value": "unknown",
+                "label": "还没想清楚"
+              },
+              {
+                "value": "skip",
+                "label": "先跳过"
+              }
+            ]
+          },
+          {
+            "id": "new-role-focus",
+            "prompt": "你更想先了解哪种工作？",
+            "options": [
+              {
+                "value": "product",
+                "label": "用户问题、产品体验与决策"
+              },
+              {
+                "value": "engineering",
+                "label": "开发、工具集成与可靠性"
+              },
+              {
+                "value": "delivery",
+                "label": "客户现场、方案与交付"
+              },
+              {
+                "value": "unknown",
+                "label": "还没想清楚"
+              },
+              {
+                "value": "skip",
+                "label": "先跳过"
+              }
+            ],
+            "when": {
+              "route": [
+                "new-role"
+              ]
+            }
+          },
+          {
+            "id": "upgrade-focus",
+            "prompt": "你想从哪类已有工作出发？",
+            "options": [
+              {
+                "value": "product",
+                "label": "产品经理 / 产品运营"
+              },
+              {
+                "value": "operations",
+                "label": "运营、营销、增长或社群"
+              },
+              {
+                "value": "cross-border",
+                "label": "已有跨境电商经营或运营"
+              },
+              {
+                "value": "unknown",
+                "label": "还没想清楚"
+              },
+              {
+                "value": "skip",
+                "label": "先跳过"
+              }
+            ],
+            "when": {
+              "route": [
+                "upgrade"
+              ]
+            }
+          },
+          {
+            "id": "service-focus",
+            "prompt": "你想先看哪类客户成果？",
+            "options": [
+              {
+                "value": "enterprise",
+                "label": "企业流程或项目交付"
+              },
+              {
+                "value": "visual",
+                "label": "内容、设计、视频或品牌素材"
+              },
+              {
+                "value": "product",
+                "label": "一个细分问题的小产品"
+              },
+              {
+                "value": "unknown",
+                "label": "还没想清楚"
+              },
+              {
+                "value": "skip",
+                "label": "先跳过"
+              }
+            ],
+            "when": {
+              "route": [
+                "service"
+              ]
+            }
+          }
+        ],
+        "recommendations": [
+          {
+            "id": "career-ai-product",
+            "title": "先了解 AI 产品",
+            "when": {
+              "route": [
+                "new-role"
+              ],
+              "new-role-focus": [
+                "product"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-ai-product"
+            ],
+            "reason": "你选择从用户与产品判断出发，先看岗位职责、经验迁移与模型评估边界，不把会用工具当成已具备岗位能力。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-ai-agent-development",
+            "title": "先了解 AI 应用 / Agent 开发",
+            "when": {
+              "route": [
+                "new-role"
+              ],
+              "new-role-focus": [
+                "engineering"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-ai-agent-development"
+            ],
+            "reason": "你想理解开发与集成工作，资料保留工具调用、权限、评估和恢复要求，可先比较与现有开发经验的差异。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-ai-solution-delivery-fde",
+            "title": "先了解 AI 方案交付 / FDE",
+            "when": {
+              "route": [
+                "new-role"
+              ],
+              "new-role-focus": [
+                "delivery"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-ai-solution-delivery-fde"
+            ],
+            "reason": "你想看客户现场的工作，先比较范围、方案、验收和交接职责，再判断需要补哪些能力。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-product-manager-ai-upgrade",
+            "title": "先比较产品经理 AI 升级",
+            "when": {
+              "route": [
+                "upgrade"
+              ],
+              "upgrade-focus": [
+                "product"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-product-manager-ai-upgrade"
+            ],
+            "reason": "先在原有产品工作中增加模型边界与评估判断；不必先换岗位。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-operations-marketing-ai-upgrade",
+            "title": "先比较运营营销 AI 升级",
+            "when": {
+              "route": [
+                "upgrade"
+              ],
+              "upgrade-focus": [
+                "operations"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-operations-marketing-ai-upgrade"
+            ],
+            "reason": "从一次真实运营工作看整理、生成与复核如何协作，业务判断和复盘仍由人负责。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-cross-border-ecommerce-ai-upgrade",
+            "title": "先比较跨境运营 AI 升级",
+            "when": {
+              "route": [
+                "upgrade"
+              ],
+              "upgrade-focus": [
+                "cross-border"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-cross-border-ecommerce-ai-upgrade"
+            ],
+            "reason": "这是已有跨境工作的升级方向，不是零基础平台开户向导；保留市场、利润和合规判断。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-enterprise-ai-services",
+            "title": "先了解企业 AI 服务",
+            "when": {
+              "route": [
+                "service"
+              ],
+              "service-focus": [
+                "enterprise"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-enterprise-ai-services"
+            ],
+            "reason": "从明确客户、问题、范围和验收理解服务，不把企业 AI 话题热度当成真实客户需求。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-content-visual-services",
+            "title": "先了解内容视觉服务",
+            "when": {
+              "route": [
+                "service"
+              ],
+              "service-focus": [
+                "visual"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-content-visual-services"
+            ],
+            "reason": "先看用途、素材授权、修改和交付标准，工具效果不等于客户可用成果。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-small-ai-products",
+            "title": "先了解小型 AI 产品",
+            "when": {
+              "route": [
+                "service"
+              ],
+              "service-focus": [
+                "product"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-small-ai-products"
+            ],
+            "reason": "先看真实问题与替代方案，再决定是否值得做原型；停止或转向也是合理结论。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "r365.scenario.guide-cross-border",
+      "type": "scenario",
+      "slug": "guide-cross-border",
+      "title": "跨境入行｜先比较经营方式与条件",
+      "summary": "先不用选平台或投入库存。我可以帮你比较企业采购、商品零售和内容带货的工作差异，结合供应链与内容协作条件，给出值得优先了解的平台资料。预算不是资格证明，也不保证收益。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "intake",
+        "audience": "cross-border",
+        "introduction": "先不用选平台或投入库存。我可以帮你比较企业采购、商品零售和内容带货的工作差异，结合供应链与内容协作条件，给出值得优先了解的平台资料。预算不是资格证明，也不保证收益。",
+        "coverageNote": "本入口面向跨境入行，独立于已有跨境运营 AI 升级。首批仅比较 Amazon、Alibaba.com 国际站、Temu、TikTok Shop；平台资格和费用不做自动判断。缺少确定选择时可先浏览，不能用未知答案推断经营能力。",
+        "questions": [
+          {
+            "id": "model",
+            "prompt": "你更想先了解哪种经营方式？",
+            "options": [
+              {
+                "value": "b2b",
+                "label": "向企业客户供货、询盘与报价"
+              },
+              {
+                "value": "retail",
+                "label": "面向消费者卖商品"
+              },
+              {
+                "value": "content",
+                "label": "通过内容与创作者连接商品"
+              },
+              {
+                "value": "compare",
+                "label": "先比较几种模式，不选平台"
+              },
+              {
+                "value": "unknown",
+                "label": "还没想清楚"
+              },
+              {
+                "value": "skip",
+                "label": "先跳过"
+              }
+            ]
+          },
+          {
+            "id": "supply",
+            "prompt": "你目前与商品供应链是什么关系？",
+            "options": [
+              {
+                "value": "factory",
+                "label": "有工厂或稳定供货资源"
+              },
+              {
+                "value": "brand",
+                "label": "有品牌或明确商品"
+              },
+              {
+                "value": "sourcing",
+                "label": "有采购与供应商协作经验"
+              },
+              {
+                "value": "none",
+                "label": "还没有供货基础"
+              },
+              {
+                "value": "unknown",
+                "label": "还没想清楚"
+              },
+              {
+                "value": "skip",
+                "label": "先跳过"
+              }
+            ],
+            "when": {
+              "model": [
+                "b2b",
+                "retail",
+                "content"
+              ]
+            }
+          },
+          {
+            "id": "content",
+            "prompt": "内容制作与创作者协作方面，你有什么条件？",
+            "options": [
+              {
+                "value": "self",
+                "label": "自己或团队能持续做内容"
+              },
+              {
+                "value": "partner",
+                "label": "能与创作者 / 内容团队协作"
+              },
+              {
+                "value": "none",
+                "label": "暂时没有内容协作条件"
+              },
+              {
+                "value": "unknown",
+                "label": "还没想清楚"
+              },
+              {
+                "value": "skip",
+                "label": "先跳过"
+              }
+            ],
+            "when": {
+              "model": [
+                "content"
+              ],
+              "supply": [
+                "factory",
+                "brand",
+                "sourcing"
+              ]
+            }
+          }
+        ],
+        "recommendations": [
+          {
+            "id": "platform-compare",
+            "title": "先比较四个平台的工作与限制",
+            "when": {
+              "model": [
+                "compare"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.platform-amazon",
+              "r365.resource.platform-alibaba-com",
+              "r365.resource.platform-temu",
+              "r365.resource.platform-tiktok-shop"
+            ],
+            "reason": "你明确选择先比较，不需要猜测预算、供货或开户资格。先看模式、责任和未知项，不急着报名。",
+            "cautions": [
+              "只推荐优先了解，不确认开户资格、利润或收入。",
+              "所在地区、经营主体、品类和实际卖家模式必须以申请时官方资料核验。"
+            ]
+          },
+          {
+            "id": "platform-b2b",
+            "title": "优先了解 Alibaba.com 国际站",
+            "when": {
+              "model": [
+                "b2b"
+              ],
+              "supply": [
+                "factory",
+                "brand",
+                "sourcing"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.platform-alibaba-com"
+            ],
+            "reason": "你选择企业客户供货，并明确已有商品或供应商协作基础；国际站资料可帮助理解企业验证、规格、询盘和报价责任。",
+            "cautions": [
+              "只推荐优先了解，不确认开户资格、利润或收入。",
+              "所在地区、经营主体、品类和实际卖家模式必须以申请时官方资料核验。"
+            ]
+          },
+          {
+            "id": "platform-retail",
+            "title": "优先了解 Amazon；对照 Temu 的所在地与模式",
+            "when": {
+              "model": [
+                "retail"
+              ],
+              "supply": [
+                "factory",
+                "brand",
+                "sourcing"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.platform-amazon",
+              "r365.resource.platform-temu"
+            ],
+            "reason": "你选择商品零售且已有商品或供应链基础，先比较刊登、库存、履约与退货；Temu 尤其要确认所在地和实际可用入口。",
+            "cautions": [
+              "只推荐优先了解，不确认开户资格、利润或收入。",
+              "所在地区、经营主体、品类和实际卖家模式必须以申请时官方资料核验。"
+            ]
+          },
+          {
+            "id": "platform-content",
+            "title": "优先了解 TikTok Shop",
+            "when": {
+              "model": [
+                "content"
+              ],
+              "supply": [
+                "factory",
+                "brand",
+                "sourcing"
+              ],
+              "content": [
+                "self",
+                "partner"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.platform-tiktok-shop"
+            ],
+            "reason": "你明确同时有商品与内容协作条件，可先看内容生态和订单经营如何衔接；仍需当地官方资格审核。",
+            "cautions": [
+              "只推荐优先了解，不确认开户资格、利润或收入。",
+              "所在地区、经营主体、品类和实际卖家模式必须以申请时官方资料核验。"
+            ]
+          },
+          {
+            "id": "platform-no-supply",
+            "title": "先了解模式与供货责任，不急着开店",
+            "when": {
+              "model": [
+                "b2b",
+                "retail",
+                "content"
+              ],
+              "supply": [
+                "none"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.platform-amazon",
+              "r365.resource.platform-alibaba-com",
+              "r365.resource.platform-temu",
+              "r365.resource.platform-tiktok-shop"
+            ],
+            "reason": "你明确暂时没有供货基础，仍然可以先理解和比较。先看各模式需要谁负责商品、规格、库存与售后，不能跳过这些责任直接投入。",
+            "cautions": [
+              "只推荐优先了解，不确认开户资格、利润或收入。",
+              "所在地区、经营主体、品类和实际卖家模式必须以申请时官方资料核验。"
+            ]
+          },
+          {
+            "id": "platform-content-gap",
+            "title": "先了解 TikTok Shop 的内容与订单责任",
+            "when": {
+              "model": [
+                "content"
+              ],
+              "supply": [
+                "factory",
+                "brand",
+                "sourcing"
+              ],
+              "content": [
+                "none"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.platform-tiktok-shop"
+            ],
+            "reason": "你想了解内容经营，但明确暂时没有内容协作条件。先看工作差异和需要补齐的协作，不把商品基础当成内容经营能力，也不要求先投入拍摄或投放。",
+            "cautions": [
+              "只推荐优先了解，不确认开户资格、利润或收入。",
+              "所在地区、经营主体、品类和实际卖家模式必须以申请时官方资料核验。"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "r365.scenario.guide-work-growth",
+      "type": "scenario",
+      "slug": "guide-work-growth",
+      "title": "在岗成长｜从已有工作找升级空间",
+      "summary": "不需要先转行。我可以帮你把产品或运营工作中的 AI 协作看清楚：哪些能力可以迁移，哪些节点值得改善，哪些判断仍要保留。你可以只理解比较，也可以带着一个明确工作继续。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "intake",
+        "audience": "work-growth",
+        "introduction": "不需要先转行。我可以帮你把产品或运营工作中的 AI 协作看清楚：哪些能力可以迁移，哪些节点值得改善，哪些判断仍要保留。你可以只理解比较，也可以带着一个明确工作继续。",
+        "coverageNote": "首批详细覆盖产品与运营营销；跨境在岗仅承接已有九方向资料。其他职业暂无专门方案，不猜测匹配。已有明确任务可直接用旧场景目录，本向导不会强制重新访谈。",
+        "questions": [
+          {
+            "id": "purpose",
+            "prompt": "这次你更希望得到什么帮助？",
+            "options": [
+              {
+                "value": "understand",
+                "label": "先理解岗位与能力变化"
+              },
+              {
+                "value": "improve",
+                "label": "比较一个现有工作怎么改进"
+              },
+              {
+                "value": "transition",
+                "label": "比较升级与转向新岗位"
+              },
+              {
+                "value": "unknown",
+                "label": "还没想清楚"
+              },
+              {
+                "value": "skip",
+                "label": "先跳过"
+              }
+            ]
+          },
+          {
+            "id": "role",
+            "prompt": "你想从哪类当前工作出发？",
+            "options": [
+              {
+                "value": "product",
+                "label": "产品经理 / 产品运营"
+              },
+              {
+                "value": "operations",
+                "label": "运营、营销、增长或社群"
+              },
+              {
+                "value": "cross-border",
+                "label": "跨境电商运营"
+              },
+              {
+                "value": "other",
+                "label": "其他工作"
+              },
+              {
+                "value": "unknown",
+                "label": "还没想清楚"
+              },
+              {
+                "value": "skip",
+                "label": "先跳过"
+              }
+            ],
+            "when": {
+              "purpose": [
+                "understand",
+                "improve",
+                "transition"
+              ]
+            }
+          }
+        ],
+        "recommendations": [
+          {
+            "id": "career-product-manager-ai-upgrade",
+            "title": "先看产品岗位的 AI 升级",
+            "when": {
+              "purpose": [
+                "understand",
+                "improve",
+                "transition"
+              ],
+              "role": [
+                "product"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-product-manager-ai-upgrade"
+            ],
+            "reason": "你选择从产品工作出发，先看人机协作、模型评估与反馈，而不是追加工具清单。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-operations-marketing-ai-upgrade",
+            "title": "先看运营营销的 AI 升级",
+            "when": {
+              "purpose": [
+                "understand",
+                "improve",
+                "transition"
+              ],
+              "role": [
+                "operations"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-operations-marketing-ai-upgrade"
+            ],
+            "reason": "你选择从运营出发，先比较输入、输出、复核与复盘如何稳定协作，不把产出数量当成业务价值。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-cross-border-ecommerce-ai-upgrade",
+            "title": "先看跨境在岗的 AI 升级",
+            "when": {
+              "purpose": [
+                "understand",
+                "improve",
+                "transition"
+              ],
+              "role": [
+                "cross-border"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-cross-border-ecommerce-ai-upgrade"
+            ],
+            "reason": "你选择已有跨境工作，承接原职业的多语言信息、成本与合规判断；平台入行资料可另外浏览。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          },
+          {
+            "id": "career-ai-product",
+            "title": "同时比较 AI 产品新分工",
+            "when": {
+              "purpose": [
+                "transition"
+              ],
+              "role": [
+                "product"
+              ]
+            },
+            "resourceIds": [
+              "r365.resource.career-ai-product"
+            ],
+            "reason": "你明确想比较转向新岗位，补充 AI 产品职责作对照；不因现有产品身份推定已符合招聘条件。",
+            "cautions": [
+              "这是方向与资料匹配，不是能力评分或录用预测。",
+              "招聘、市场与客户证据仍需结合目标地区和时间核验；待补项保持待补。"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "r365.scenario.product-visual-kit",
+      "slug": "product-visual-kit",
+      "tags": [
+        "本地生活",
+        "产品视觉",
+        "海报",
+        "生图"
+      ],
+      "type": "scenario",
+      "title": "本地小店产品视觉素材包",
+      "status": "current",
+      "summary": "围绕一个真实产品生成三个视觉方向和一条任务专属 Prompt，不虚构产品信息。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/product-visual-kit.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2027-02-12"
+      },
+      "contentPath": "content/scenarios/product-visual-kit.json",
+      "deliverable": "3 个海报方向和 1 条可直接使用的任务专属 Prompt",
+      "match_terms": [
+        "门店",
+        "小店",
+        "咖啡店",
+        "产品海报",
+        "视觉素材",
+        "商品图片"
+      ],
+      "next_intent": "visual",
+      "workflow_ids": [
+        "r365.workflow.product-visual-kit"
+      ],
+      "applicability": {
+        "goals": [
+          "visual-content",
+          "product-promotion"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ],
+        "constraints": [
+          "low-budget",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "product-visual-kit"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "excluded_constraints": [
+          "missing-product-facts"
+        ]
+      },
+      "schema_version": "1.0.0",
+      "completion_criteria": [
+        "三个方向都说明用途、比例、准确文字与视觉重点。",
+        "Prompt 只使用已确认的产品事实。",
+        "用户能选择一个方向继续生成或交给设计师。"
+      ],
+      "recommendation_weight": 5
+    },
+    {
+      "id": "r365.scenario.weekly-content-kit",
+      "slug": "weekly-content-kit",
+      "tags": [
+        "本地生活",
+        "内容运营",
+        "获客",
+        "小店"
+      ],
+      "type": "scenario",
+      "title": "本地小店一周获客内容包",
+      "status": "current",
+      "summary": "把一家本地小店的真实卖点转成一周可发布内容，并明确首篇文案与封面方向。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/weekly-content-kit.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2027-02-12"
+      },
+      "contentPath": "content/scenarios/weekly-content-kit.json",
+      "deliverable": "7 条可发布选题、1 篇完整文案和 1 个封面方向",
+      "match_terms": [
+        "门店",
+        "小店",
+        "咖啡店",
+        "餐厅",
+        "零售",
+        "一周内容",
+        "获客内容"
+      ],
+      "next_intent": "writing",
+      "workflow_ids": [
+        "r365.workflow.weekly-content-kit"
+      ],
+      "applicability": {
+        "goals": [
+          "content-growth",
+          "customer-acquisition"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ],
+        "constraints": [
+          "free-only",
+          "low-budget",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "weekly-content-kit"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "excluded_constraints": []
+      },
+      "schema_version": "1.0.0",
+      "completion_criteria": [
+        "七条选题分别对应真实顾客问题或购买理由。",
+        "至少一篇文案可以继续编辑和发布。",
+        "封面方向包含准确文字、比例和视觉重点。"
+      ],
+      "recommendation_weight": 20
+    },
+    {
+      "id": "r365.workflow.creator-ip-industry-cognition",
+      "goal": "在 45–75 分钟内形成可信行业认知地图并进入一个七天真实验证任务。",
+      "slug": "creator-ip-industry-cognition",
+      "tags": [
+        "自媒体",
+        "个人 IP",
+        "行业认知",
+        "Workflow"
+      ],
+      "type": "workflow",
+      "nodes": [
+        {
+          "id": "define-entry-context",
+          "title": "5 分钟：明确方向、目标与起点",
+          "action": "限定一个细分方向、一个主阵地候选和七天可验证问题。",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.rhzl-creator-ip-industry-cognition"
+          ],
+          "completion_criteria": [
+            "方向、目标、主阵地、起点和待验证问题齐全。"
+          ]
+        },
+        {
+          "id": "map-value-chain",
+          "title": "10 分钟：看清价值链与价值交换",
+          "action": "从受众问题出发，标出角色、投入、获得和可能承担的位置。",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.rhzl-creator-ip-industry-cognition"
+          ],
+          "completion_criteria": [
+            "至少包含受众、创作者与平台，且商业模式没有被简化成粉丝数。"
+          ]
+        },
+        {
+          "id": "learn-core-mechanisms",
+          "title": "20 分钟：理解关键机制",
+          "action": "围绕定位、内容、分发、信任与变现记录可回溯判断和适用边界。",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.rhzl-creator-ip-industry-cognition"
+          ],
+          "completion_criteria": [
+            "关键结论有来源、局限或反证，且没有保证性表述。"
+          ]
+        },
+        {
+          "id": "calibrate-with-evidence",
+          "title": "10 分钟：用案例、失败与反证校准",
+          "action": "区分观察、因果与不可复制条件，记录自己的风险边界。",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.rhzl-creator-ip-industry-cognition"
+          ],
+          "completion_criteria": [
+            "至少保留一条失败或反向证据及其不可复制条件。"
+          ]
+        },
+        {
+          "id": "build-cognition-map",
+          "title": "15 分钟：生成认知地图与 7 天验证任务",
+          "action": "收敛三条有取舍的路径，只选择一个低成本、可逆且反馈快的七天任务。",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.rhzl-creator-ip-industry-cognition"
+          ],
+          "completion_criteria": [
+            "九部分齐全，唯一下一步可执行且成功证据可观察。"
+          ]
+        }
+      ],
+      "title": "一小时吃透自媒体 / IP 行业 Workflow",
+      "status": "current",
+      "summary": "公开 Catalog 只保留跨载体五步合同；详细证据包、用户状态和成果保存由 RHZL 运行时承载。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/creator-ip-industry-cognition.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2026-11-12"
+      },
+      "contentPath": "content/workflows/creator-ip-industry-cognition.json",
+      "match_terms": [
+        "自媒体",
+        "个人IP",
+        "一小时",
+        "行业认知",
+        "七天验证"
+      ],
+      "scenario_ids": [
+        "r365.scenario.creator-ip-industry-cognition"
+      ],
+      "applicability": {
+        "goals": [
+          "industry-cognition",
+          "career-entry",
+          "creator-positioning"
+        ],
+        "identities": [
+          "creator",
+          "career-switcher",
+          "brand-content-operator"
+        ],
+        "constraints": [
+          "evidence-aware",
+          "no-guaranteed-outcome",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "industry-cognition-map",
+          "seven-day-validation-task"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "excluded_constraints": [
+          "guaranteed-growth-required"
+        ]
+      },
+      "schema_version": "1.0.0",
+      "estimated_minutes": 60,
+      "completion_criteria": [
+        "固定九部分认知地图齐全且关键结论可回溯。",
+        "没有把头部案例、市场增长或平台规则写成个体保证。",
+        "下一步只有一个，并能在七天内留下可观察证据。"
+      ]
+    },
+    {
+      "id": "r365.workflow.customer-feedback-review",
+      "goal": "把脱敏反馈转成有证据的优势、问题和三条优先动作。",
+      "slug": "customer-feedback-review",
+      "tags": [
+        "顾客反馈",
+        "服务改进",
+        "Workflow"
+      ],
+      "type": "workflow",
+      "nodes": [
+        {
+          "id": "sanitize-input",
+          "title": "脱敏并界定样本",
+          "action": "删除可识别信息，记录时间范围、渠道与样本量。",
+          "prompt_ids": [],
+          "resource_ids": [],
+          "completion_criteria": [
+            "输入无可识别顾客信息，样本边界明确。"
+          ]
+        },
+        {
+          "id": "classify-feedback",
+          "title": "分类并保留证据",
+          "action": "按优势、问题、期待和例外情况分类，并保留脱敏摘录。",
+          "prompt_ids": [
+            "r365.prompt.customer-feedback-review"
+          ],
+          "resource_ids": [],
+          "completion_criteria": [
+            "分类互斥且每项结论至少有一条证据。"
+          ]
+        },
+        {
+          "id": "prioritize-actions",
+          "title": "形成优先改进动作",
+          "action": "按影响、频率、成本和可逆性选择三条动作。",
+          "prompt_ids": [],
+          "resource_ids": [],
+          "completion_criteria": [
+            "三条动作均有优先级和验证信号。"
+          ]
+        }
+      ],
+      "title": "顾客反馈整理 Workflow",
+      "status": "current",
+      "summary": "先脱敏，再把顾客反馈编码、归类和转成可验证的优先改进动作。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/customer-feedback-review.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2027-02-12"
+      },
+      "contentPath": "content/workflows/customer-feedback-review.json",
+      "match_terms": [
+        "顾客评论",
+        "差评",
+        "用户反馈",
+        "门店改进",
+        "评论整理"
+      ],
+      "scenario_ids": [
+        "r365.scenario.customer-feedback-review"
+      ],
+      "applicability": {
+        "goals": [
+          "customer-insight",
+          "service-improvement"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ],
+        "constraints": [
+          "free-only",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "customer-feedback-review"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "excluded_constraints": [
+          "contains-private-customer-data"
+        ]
+      },
+      "schema_version": "1.0.0",
+      "estimated_minutes": 35,
+      "completion_criteria": [
+        "输入已移除姓名、联系方式、订单号和其他可识别信息。",
+        "每项结论有反馈证据且没有把少量样本写成普遍事实。",
+        "前三项动作包含优先级、负责人建议和验证方式。"
+      ]
+    },
+    {
+      "id": "r365.workflow.product-visual-kit",
+      "goal": "形成三个可比较的视觉方向和一条准确、可执行的生成 Prompt。",
+      "slug": "product-visual-kit",
+      "tags": [
+        "产品视觉",
+        "海报",
+        "生图",
+        "Workflow"
+      ],
+      "type": "workflow",
+      "nodes": [
+        {
+          "id": "lock-product-facts",
+          "title": "锁定产品事实与用途",
+          "action": "确认产品名称、卖点、准确文字、目标平台、比例和禁用项。",
+          "prompt_ids": [],
+          "resource_ids": [],
+          "completion_criteria": [
+            "用途、比例、准确文字和禁用项齐全。"
+          ]
+        },
+        {
+          "id": "compare-directions",
+          "title": "比较三个视觉方向",
+          "action": "分别给出信息型、场景型和品牌型方向，说明各自取舍。",
+          "prompt_ids": [
+            "r365.prompt.local-business-visual-brief"
+          ],
+          "resource_ids": [
+            "r365.resource.visual-prompt-router"
+          ],
+          "completion_criteria": [
+            "三个方向用途清楚且没有互相重复。"
+          ]
+        },
+        {
+          "id": "finalize-prompt",
+          "title": "确定最终任务 Prompt",
+          "action": "把选中方向编译成一条包含准确文字与核验要求的 Prompt。",
+          "prompt_ids": [
+            "r365.prompt.local-business-visual-brief"
+          ],
+          "resource_ids": [
+            "r365.resource.visual-prompt-router"
+          ],
+          "completion_criteria": [
+            "Prompt 可直接交给支持的视觉工具或设计师。"
+          ]
+        }
+      ],
+      "title": "产品视觉素材包 Workflow",
+      "status": "current",
+      "summary": "锁定真实产品事实后，生成三个有取舍的视觉方向和一个可执行任务 Prompt。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/product-visual-kit.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2027-02-12"
+      },
+      "contentPath": "content/workflows/product-visual-kit.json",
+      "match_terms": [
+        "产品海报",
+        "门店视觉",
+        "商品图",
+        "封面",
+        "中文排版"
+      ],
+      "scenario_ids": [
+        "r365.scenario.product-visual-kit"
+      ],
+      "applicability": {
+        "goals": [
+          "visual-content",
+          "product-promotion"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ],
+        "constraints": [
+          "low-budget",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "product-visual-kit"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "excluded_constraints": [
+          "missing-product-facts"
+        ]
+      },
+      "schema_version": "1.0.0",
+      "estimated_minutes": 30,
+      "completion_criteria": [
+        "产品名称、卖点、限制和准确文字已经确认。",
+        "三个方向在构图或情绪上有明显取舍。",
+        "最终 Prompt 包含用途、比例、文字、禁用项和核验要求。"
+      ]
+    },
+    {
+      "id": "r365.workflow.weekly-content-kit",
+      "goal": "在约 60 分钟内形成一套可继续发布的一周获客内容包。",
+      "slug": "weekly-content-kit",
+      "tags": [
+        "内容运营",
+        "本地生活",
+        "Workflow"
+      ],
+      "type": "workflow",
+      "nodes": [
+        {
+          "id": "collect-facts",
+          "title": "收集真实卖点与顾客问题",
+          "action": "列出目标顾客、三个高频问题、三个已确认卖点和本周目标。",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.public-knowledge-search"
+          ],
+          "completion_criteria": [
+            "目标顾客、问题、卖点和目标均有真实依据。"
+          ]
+        },
+        {
+          "id": "plan-seven-topics",
+          "title": "规划七条选题",
+          "action": "让七条内容分别承担解释、证明、比较、答疑和行动引导。",
+          "prompt_ids": [],
+          "resource_ids": [
+            "r365.resource.ai-writing-humanizer"
+          ],
+          "completion_criteria": [
+            "七条选题不重复，并分别对应顾客问题。"
+          ]
+        },
+        {
+          "id": "draft-and-visual",
+          "title": "完成首篇文案与封面方向",
+          "action": "完成首篇草稿，再确定用途、比例、准确文字和视觉重点。",
+          "prompt_ids": [
+            "r365.prompt.local-business-visual-brief"
+          ],
+          "resource_ids": [
+            "r365.resource.ai-writing-humanizer",
+            "r365.resource.visual-prompt-router"
+          ],
+          "completion_criteria": [
+            "首篇草稿可编辑，封面方向可执行且没有虚构信息。"
+          ]
+        }
+      ],
+      "title": "一周获客内容包 Workflow",
+      "status": "current",
+      "summary": "从顾客问题与真实卖点出发，收敛七条选题、首篇文案和封面方向。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/weekly-content-kit.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2027-02-12"
+      },
+      "contentPath": "content/workflows/weekly-content-kit.json",
+      "match_terms": [
+        "咖啡店",
+        "门店",
+        "一周内容",
+        "获客内容",
+        "公众号",
+        "小红书"
+      ],
+      "scenario_ids": [
+        "r365.scenario.weekly-content-kit"
+      ],
+      "applicability": {
+        "goals": [
+          "content-growth",
+          "customer-acquisition"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ],
+        "constraints": [
+          "free-only",
+          "low-budget",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "weekly-content-kit"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "excluded_constraints": []
+      },
+      "schema_version": "1.0.0",
+      "estimated_minutes": 60,
+      "completion_criteria": [
+        "七条选题、首篇文案和封面方向均已形成。",
+        "事实、优惠和产品信息均来自用户确认材料。",
+        "下一步发布或复核动作明确。"
+      ]
+    },
+    {
+      "id": "r365.resource.ai-writing-humanizer",
+      "slug": "ai-writing-humanizer",
+      "tags": [
+        "Skill",
+        "中文写作",
+        "改写",
+        "内容运营"
+      ],
+      "type": "resource",
+      "title": "AI Writing Humanizer Skill",
+      "status": "current",
+      "purpose": "把已核实素材整理为更自然、保留作者判断的中文内容。",
+      "summary": "在保留事实、立场和作者声音的前提下，减少中文内容中的模板化 AI 表达。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/ai-writing-humanizer.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2027-02-12"
+      },
+      "source_url": "https://github.com/ruhang365/ruhang365-ai-writing-humanizer-skill",
+      "contentPath": "content/resources/ai-writing-humanizer.json",
+      "match_terms": [
+        "公众号",
+        "小红书",
+        "文章",
+        "文案",
+        "改写",
+        "去 AI 味"
+      ],
+      "verified_at": "2026-08-12",
+      "capabilities": [
+        "writing",
+        "rewriting",
+        "voice-preservation"
+      ],
+      "applicability": {
+        "goals": [
+          "writing",
+          "content-growth",
+          "rewrite"
+        ],
+        "identities": [
+          "creator",
+          "local-business",
+          "content-operator"
+        ],
+        "constraints": [
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "article-draft",
+          "weekly-content-kit",
+          "natural-chinese-copy"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ],
+        "excluded_constraints": [
+          "fabricate-facts"
+        ]
+      },
+      "resource_kind": "skill",
+      "repository_url": "https://github.com/ruhang365/ruhang365-ai-writing-humanizer-skill",
+      "schema_version": "1.0.0",
+      "resource_version": "0c62b83cc20e",
+      "upstream_license": "CC-BY-4.0",
+      "completion_criteria": [
+        "事实与来源边界未被改写。",
+        "作者立场和必要不确定性仍然清楚。",
+        "交付文本可由用户继续编辑和验收。"
+      ]
+    },
+    {
+      "id": "r365.resource.career-ai-agent-development",
+      "type": "resource",
+      "slug": "ai-agent-development",
+      "title": "AI 应用 / Agent 开发",
+      "summary": "围绕工具调用、数据、评估和失败恢复，构建能在真实工作里运行的 AI 应用或 Agent。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career/directions/ai-agent-development"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career/directions/ai-agent-development",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "career",
+        "direction": {
+          "slug": "ai-agent-development",
+          "name": "AI 应用 / Agent 开发",
+          "shortName": "AI 应用 / Agent 开发",
+          "category": "new-role",
+          "categoryLabel": "AI 新岗位 / 新分工",
+          "priority": "重点首发",
+          "eyebrow": "把模型接进真实流程并让它可控",
+          "summary": "围绕工具调用、数据、评估和失败恢复，构建能在真实工作里运行的 AI 应用或 Agent。",
+          "whatItDoes": "从一个明确的工作问题开始，选择模型与工具，设计上下文、权限、评估和人工接管，让系统在边界内稳定完成一段工作。",
+          "whyNow": "模型本身越来越容易调用，真正稀缺的工作转向流程设计、可靠性和交付。入行实验室中的第一方工具可帮助你看见这种工作形态，但不等于已证明招聘需求。",
+          "difference": "它不是单纯写 Prompt，也不是把聊天窗口换个名字；核心是让模型成为可观察、可恢复的流程部件。",
+          "fitFor": [
+            "有软件开发、自动化、数据或复杂流程经验的人",
+            "愿意同时处理代码、业务规则和用户反馈的人",
+            "希望从小范围可运行场景开始验证的人"
+          ],
+          "transferableExperience": [
+            "脚本、接口和系统集成",
+            "流程梳理、异常处理和日志意识",
+            "把复杂需求拆成可测试步骤"
+          ],
+          "entryThreshold": [
+            "能写出输入、工具、输出和失败条件",
+            "能用一个小场景完成端到端验证",
+            "知道密钥、隐私、权限和人工复核不能省略"
+          ],
+          "learnNext": [
+            "Agent 工作流和工具调用",
+            "评估、观测与失败恢复",
+            "从一个真实场景做最小可运行验证"
+          ],
+          "resources": [
+            {
+              "label": "Codex 场景导航器",
+              "href": "/tools/lab/codex-scenario-guide",
+              "kind": "tool",
+              "note": "按实际问题找到桌面端使用手册与恢复入口。"
+            },
+            {
+              "label": "AI 全流程项目交付框架",
+              "href": "/tools/lab/ai-project-delivery",
+              "kind": "tool",
+              "note": "理解从模糊想法到可验收系统的交付边界。"
+            },
+            {
+              "label": "入行实验室",
+              "href": "/tools/lab",
+              "kind": "tool",
+              "note": "查看第一方工具的状态，不把 Preview 当成正式服务。"
+            }
+          ],
+          "signals": [
+            {
+              "kind": "招聘需求",
+              "status": "已接入外部来源",
+              "statement": "OpenAI 官方招聘页列出 Applied AI Engineer, Codex Core Agent，职责包含真实任务评估、工具调用、生产故障分析和 Agent 可靠性；这是一个岗位样本，不代表整体市场规模。",
+              "sourceUrl": "https://openai.com/careers/applied-ai-engineer-codex-core-agent-san-francisco/",
+              "sourceLabel": "OpenAI Careers · Applied AI Engineer, Codex Core Agent",
+              "observedAt": "2026-09-13",
+              "region": "美国与英国多个办公地点"
+            },
+            {
+              "kind": "讨论热度",
+              "status": "已接入站内资料",
+              "statement": "实验室工具和公开使用手册能说明问题形态，不能代替就业需求。"
+            },
+            {
+              "kind": "商业需求",
+              "status": "已接入外部来源",
+              "statement": "OpenAI 与 Accenture 公布的合作包含为企业设计、测试和部署定制 Agent 的方案，说明企业交付场景正在形成；这是合作方公开信号，不代表可直接获得项目。",
+              "sourceUrl": "https://openai.com/index/accenture-partnership/",
+              "sourceLabel": "OpenAI · Accenture enterprise AI partnership",
+              "observedAt": "2026-09-13",
+              "region": "企业服务（全球合作）"
+            }
+          ],
+          "evidenceNote": "招聘与企业合作信号已接入官方来源；外部信号随岗位状态和合作进展变化，不能替代用户所在地区的机会判断。"
+        },
+        "journey": {
+          "slug": "ai-agent-development",
+          "name": "AI 应用 / Agent 开发",
+          "category": "AI 新岗位",
+          "legacySlugs": [
+            "agent-engineer",
+            "ai-agent"
+          ],
+          "goal": "让模型在一个有边界的真实流程里稳定完成工作。",
+          "summary": "适合开发、自动化、数据或复杂流程背景的人。",
+          "stages": [
+            {
+              "title": "选定任务",
+              "outcome": "输入输出合同",
+              "actions": [
+                "挑一个高频且可复核的任务",
+                "列出失败条件和人工接管点"
+              ]
+            },
+            {
+              "title": "搭出闭环",
+              "outcome": "最小可运行流程",
+              "actions": [
+                "接入必要工具与数据",
+                "记录每一步结果"
+              ]
+            },
+            {
+              "title": "验证可靠性",
+              "outcome": "一份复盘",
+              "actions": [
+                "用真实样本试跑",
+                "修复最常见的一类失败"
+              ]
+            }
+          ],
+          "problems": [
+            {
+              "title": "一开始就做通用 Agent",
+              "detail": "缩小到一个任务，先证明输出真的可用。"
+            },
+            {
+              "title": "只看演示不看失败",
+              "detail": "把权限、异常与人工接管写进第一版。"
+            },
+            {
+              "title": "工具接得越多越不稳",
+              "detail": "从最少工具开始，并为每个关键动作留出可见的输入、输出和失败提示。"
+            },
+            {
+              "title": "不知道怎么评估",
+              "detail": "准备一组真实样本和人工判定规则，不用演示效果替代可靠性。"
+            },
+            {
+              "title": "权限和数据边界不清",
+              "detail": "先确定可访问范围、脱敏方式与人工接管点，不能确认时不要自动执行。"
+            }
+          ],
+          "abilities": [
+            "流程建模",
+            "工具调用与集成",
+            "评估和失败恢复"
+          ],
+          "resources": [
+            {
+              "label": "Codex 场景导航器",
+              "href": "/tools/lab/codex-scenario-guide",
+              "note": "从真实问题选择使用路径。"
+            },
+            {
+              "label": "AI 全流程项目交付框架",
+              "href": "/tools/lab/ai-project-delivery",
+              "note": "查看交付与验证边界。"
+            }
+          ]
+        }
+      },
+      "resource_kind": "guide",
+      "purpose": "围绕工具调用、数据、评估和失败恢复，构建能在真实工作里运行的 AI 应用或 Agent。"
+    },
+    {
+      "id": "r365.resource.career-ai-product",
+      "type": "resource",
+      "slug": "ai-product",
+      "title": "AI 产品",
+      "summary": "连接用户问题、模型能力、产品体验和结果验证的产品岗位。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career/directions/ai-product"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career/directions/ai-product",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "career",
+        "direction": {
+          "slug": "ai-product",
+          "name": "AI 产品",
+          "shortName": "AI 产品",
+          "category": "new-role",
+          "categoryLabel": "AI 新岗位 / 新分工",
+          "priority": "重点首发",
+          "eyebrow": "把模型能力变成用户能用的产品",
+          "summary": "连接用户问题、模型能力、产品体验和结果验证的产品岗位。",
+          "whatItDoes": "把模糊需求拆成可验证的用户场景，和研发、设计、业务一起定义模型如何进入产品，并持续检查实际使用结果。",
+          "whyNow": "当模型能力快速进入业务，产品岗位需要同时理解用户价值、模型边界和交付约束。公开团队案例可以帮助你识别这种新分工；具体招聘机会仍需按时间和地区核验。",
+          "difference": "它不只是给传统产品流程加一个 AI 标签，而是要把不确定的模型输出、评估方式和人工兜底一起设计进去。",
+          "fitFor": [
+            "有产品、运营、研究或业务判断经验的人",
+            "愿意持续观察用户与模型共同工作的结果",
+            "对新工具感兴趣但不想只做工具测评的人"
+          ],
+          "transferableExperience": [
+            "用户研究和需求取舍",
+            "跨团队推进与优先级判断",
+            "用数据或访谈复盘产品结果"
+          ],
+          "entryThreshold": [
+            "能把一个真实问题写成用户、场景、约束和结果",
+            "理解模型可能出错，能设计评估与人工兜底",
+            "能和工程团队讨论接口、数据和上线后的反馈"
+          ],
+          "learnNext": [
+            "AI 产品问题拆解与 PRD 表达",
+            "模型能力、评估和体验边界",
+            "从公开案例反推岗位职责，而不是背工具清单"
+          ],
+          "resources": [
+            {
+              "label": "AI 产品经理路线图",
+              "href": "/ai-product-manager-roadmap",
+              "kind": "route",
+              "note": "站内已有的产品方向入口，先看工作节点和适用人群。"
+            },
+            {
+              "label": "AI 产品 PRD 模板",
+              "href": "/ai-product-prd-template",
+              "kind": "route",
+              "note": "把一个产品问题展开成可讨论的结构。"
+            },
+            {
+              "label": "AI 未来团队五种工作原型",
+              "href": "/articles/ai-future-team-five-roles",
+              "kind": "article",
+              "note": "站内整理的公开团队案例，用于理解分工变化。"
+            }
+          ],
+          "signals": [
+            {
+              "kind": "招聘需求",
+              "status": "已接入外部来源",
+              "statement": "OpenAI 官方招聘页列出 Product Manager, Core Models（旧金山），职责包含模型需求、评估和产品上线；这是一个岗位样本，不代表中国市场规模。",
+              "sourceUrl": "https://openai.com/careers/product-manager-core-models-san-francisco/",
+              "sourceLabel": "OpenAI Careers · Product Manager, Core Models",
+              "observedAt": "2026-09-13",
+              "region": "San Francisco, US"
+            },
+            {
+              "kind": "讨论热度",
+              "status": "已接入站内资料",
+              "statement": "公开案例与站内文章可用于理解工作原型，不替代岗位需求证据。"
+            },
+            {
+              "kind": "商业需求",
+              "status": "已接入外部来源",
+              "statement": "OpenAI 的企业研究显示，企业使用正在从辅助走向执行，并需要把 Agent 接入上下文、工具、权限和可重复工作流；这是厂商发布的采用信号，不等于独立市场规模。",
+              "sourceUrl": "https://openai.com/index/how-enterprises-put-ai-to-work/",
+              "sourceLabel": "OpenAI · From assistance to execution",
+              "observedAt": "2026-09-13",
+              "region": "企业样本（全球）"
+            }
+          ],
+          "evidenceNote": "招聘与企业采用信号已接入可追溯来源；仍需按目标地区持续补充独立招聘和成交证据。"
+        },
+        "journey": {
+          "slug": "ai-product",
+          "name": "AI 产品",
+          "category": "AI 新岗位",
+          "legacySlugs": [
+            "ai-product-manager",
+            "ai-pm"
+          ],
+          "goal": "把一个真实用户问题，做成可以验证的 AI 产品方案。",
+          "summary": "适合已有产品、运营或研究经验，想把模型能力变成用户结果的人。",
+          "stages": [
+            {
+              "title": "看清问题",
+              "outcome": "一页场景说明",
+              "actions": [
+                "选一个你熟悉的用户任务",
+                "写清输入、限制和完成标准"
+              ]
+            },
+            {
+              "title": "设计协作",
+              "outcome": "可评估的方案",
+              "actions": [
+                "定义模型参与的位置",
+                "补上失败兜底与人工判断"
+              ]
+            },
+            {
+              "title": "验证结果",
+              "outcome": "一次用户反馈",
+              "actions": [
+                "用原型或人工模拟跑通",
+                "记录结果并修改假设"
+              ]
+            }
+          ],
+          "problems": [
+            {
+              "title": "只会写功能清单",
+              "detail": "先用用户任务和完成标准约束功能，而不是从模型能力出发。"
+            },
+            {
+              "title": "不知道如何评估效果",
+              "detail": "从一个可观察结果开始，例如完成时间、正确率或人工返工量。"
+            },
+            {
+              "title": "只看模型能力",
+              "detail": "回到用户输入、风险与完成标准，确定模型真正应该参与的环节。"
+            },
+            {
+              "title": "没有可用数据",
+              "detail": "先用合规的样例或人工模拟验证任务价值，再决定是否接数据。"
+            },
+            {
+              "title": "上线后没人用",
+              "detail": "观察用户在哪一步拒绝、修改或绕开结果，把原因写进下一轮方案。"
+            }
+          ],
+          "abilities": [
+            "用户问题拆解",
+            "模型边界判断",
+            "体验与评估设计"
+          ],
+          "resources": [
+            {
+              "label": "AI 产品经理路线图",
+              "href": "/ai-product-manager-roadmap",
+              "note": "了解工作节点与角色边界。"
+            },
+            {
+              "label": "AI 产品 PRD 模板",
+              "href": "/ai-product-prd-template",
+              "note": "把问题写成可讨论的方案。"
+            }
+          ]
+        }
+      },
+      "resource_kind": "guide",
+      "purpose": "连接用户问题、模型能力、产品体验和结果验证的产品岗位。"
+    },
+    {
+      "id": "r365.resource.career-ai-solution-delivery-fde",
+      "type": "resource",
+      "slug": "ai-solution-delivery-fde",
+      "title": "AI 方案交付 / FDE",
+      "summary": "连接客户问题、技术方案、部署协作和使用结果的交付型岗位。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career/directions/ai-solution-delivery-fde"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career/directions/ai-solution-delivery-fde",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "career",
+        "direction": {
+          "slug": "ai-solution-delivery-fde",
+          "name": "AI 方案交付 / FDE",
+          "shortName": "AI 方案交付 / FDE",
+          "category": "new-role",
+          "categoryLabel": "AI 新岗位 / 新分工",
+          "priority": "重点首发",
+          "eyebrow": "在客户现场把能力落到结果",
+          "summary": "连接客户问题、技术方案、部署协作和使用结果的交付型岗位。",
+          "whatItDoes": "理解客户的真实流程，判断买、配、连、改、建的路径，推动方案落地并用可观察结果完成验收与交接。",
+          "whyNow": "AI 方案的难点往往不在演示，而在适配真实流程、数据和组织约束。现有交付入口可以帮助你理解工作节点；客户需求和岗位规模需要按项目证据核验。",
+          "difference": "它既不是售前 PPT，也不是只写代码的研发岗位；要对方案能否被采用、运行和交接负责。",
+          "fitFor": [
+            "有咨询、售前、实施、产品或技术支持经验的人",
+            "喜欢在不确定条件下推进跨团队项目的人",
+            "能把客户语言翻译成可交付约束的人"
+          ],
+          "transferableExperience": [
+            "客户访谈与需求澄清",
+            "项目推进、风险沟通和交付验收",
+            "把方案写清楚并让不同角色协作"
+          ],
+          "entryThreshold": [
+            "能区分需求、方案、实现、部署和验收",
+            "能写出风险、权限、数据和恢复条件",
+            "能在证据不足时明确标记待验证，而不是过度承诺"
+          ],
+          "learnNext": [
+            "方案路径选择与范围控制",
+            "客户场景建模和验收设计",
+            "交付后的使用反馈与交接"
+          ],
+          "resources": [
+            {
+              "label": "AI 方案交付入口",
+              "href": "/ai-solution-delivery",
+              "kind": "route",
+              "note": "从客户问题和交付结果理解方案岗位。"
+            },
+            {
+              "label": "AI 全流程项目交付框架",
+              "href": "/tools/lab/ai-project-delivery",
+              "kind": "tool",
+              "note": "查看交付、验证和恢复边界。"
+            },
+            {
+              "label": "入行日报",
+              "href": "https://daily.ruhang365.cn",
+              "kind": "daily",
+              "note": "时效信号仍以日报和原始来源为准。"
+            }
+          ],
+          "signals": [
+            {
+              "kind": "招聘需求",
+              "status": "已接入外部来源",
+              "statement": "OpenAI 官方招聘页列出 Forward Deployed Engineer（旧金山），职责覆盖发现、技术范围、系统设计、构建、生产上线与评估反馈；这是一个岗位样本，不代表整体市场规模。",
+              "sourceUrl": "https://openai.com/careers/forward-deployed-engineer-(fde)-sf-san-francisco/",
+              "sourceLabel": "OpenAI Careers · Forward Deployed Engineer (FDE)",
+              "observedAt": "2026-09-13",
+              "region": "San Francisco, US"
+            },
+            {
+              "kind": "讨论热度",
+              "status": "已接入站内资料",
+              "statement": "站内交付框架能解释职责边界，不等于市场热度排名。"
+            },
+            {
+              "kind": "商业需求",
+              "status": "已接入外部来源",
+              "statement": "Anthropic 与 DXC 公布的合作计划培训大量面向客户组织的 FDE，把 Claude 接入银行、航空、保险、制造和政府系统；这是合作方公开信号，不代表个人可直接获得客户。",
+              "sourceUrl": "https://www.anthropic.com/news/dxc-anthropic-alliance",
+              "sourceLabel": "Anthropic · DXC forward-deployed alliance",
+              "observedAt": "2026-09-13",
+              "region": "全球企业服务"
+            }
+          ],
+          "evidenceNote": "FDE 是职责组合而非统一职称；招聘与企业合作信号已接入，但仍需按目标地区和具体项目核验。"
+        },
+        "journey": {
+          "slug": "ai-solution-delivery-fde",
+          "name": "AI 方案交付 / FDE",
+          "category": "AI 新岗位",
+          "legacySlugs": [
+            "fde",
+            "ai-solution"
+          ],
+          "goal": "把客户问题翻译成可上线、可验收的 AI 方案。",
+          "summary": "适合咨询、售前、实施、产品和技术支持经验。",
+          "stages": [
+            {
+              "title": "澄清现场",
+              "outcome": "问题与约束清单",
+              "actions": [
+                "访谈实际使用者",
+                "确认数据、权限和协作约束"
+              ]
+            },
+            {
+              "title": "选择路径",
+              "outcome": "范围可控的方案",
+              "actions": [
+                "比较买、配、连、改、建",
+                "写出验收与风险"
+              ]
+            },
+            {
+              "title": "完成交接",
+              "outcome": "可复用成果",
+              "actions": [
+                "陪同跑通关键流程",
+                "留好恢复和交接说明"
+              ]
+            }
+          ],
+          "problems": [
+            {
+              "title": "方案停在 PPT",
+              "detail": "先定义客户可以实际完成的一次动作。"
+            },
+            {
+              "title": "范围不断膨胀",
+              "detail": "把本期不做的内容和恢复条件写清。"
+            },
+            {
+              "title": "客户和一线使用者说法不同",
+              "detail": "分别记录业务目标与真实流程，让需要确认的分歧可见。"
+            },
+            {
+              "title": "现有系统接不进去",
+              "detail": "先划出可独立试跑的一段流程，明确接口、权限和人工替代方式。"
+            },
+            {
+              "title": "交付后没人接手",
+              "detail": "把验收、日常操作、异常处理和责任人放入交接材料。"
+            }
+          ],
+          "abilities": [
+            "客户场景建模",
+            "范围与风险控制",
+            "交付验收"
+          ],
+          "resources": [
+            {
+              "label": "AI 方案交付入口",
+              "href": "/ai-solution-delivery",
+              "note": "从客户问题理解交付。"
+            },
+            {
+              "label": "AI 全流程项目交付框架",
+              "href": "/tools/lab/ai-project-delivery",
+              "note": "查看验证和恢复边界。"
+            }
+          ]
+        }
+      },
+      "resource_kind": "guide",
+      "purpose": "连接客户问题、技术方案、部署协作和使用结果的交付型岗位。"
+    },
+    {
+      "id": "r365.resource.career-content-visual-services",
+      "type": "resource",
+      "slug": "content-visual-services",
+      "title": "内容视觉服务",
+      "summary": "围绕品牌、内容和视频需求，组合 AI 图像、视频与编辑能力，交付客户真正能使用的素材。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career/directions/content-visual-services"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career/directions/content-visual-services",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "career",
+        "direction": {
+          "slug": "content-visual-services",
+          "name": "内容视觉服务",
+          "shortName": "内容视觉服务",
+          "category": "independent-service",
+          "categoryLabel": "AI 创业与独立服务",
+          "priority": "基础覆盖",
+          "eyebrow": "把创意生产变成可交付服务",
+          "summary": "围绕品牌、内容和视频需求，组合 AI 图像、视频与编辑能力，交付客户真正能使用的素材。",
+          "whatItDoes": "理解内容目标、品牌约束和发布场景，选择合适的生成与编辑流程，交付可复用、可修改、可验收的视觉资产。",
+          "whyNow": "生成工具降低了试错成本，但客户仍需要审美判断、版权边界和稳定交付。工具更新快，不代表服务需求自动成立。",
+          "difference": "服务不是“帮客户生成一张图”，而是把需求、风格、修改和发布交付接成稳定流程。",
+          "fitFor": [
+            "设计、视频、内容或品牌从业者",
+            "能把审美判断写成流程并管理修改的人"
+          ],
+          "transferableExperience": [
+            "视觉与内容策划",
+            "客户沟通和版本管理",
+            "版权与发布要求判断"
+          ],
+          "entryThreshold": [
+            "能明确用途、规格、风格和交付范围",
+            "能保留素材来源、授权和修改记录"
+          ],
+          "learnNext": [
+            "图像与视频工作流",
+            "客户 brief 与验收",
+            "素材资产管理"
+          ],
+          "resources": [
+            {
+              "label": "AI 视频开工台",
+              "href": "/video",
+              "kind": "tool",
+              "note": "从人物、分镜和镜头节点理解生产流程。"
+            },
+            {
+              "label": "场景出图助手",
+              "href": "/tools/lab/visual-prompt",
+              "kind": "tool",
+              "note": "查看可审计 Prompt 案例与使用边界。"
+            },
+            {
+              "label": "AI 内容增长入口",
+              "href": "/ai-content-growth",
+              "kind": "route",
+              "note": "补齐内容目标和分发场景。"
+            }
+          ],
+          "signals": [
+            {
+              "kind": "招聘需求",
+              "status": "待补日期与地区来源",
+              "statement": "服务需求与岗位招聘需分开观察，不能用生成工具热度替代。"
+            },
+            {
+              "kind": "讨论热度",
+              "status": "待补日期与地区来源",
+              "statement": "需要按客户行业和内容类型整理讨论样本。"
+            },
+            {
+              "kind": "商业需求",
+              "status": "待补日期与地区来源",
+              "statement": "暂无公开核验的订单、客单价或复购样本。"
+            }
+          ],
+          "evidenceNote": "页面提供继续了解的生产入口，不把工具 Preview 当成外包服务承诺。"
+        },
+        "journey": {
+          "slug": "content-visual-services",
+          "name": "内容视觉服务",
+          "category": "独立服务",
+          "legacySlugs": [
+            "ai-content-service",
+            "visual-ai"
+          ],
+          "goal": "用可复核的内容与视觉成果，验证一项可持续服务。",
+          "summary": "适合内容、设计、品牌和传播背景的人。",
+          "stages": [
+            {
+              "title": "确定成果",
+              "outcome": "服务样张",
+              "actions": [
+                "定义客户可接收的交付物",
+                "确认素材与授权边界"
+              ]
+            },
+            {
+              "title": "建立方法",
+              "outcome": "可复用工作流",
+              "actions": [
+                "保留人工审稿步骤",
+                "列出风格和事实检查"
+              ]
+            },
+            {
+              "title": "交付复盘",
+              "outcome": "案例记录",
+              "actions": [
+                "让客户按标准验收",
+                "记录修改原因"
+              ]
+            }
+          ],
+          "problems": [
+            {
+              "title": "只展示效果图",
+              "detail": "同时展示目标、过程和客户可用的最终文件。"
+            },
+            {
+              "title": "客户说不清好不好",
+              "detail": "在开始前对齐用途、受众、事实来源、风格与修改轮次。"
+            },
+            {
+              "title": "人物或视觉不一致",
+              "detail": "先用人物一致性问题工具整理参考、约束和验收，再进入生成流程。"
+            },
+            {
+              "title": "素材授权不明",
+              "detail": "明确客户提供素材的使用范围，第三方素材不能默认可商用。"
+            },
+            {
+              "title": "修改无限增加",
+              "detail": "把交付格式、验收标准和本期边界写入服务说明。"
+            }
+          ],
+          "abilities": [
+            "创意表达",
+            "内容事实校验",
+            "客户协作"
+          ],
+          "resources": [
+            {
+              "label": "视频入口",
+              "href": "/video",
+              "note": "按内容形式继续探索。"
+            },
+            {
+              "label": "场景出图助手",
+              "href": "/tools/lab/visual-prompt",
+              "note": "查看可检索的场景提示词。"
+            }
+          ]
+        }
+      },
+      "resource_kind": "guide",
+      "purpose": "围绕品牌、内容和视频需求，组合 AI 图像、视频与编辑能力，交付客户真正能使用的素材。"
+    },
+    {
+      "id": "r365.resource.career-cross-border-ecommerce-ai-upgrade",
+      "type": "resource",
+      "slug": "cross-border-ecommerce-ai-upgrade",
+      "title": "跨境电商运营 AI 升级",
+      "summary": "跨境运营继续面对选品、供应链、投放和客户，但 AI 可以帮助整理多语言、多平台和多市场信息。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career/directions/cross-border-ecommerce-ai-upgrade"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career/directions/cross-border-ecommerce-ai-upgrade",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "career",
+        "direction": {
+          "slug": "cross-border-ecommerce-ai-upgrade",
+          "name": "跨境电商运营 AI 升级",
+          "shortName": "跨境电商运营 AI 升级",
+          "category": "career-upgrade",
+          "categoryLabel": "现有职业如何变化",
+          "priority": "基础覆盖",
+          "eyebrow": "把多市场信息变成可判断动作",
+          "summary": "跨境运营继续面对选品、供应链、投放和客户，但 AI 可以帮助整理多语言、多平台和多市场信息。",
+          "whatItDoes": "把商品、市场、广告和客户反馈放进可复用的分析与执行流程，同时保留合规、利润和本地化判断。",
+          "whyNow": "跨境工作天然有多语言和多数据源，AI 能降低整理成本；真正的机会仍取决于品类、地区、渠道和利润。",
+          "difference": "不能只看翻译和生成速度，还要看市场事实、供应链约束和毛利是否成立。",
+          "fitFor": [
+            "跨境电商运营与品牌出海团队",
+            "熟悉平台规则并愿意用数据复盘的人"
+          ],
+          "transferableExperience": [
+            "商品与市场分析",
+            "广告投放和转化复盘",
+            "供应商与客户协作"
+          ],
+          "entryThreshold": [
+            "能明确区分事实、推断和待核验信息",
+            "能用一个市场或商品做小范围验证"
+          ],
+          "learnNext": [
+            "跨境市场研究与信息核验",
+            "多语言内容与客服流程",
+            "利润和合规边界"
+          ],
+          "resources": [
+            {
+              "label": "工具与成本比较",
+              "href": "/ai-tools-save-money",
+              "kind": "route",
+              "note": "从成本和场景判断工具是否值得用。"
+            },
+            {
+              "label": "工具地图",
+              "href": "/tools/map",
+              "kind": "tool",
+              "note": "按跨境工作节点寻找工具组合。"
+            }
+          ],
+          "signals": [
+            {
+              "kind": "招聘需求",
+              "status": "待补日期与地区来源",
+              "statement": "需要按平台、国家和岗位职责核验招聘需求。"
+            },
+            {
+              "kind": "讨论热度",
+              "status": "待补日期与地区来源",
+              "statement": "讨论量不直接代表订单或利润，需分开记录。"
+            },
+            {
+              "kind": "商业需求",
+              "status": "待补日期与地区来源",
+              "statement": "暂无公开、可复核的成交和利润样本接入。"
+            }
+          ],
+          "evidenceNote": "跨境机会必须同时说明市场所在地、平台条件和合规约束。"
+        },
+        "journey": {
+          "slug": "cross-border-ecommerce-ai-upgrade",
+          "name": "跨境电商运营 AI 升级",
+          "category": "职业升级",
+          "legacySlugs": [
+            "cross-border-ai"
+          ],
+          "goal": "把多市场信息整理成有利润与合规边界的行动。",
+          "summary": "适合跨境运营、品牌出海和平台经营团队。",
+          "stages": [
+            {
+              "title": "限定市场",
+              "outcome": "一个验证范围",
+              "actions": [
+                "选一个品类和市场",
+                "区分事实与待核验信息"
+              ]
+            },
+            {
+              "title": "串起信息",
+              "outcome": "分析工作流",
+              "actions": [
+                "整理商品、广告和客户反馈",
+                "保留来源和本地化判断"
+              ]
+            },
+            {
+              "title": "验证行动",
+              "outcome": "一次小范围试验",
+              "actions": [
+                "确认利润与合规",
+                "复盘能否复用"
+              ]
+            }
+          ],
+          "problems": [
+            {
+              "title": "把翻译当作市场研究",
+              "detail": "市场事实、供应链和毛利仍需要单独验证。"
+            },
+            {
+              "title": "信息来源互相矛盾",
+              "detail": "保留原始来源、市场和日期，把需要当地核验的判断单独列出。"
+            },
+            {
+              "title": "忽略平台与合规差异",
+              "detail": "先确认市场、平台规则、税务与广告边界，不能用通用文案覆盖。"
+            },
+            {
+              "title": "看不到利润影响",
+              "detail": "把工具、内容和投放动作接回到成本、转化与售后，而不是只看曝光。"
+            },
+            {
+              "title": "一次铺太多国家",
+              "detail": "在一个品类、一个市场里验证可复用方法后再扩大范围。"
+            }
+          ],
+          "abilities": [
+            "市场研究",
+            "多语言工作流",
+            "利润与合规判断"
+          ],
+          "resources": [
+            {
+              "label": "工具与成本比较",
+              "href": "/ai-tools-save-money",
+              "note": "从成本判断是否值得用。"
+            },
+            {
+              "label": "工具地图",
+              "href": "/tools/map",
+              "note": "按工作节点找组合。"
+            }
+          ]
+        }
+      },
+      "resource_kind": "guide",
+      "purpose": "跨境运营继续面对选品、供应链、投放和客户，但 AI 可以帮助整理多语言、多平台和多市场信息。"
+    },
+    {
+      "id": "r365.resource.career-enterprise-ai-services",
+      "type": "resource",
+      "slug": "enterprise-ai-services",
+      "title": "企业 AI 服务",
+      "summary": "以企业真实问题为起点，提供诊断、流程设计、工具接入或交付协作的独立服务方向。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career/directions/enterprise-ai-services"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career/directions/enterprise-ai-services",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "career",
+        "direction": {
+          "slug": "enterprise-ai-services",
+          "name": "企业 AI 服务",
+          "shortName": "企业 AI 服务",
+          "category": "independent-service",
+          "categoryLabel": "AI 创业与独立服务",
+          "priority": "基础覆盖",
+          "eyebrow": "围绕客户流程做可验收的服务",
+          "summary": "以企业真实问题为起点，提供诊断、流程设计、工具接入或交付协作的独立服务方向。",
+          "whatItDoes": "先判断客户问题是否值得解决，再明确范围、交付物、数据边界和验收方式，避免把泛泛的 AI 咨询当成产品。",
+          "whyNow": "企业需要的通常不是一个模型演示，而是能接进流程并被团队使用的解决方案。是否有商业机会必须看客户预算、采购和复购信号。",
+          "difference": "服务价值来自问题判断和交付结果，不来自堆叠工具或承诺“全面 AI 化”。",
+          "fitFor": [
+            "有行业经验、客户资源或项目交付经验的人",
+            "能把复杂问题收敛成小范围服务的人"
+          ],
+          "transferableExperience": [
+            "咨询与客户访谈",
+            "流程优化和项目管理",
+            "行业知识与风险判断"
+          ],
+          "entryThreshold": [
+            "能写清楚客户、问题、范围、交付物和不适用情况",
+            "能用小试点验证价值再扩大范围"
+          ],
+          "learnNext": [
+            "服务方案与报价边界",
+            "项目验收和交接",
+            "案例证据与客户反馈"
+          ],
+          "resources": [
+            {
+              "label": "AI 方案交付入口",
+              "href": "/ai-solution-delivery",
+              "kind": "route",
+              "note": "先理解交付路径，再判断是否适合做服务。"
+            },
+            {
+              "label": "AI 项目交付框架",
+              "href": "/tools/lab/ai-project-delivery",
+              "kind": "tool",
+              "note": "查看风险、验收和恢复边界。"
+            }
+          ],
+          "signals": [
+            {
+              "kind": "招聘需求",
+              "status": "待补日期与地区来源",
+              "statement": "服务方向不等同于就业岗位，需单独观察客户需求和合作机会。"
+            },
+            {
+              "kind": "讨论热度",
+              "status": "待补日期与地区来源",
+              "statement": "需要补充有原始出处的行业问题，而不是只记录观点。"
+            },
+            {
+              "kind": "商业需求",
+              "status": "待补日期与地区来源",
+              "statement": "成交、预算和复购证据尚未公开接入。"
+            }
+          ],
+          "evidenceNote": "这是独立服务方向；页面不承诺客户、收入或接单结果。"
+        },
+        "journey": {
+          "slug": "enterprise-ai-services",
+          "name": "企业 AI 服务",
+          "category": "独立服务",
+          "legacySlugs": [
+            "enterprise-ai-consulting"
+          ],
+          "goal": "从一个可验收的企业问题开始，验证服务交付能力。",
+          "summary": "适合有行业经验、客户沟通与项目推进基础的人。",
+          "stages": [
+            {
+              "title": "选细分问题",
+              "outcome": "明确服务边界",
+              "actions": [
+                "只选一个熟悉行业",
+                "确认谁为结果付费"
+              ]
+            },
+            {
+              "title": "形成样板",
+              "outcome": "可演示交付物",
+              "actions": [
+                "用真实约束做样例",
+                "定义服务不覆盖什么"
+              ]
+            },
+            {
+              "title": "小范围交付",
+              "outcome": "客户反馈",
+              "actions": [
+                "约定验收方式",
+                "记录可复用方法"
+              ]
+            }
+          ],
+          "problems": [
+            {
+              "title": "服务说得太泛",
+              "detail": "聚焦一个客户角色、一段流程和一个可见结果。"
+            },
+            {
+              "title": "客户只问“能不能做”",
+              "detail": "反问具体谁、在哪一步、用什么判断结果，让需求从概念回到现场。"
+            },
+            {
+              "title": "报价无法对应价值",
+              "detail": "先把交付范围、验收物与不包含项写清，而不是用宽泛承诺换订单。"
+            },
+            {
+              "title": "客户数据不能直接使用",
+              "detail": "提供最小样例和脱敏验证路径，不绕过数据与权限边界。"
+            },
+            {
+              "title": "案例不够有说服力",
+              "detail": "记录问题、约束、方法和可复核结果；不要用单个好结果泛化能力。"
+            }
+          ],
+          "abilities": [
+            "行业理解",
+            "客户沟通",
+            "方案交付"
+          ],
+          "resources": [
+            {
+              "label": "AI 全流程项目交付框架",
+              "href": "/tools/lab/ai-project-delivery",
+              "note": "明确交付与恢复。"
+            },
+            {
+              "label": "入行日报",
+              "href": "https://daily.ruhang365.cn",
+              "note": "按时效信号继续研究。"
+            }
+          ]
+        }
+      },
+      "resource_kind": "guide",
+      "purpose": "以企业真实问题为起点，提供诊断、流程设计、工具接入或交付协作的独立服务方向。"
+    },
+    {
+      "id": "r365.resource.career-operations-marketing-ai-upgrade",
+      "type": "resource",
+      "slug": "operations-marketing-ai-upgrade",
+      "title": "运营营销 AI 升级",
+      "summary": "运营、增长和营销工作保留业务目标，但把信息整理、内容生产和复盘交给更稳定的协作流程。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career/directions/operations-marketing-ai-upgrade"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career/directions/operations-marketing-ai-upgrade",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "career",
+        "direction": {
+          "slug": "operations-marketing-ai-upgrade",
+          "name": "运营营销 AI 升级",
+          "shortName": "运营营销 AI 升级",
+          "category": "career-upgrade",
+          "categoryLabel": "现有职业如何变化",
+          "priority": "基础覆盖",
+          "eyebrow": "从重复整理转向判断与复盘",
+          "summary": "运营、增长和营销工作保留业务目标，但把信息整理、内容生产和复盘交给更稳定的协作流程。",
+          "whatItDoes": "围绕活动、内容、用户和数据，使用 AI 加速整理与生成，把时间留给选题、判断、沟通和结果复盘。",
+          "whyNow": "大量运营工作已经有可重复的文本、表格和分析环节；真正的升级取决于能否把 AI 接进业务闭环。",
+          "difference": "不是“会用几个工具”，而是能判断何时自动化、何时需要人工复核，并对结果负责。",
+          "fitFor": [
+            "运营、增长、社群和营销从业者",
+            "需要提高信息处理速度但不想牺牲判断的人"
+          ],
+          "transferableExperience": [
+            "活动与内容策划",
+            "用户沟通和数据复盘",
+            "跨渠道协作"
+          ],
+          "entryThreshold": [
+            "能挑出一个高频、边界清楚的工作节点",
+            "能定义输入、输出、复核和完成标准"
+          ],
+          "learnNext": [
+            "运营复盘和周报工作流",
+            "内容选题与分发",
+            "轻量自动化边界"
+          ],
+          "resources": [
+            {
+              "label": "AI 运营提效入口",
+              "href": "/ai-ops-productivity",
+              "kind": "route",
+              "note": "从常见运营场景理解升级空间。"
+            },
+            {
+              "label": "AI 内容增长入口",
+              "href": "/ai-content-growth",
+              "kind": "route",
+              "note": "查看内容工作节点与可复用材料。"
+            },
+            {
+              "label": "什么值得用",
+              "href": "/tools",
+              "kind": "tool",
+              "note": "按场景比较工具，不按品牌堆清单。"
+            }
+          ],
+          "signals": [
+            {
+              "kind": "招聘需求",
+              "status": "待补日期与地区来源",
+              "statement": "岗位需求通常仍以运营或营销职称出现，需查看 JD 的实际 AI 工作内容。"
+            },
+            {
+              "kind": "讨论热度",
+              "status": "待补日期与地区来源",
+              "statement": "需要按行业和平台补充可追溯的讨论样本。"
+            },
+            {
+              "kind": "商业需求",
+              "status": "待补日期与地区来源",
+              "statement": "暂无按客户结果核验的服务采购数据。"
+            }
+          ],
+          "evidenceNote": "重点是识别原岗位的工作变化，不把“AI 运营”自动包装成新职业。"
+        },
+        "journey": {
+          "slug": "operations-marketing-ai-upgrade",
+          "name": "运营营销 AI 升级",
+          "category": "职业升级",
+          "legacySlugs": [
+            "ai-operations",
+            "marketing-ai"
+          ],
+          "goal": "把重复整理交给流程，把时间留给选题、判断和复盘。",
+          "summary": "适合运营、增长、社群和营销从业者。",
+          "stages": [
+            {
+              "title": "拆一个工作日",
+              "outcome": "节点清单",
+              "actions": [
+                "记录一次真实执行",
+                "找可重复且可复核的步骤"
+              ]
+            },
+            {
+              "title": "做协作模板",
+              "outcome": "稳定输入输出",
+              "actions": [
+                "准备输入材料",
+                "写明人工复核点"
+              ]
+            },
+            {
+              "title": "看业务结果",
+              "outcome": "一次有效复盘",
+              "actions": [
+                "比较前后耗时与质量",
+                "调整模板而非盲目加工具"
+              ]
+            }
+          ],
+          "problems": [
+            {
+              "title": "工具很多但没有闭环",
+              "detail": "先固定一个业务指标和一次交付物。"
+            },
+            {
+              "title": "内容越来越多但质量不稳",
+              "detail": "固定事实来源、品牌边界和人工审校点，不用批量产出替代判断。"
+            },
+            {
+              "title": "团队不愿意采用",
+              "detail": "先让一位真实使用者完成一轮工作，再用结果迭代模板与分工。"
+            },
+            {
+              "title": "数据无法归因",
+              "detail": "在流程开始前明确要观察的业务信号，区分过程效率与业务结果。"
+            },
+            {
+              "title": "自动化出了错没人发现",
+              "detail": "增加抽检和停止条件，不能靠“已运行”判断工作已完成。"
+            }
+          ],
+          "abilities": [
+            "内容与活动判断",
+            "流程标准化",
+            "数据复盘"
+          ],
+          "resources": [
+            {
+              "label": "AI 运营提效入口",
+              "href": "/ai-ops-productivity",
+              "note": "查看常见工作节点。"
+            },
+            {
+              "label": "AI 内容增长入口",
+              "href": "/ai-content-growth",
+              "note": "从选题到分发组织工作。"
+            }
+          ]
+        }
+      },
+      "resource_kind": "guide",
+      "purpose": "运营、增长和营销工作保留业务目标，但把信息整理、内容生产和复盘交给更稳定的协作流程。"
+    },
+    {
+      "id": "r365.resource.career-product-manager-ai-upgrade",
+      "type": "resource",
+      "slug": "product-manager-ai-upgrade",
+      "title": "产品经理 AI 升级",
+      "summary": "传统产品经理继续负责用户价值，但要增加模型边界、评估和人机协作判断。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career/directions/product-manager-ai-upgrade"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career/directions/product-manager-ai-upgrade",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "career",
+        "direction": {
+          "slug": "product-manager-ai-upgrade",
+          "name": "产品经理 AI 升级",
+          "shortName": "产品经理 AI 升级",
+          "category": "career-upgrade",
+          "categoryLabel": "现有职业如何变化",
+          "priority": "基础覆盖",
+          "eyebrow": "在原有产品能力上补齐 AI 判断",
+          "summary": "传统产品经理继续负责用户价值，但要增加模型边界、评估和人机协作判断。",
+          "whatItDoes": "在原有需求、规划和协作工作中，加入模型可行性、数据与评估、用户反馈和失败兜底的判断。",
+          "whyNow": "AI 进入既有产品后，岗位名称未必变化，工作方法却会变化。先看清哪些能力可迁移，再决定是否转向新岗位。",
+          "difference": "重点不是学习一堆模型名词，而是能把模型不确定性纳入产品决策。",
+          "fitFor": [
+            "已有产品经理或产品运营经验的人",
+            "正在负责 AI 功能或流程改造的人"
+          ],
+          "transferableExperience": [
+            "需求分析和路线规划",
+            "用户反馈与产品迭代",
+            "跨团队协作"
+          ],
+          "entryThreshold": [
+            "能描述 AI 功能的用户结果和失败边界",
+            "能设计简单的效果评估与反馈闭环"
+          ],
+          "learnNext": [
+            "AI 产品 PRD",
+            "模型评估与体验设计",
+            "产品经理与工程协作"
+          ],
+          "resources": [
+            {
+              "label": "AI 产品 PRD 模板",
+              "href": "/ai-product-prd-template",
+              "kind": "route",
+              "note": "补齐从问题到验收的产品表达。"
+            },
+            {
+              "label": "AI 产品经理路线图",
+              "href": "/ai-product-manager-roadmap",
+              "kind": "route",
+              "note": "比较原岗位升级与新岗位要求。"
+            }
+          ],
+          "signals": [
+            {
+              "kind": "招聘需求",
+              "status": "待补日期与地区来源",
+              "statement": "传统产品岗位的 AI 要求需按具体 JD 核验，不把标题变化当成新岗位。"
+            },
+            {
+              "kind": "讨论热度",
+              "status": "待补日期与地区来源",
+              "statement": "需要持续整理有原始出处的产品实践讨论。"
+            },
+            {
+              "kind": "商业需求",
+              "status": "待补日期与地区来源",
+              "statement": "暂无按行业公开核验的项目采购证据。"
+            }
+          ],
+          "evidenceNote": "这是原职业升级方向，不与 AI 产品新岗位混为一谈。"
+        },
+        "journey": {
+          "slug": "product-manager-ai-upgrade",
+          "name": "产品经理 AI 升级",
+          "category": "职业升级",
+          "legacySlugs": [
+            "pm-ai-upgrade"
+          ],
+          "goal": "在原有产品能力上增加模型边界与人机协作判断。",
+          "summary": "不必换岗，也可以从一个正在负责的产品节点开始。",
+          "stages": [
+            {
+              "title": "挑选节点",
+              "outcome": "一个升级机会",
+              "actions": [
+                "找重复或信息密集环节",
+                "排除不该自动化的决策"
+              ]
+            },
+            {
+              "title": "改造体验",
+              "outcome": "人机协作说明",
+              "actions": [
+                "明确用户何时确认",
+                "定义错误提示与撤回"
+              ]
+            },
+            {
+              "title": "复盘成效",
+              "outcome": "可继续使用的规则",
+              "actions": [
+                "观察真实使用",
+                "保留有效的人工判断"
+              ]
+            }
+          ],
+          "problems": [
+            {
+              "title": "把 AI 当成新功能标签",
+              "detail": "先回答它让用户完成了什么，而不是它调用了什么模型。"
+            },
+            {
+              "title": "担心替代原流程",
+              "detail": "保留可撤回的人机协作节点，先让用户在低风险环节验证帮助程度。"
+            },
+            {
+              "title": "无法和研发对齐",
+              "detail": "把用户结果、输入条件、失败案例和评估方式写成同一份讨论材料。"
+            },
+            {
+              "title": "不知道从哪项工作开始",
+              "detail": "优先选择高频、信息密集且能被人工复核的一步，不从大而全改造开始。"
+            },
+            {
+              "title": "复盘只看使用次数",
+              "detail": "同时看质量、返工和用户是否愿意继续使用，避免把点击当成价值。"
+            }
+          ],
+          "abilities": [
+            "产品判断",
+            "效果评估",
+            "跨团队协作"
+          ],
+          "resources": [
+            {
+              "label": "AI 产品 PRD 模板",
+              "href": "/ai-product-prd-template",
+              "note": "整理实际需求。"
+            },
+            {
+              "label": "AI 产品经理路线图",
+              "href": "/ai-product-manager-roadmap",
+              "note": "比较升级与转岗路径。"
+            }
+          ]
+        }
+      },
+      "resource_kind": "guide",
+      "purpose": "传统产品经理继续负责用户价值，但要增加模型边界、评估和人机协作判断。"
+    },
+    {
+      "id": "r365.resource.career-small-ai-products",
+      "type": "resource",
+      "slug": "small-ai-products",
+      "title": "小型 AI 产品",
+      "summary": "围绕一个明确人群和高频问题，做小而可用的 AI 工具或服务，再根据使用与付费反馈决定是否继续。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://rhzl.ruhang365.cn/career/directions/small-ai-products"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/career/directions/small-ai-products",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "career",
+        "direction": {
+          "slug": "small-ai-products",
+          "name": "小型 AI 产品",
+          "shortName": "小型 AI 产品",
+          "category": "independent-service",
+          "categoryLabel": "AI 创业与独立服务",
+          "priority": "基础覆盖",
+          "eyebrow": "用小范围问题验证产品机会",
+          "summary": "围绕一个明确人群和高频问题，做小而可用的 AI 工具或服务，再根据使用与付费反馈决定是否继续。",
+          "whatItDoes": "先观察问题和用户，再用轻量原型、现成能力或小型 Agent 验证是否有人愿意使用，而不是先花大量时间开发。",
+          "whyNow": "模型与基础设施降低了试做成本，但发现问题、获得用户和维持服务仍是主要难点。机会样本必须经过真实验证。",
+          "difference": "不是把一个 Prompt 包装成产品，也不是看到工具能做就默认有人买。",
+          "fitFor": [
+            "有行业问题、产品或开发能力的人",
+            "愿意小步验证并接受“不继续”的创业者"
+          ],
+          "transferableExperience": [
+            "问题发现和用户访谈",
+            "原型开发与迭代",
+            "定价、运营和反馈判断"
+          ],
+          "entryThreshold": [
+            "能描述目标用户、问题频率和替代方案",
+            "能设计一个可在短周期内观察结果的验证"
+          ],
+          "learnNext": [
+            "机会筛选与问题验证",
+            "最小产品和使用反馈",
+            "成本、稳定性和停止条件"
+          ],
+          "resources": [
+            {
+              "label": "独立开发机会雷达",
+              "href": "/tools/lab/indie-developer-radar",
+              "kind": "tool",
+              "note": "浏览真实候选项目，机会样本不是已验证商机。"
+            },
+            {
+              "label": "独立开发机会文章",
+              "href": "/articles/independent-developer-opportunity-radar",
+              "kind": "article",
+              "note": "从找方向、看风险和七天验证开始。"
+            },
+            {
+              "label": "AI 项目交付框架",
+              "href": "/tools/lab/ai-project-delivery",
+              "kind": "tool",
+              "note": "控制从想法到可验收版本的范围。"
+            }
+          ],
+          "signals": [
+            {
+              "kind": "招聘需求",
+              "status": "待补日期与地区来源",
+              "statement": "创业方向不等同于招聘岗位，页面不以职位数量判断机会。"
+            },
+            {
+              "kind": "讨论热度",
+              "status": "待补日期与地区来源",
+              "statement": "机会雷达提供候选样本，不代表需求或成功概率。"
+            },
+            {
+              "kind": "商业需求",
+              "status": "待补日期与地区来源",
+              "statement": "尚未接入公开、可复核的付费和复购证据。"
+            }
+          ],
+          "evidenceNote": "先把候选问题看清，再决定做不做；不把案例、讨论或工具列表写成商机保证。"
+        },
+        "journey": {
+          "slug": "small-ai-products",
+          "name": "小型 AI 产品",
+          "category": "独立服务",
+          "legacySlugs": [
+            "indie-ai-product",
+            "micro-saas-ai"
+          ],
+          "goal": "从一个具体用户任务出发，验证是否值得做成小产品。",
+          "summary": "适合独立开发者、产品人和有明确细分问题的人。",
+          "stages": [
+            {
+              "title": "找真实摩擦",
+              "outcome": "问题证据",
+              "actions": [
+                "访谈或观察真实用户",
+                "确认现有替代方案"
+              ]
+            },
+            {
+              "title": "做最小交付",
+              "outcome": "可使用原型",
+              "actions": [
+                "只做核心任务",
+                "让用户完成一次真实动作"
+              ]
+            },
+            {
+              "title": "判断是否继续",
+              "outcome": "去留结论",
+              "actions": [
+                "记录复用与付费意愿",
+                "决定完善、转向或停止"
+              ]
+            }
+          ],
+          "problems": [
+            {
+              "title": "先做功能再找用户",
+              "detail": "先证明问题反复出现，才值得扩展产品。"
+            },
+            {
+              "title": "用户说想要但不使用",
+              "detail": "要求他们用现有替代方式完成一次任务，观察真实摩擦而不是只听偏好。"
+            },
+            {
+              "title": "功能范围不断增加",
+              "detail": "守住单一核心任务，把其他想法放入后续验证，不让它们阻塞首轮使用。"
+            },
+            {
+              "title": "不知道是否值得收费",
+              "detail": "区分节省时间、降低错误和替代成本，先验证是否持续发生。"
+            },
+            {
+              "title": "隐私与可靠性没准备好",
+              "detail": "在可控样例中验证，再决定是否让真实数据或自动操作进入产品。"
+            }
+          ],
+          "abilities": [
+            "问题验证",
+            "最小产品设计",
+            "用户反馈复盘"
+          ],
+          "resources": [
+            {
+              "label": "独立开发机会雷达",
+              "href": "/tools/lab/indie-developer-radar",
+              "note": "查看公开问题发现入口。"
+            },
+            {
+              "label": "机会雷达文章",
+              "href": "/articles/independent-developer-opportunity-radar",
+              "note": "理解证据边界。"
+            }
+          ]
+        }
+      },
+      "resource_kind": "guide",
+      "purpose": "围绕一个明确人群和高频问题，做小而可用的 AI 工具或服务，再根据使用与付费反馈决定是否继续。"
+    },
+    {
+      "id": "r365.resource.platform-alibaba-com",
+      "type": "resource",
+      "slug": "platform-alibaba-com",
+      "title": "Alibaba.com 国际站｜先了解 B2B 询盘与报价",
+      "summary": "面向企业买家的批发贸易平台。官方卖家指南包括企业验证、商品展示、回复询盘、报价请求（RFQ）与订单保护；需要理解客户需求并沟通交易条件，不只是上传商品。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://seller.alibaba.com/how-to-sell"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://seller.alibaba.com/how-to-sell",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "platform",
+        "summary": "面向企业买家的批发贸易平台。官方卖家指南包括企业验证、商品展示、回复询盘、报价请求（RFQ）与订单保护；需要理解客户需求并沟通交易条件，不只是上传商品。",
+        "fitFor": [
+          "有工厂、贸易或供应商协作背景，想理解企业采购的人",
+          "愿意处理询盘、规格、报价和客户关系的人"
+        ],
+        "requirements": [
+          "核对经营主体所在地适用的卖家方案与企业验证材料",
+          "整理可供商品、规格、产能、起订量和交期，确保信息真实",
+          "根据目标客户和商品核对报价、支付、物流、售后及合规责任"
+        ],
+        "cautions": [
+          "官方明确卖家方案随企业所在国家变化，不能套用某个国家的价格或资格",
+          "询盘、会员或 RFQ 机会不保证订单",
+          "具体贸易条款和成本必须按商品与订单核验，向导不代替交易或税务判断"
+        ],
+        "sources": [
+          {
+            "label": "Alibaba.com 官方：How to start selling",
+            "url": "https://seller.alibaba.com/how-to-sell",
+            "checkedAt": "2026-09-17"
+          }
+        ]
+      },
+      "resource_kind": "guide",
+      "purpose": "面向企业买家的批发贸易平台。官方卖家指南包括企业验证、商品展示、回复询盘、报价请求（RFQ）与订单保护；需要理解客户需求并沟通交易条件，不只是上传商品。"
+    },
+    {
+      "id": "r365.resource.platform-amazon",
+      "type": "resource",
+      "slug": "platform-amazon",
+      "title": "Amazon｜先了解商品零售与履约",
+      "summary": "通过商品刊登面向消费者销售，需选择并管理履约方式。官方入门页依次介绍开户、刊登、定价、履约和推广；先看清完整经营链路，再判断要不要投入。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://sell.amazon.com/sell"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://sell.amazon.com/sell",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "platform",
+        "summary": "通过商品刊登面向消费者销售，需选择并管理履约方式。官方入门页依次介绍开户、刊登、定价、履约和推广；先看清完整经营链路，再判断要不要投入。",
+        "fitFor": [
+          "想了解标准化商品线上零售的人",
+          "愿意研究商品信息、库存、履约和售后的品牌或供应链团队"
+        ],
+        "requirements": [
+          "先确定目标站点与注册主体，核对该站点当前身份/企业资料及收款要求",
+          "核对品类准入、商品合规和品牌授权",
+          "比较自行履约与 Amazon 履约方案，结合实际商品测算库存、物流、退货与推广成本"
+        ],
+        "cautions": [
+          "本次来源为美国官方入门资料，不代表所有国家或中国卖家的统一入驻条件",
+          "没有通用预算门槛可保证开户或盈利；费用与政策应在实际站点重新核验",
+          "刊登商品不等于获得订单，不能从平台案例推断个人收益"
+        ],
+        "sources": [
+          {
+            "label": "Amazon 官方：How to sell on Amazon",
+            "url": "https://sell.amazon.com/sell",
+            "checkedAt": "2026-09-17"
+          }
+        ]
+      },
+      "resource_kind": "guide",
+      "purpose": "通过商品刊登面向消费者销售，需选择并管理履约方式。官方入门页依次介绍开户、刊登、定价、履约和推广；先看清完整经营链路，再判断要不要投入。"
+    },
+    {
+      "id": "r365.resource.platform-temu",
+      "type": "resource",
+      "slug": "platform-temu",
+      "title": "Temu｜先核对所在地与卖家模式",
+      "summary": "本次官方页面展示美国本地卖家注册、商品管理、订单、履约与退货学习入口，并区分企业注册地或个人居住地。先核对自己能使用的入口和责任，再比较是否适合商品与供应链。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://seller.temu.com/"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://seller.temu.com/",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "platform",
+        "summary": "本次官方页面展示美国本地卖家注册、商品管理、订单、履约与退货学习入口，并区分企业注册地或个人居住地。先核对自己能使用的入口和责任，再比较是否适合商品与供应链。",
+        "fitFor": [
+          "想了解平台商品经营，愿意先核对主体所在地与履约责任的人",
+          "已有供应链协作能力，希望比较销售渠道的人"
+        ],
+        "requirements": [
+          "在官方入口选择真实经营主体所在地，核对该地区的申请资料和当前开放情况",
+          "确认实际适用的卖家模式及定价、库存、发货、退货责任",
+          "按目标地区与品类核对商品合规、费用、结算和售后条款"
+        ],
+        "cautions": [
+          "本次读取为美国本地卖家页面；页面另列中国大陆或香港卖家入口，不能将美国资料外推为中国跨境要求",
+          "全托管、半托管等模式的当前资格与责任本次未完成独立核验，保持未知，实际申请前必须核对",
+          "平台的低成本和增长文案不是利润、开户资格或订单保证"
+        ],
+        "sources": [
+          {
+            "label": "Temu 官方 Seller Center（本次为美国入口）",
+            "url": "https://seller.temu.com/",
+            "checkedAt": "2026-09-17"
+          }
+        ]
+      },
+      "resource_kind": "guide",
+      "purpose": "本次官方页面展示美国本地卖家注册、商品管理、订单、履约与退货学习入口，并区分企业注册地或个人居住地。先核对自己能使用的入口和责任，再比较是否适合商品与供应链。"
+    },
+    {
+      "id": "r365.resource.platform-tiktok-shop",
+      "type": "resource",
+      "slug": "platform-tiktok-shop",
+      "title": "TikTok Shop｜先了解内容与商品协作",
+      "summary": "在 TikTok 内连接内容、创作者与商品经营；短视频、直播或可购买内容只是经营的一部分，仍需要卖家验证、仓库/退货地址、收款、履约和售后。",
+      "version": "1.1.0",
+      "schema_version": "1.1.0",
+      "status": "current",
+      "applicability": {
+        "identities": [
+          "career-explorer"
+        ],
+        "goals": [
+          "understand-and-compare"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "constraints": [
+          "evidence-aware"
+        ],
+        "excluded_constraints": [
+          "guaranteed-income-required"
+        ],
+        "deliverables": [
+          "understanding-and-comparison"
+        ]
+      },
+      "completion_criteria": [
+        "能说清适用条件、限制和需要进一步核验的内容；理解与比较本身就是可接受结果，不要求提交任务。"
+      ],
+      "governance": {
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://ads.tiktok.com/resources/help/article/set-up-tiktok-shop-using-tiktok-seller-center"
+        },
+        "stale": false,
+        "updated_at": "2026-09-17",
+        "stale_after": "2026-12-17"
+      },
+      "source_url": "https://ads.tiktok.com/resources/help/article/set-up-tiktok-shop-using-tiktok-seller-center",
+      "verified_at": "2026-09-17",
+      "guidance": {
+        "kind": "platform",
+        "summary": "在 TikTok 内连接内容、创作者与商品经营；短视频、直播或可购买内容只是经营的一部分，仍需要卖家验证、仓库/退货地址、收款、履约和售后。",
+        "fitFor": [
+          "有内容制作能力，或能与创作者协作的商品团队",
+          "愿意同时研究内容、本地用户、订单与服务的人"
+        ],
+        "requirements": [
+          "核对当前开放市场及实际本地/跨境卖家入口，不把通用帮助页视为跨境资格证明",
+          "按当地规则准备主体/身份验证与匹配收款资料，确认仓库和退货地址",
+          "核对商品准入、内容政策、素材授权及履约售后责任"
+        ],
+        "cautions": [
+          "不同国家、主体与经营入口的条件不统一，实际申请前需要当地官方资料",
+          "有粉丝、会拍视频或愿意投放，不等于能开户或获得销售",
+          "内容曝光不等于订单或利润，也不承诺达人合作结果"
+        ],
+        "sources": [
+          {
+            "label": "TikTok 官方：Seller Center 设置（June 2026）",
+            "url": "https://ads.tiktok.com/resources/help/article/set-up-tiktok-shop-using-tiktok-seller-center",
+            "checkedAt": "2026-09-17"
+          },
+          {
+            "label": "TikTok 官方：Welcome to TikTok Shop",
+            "url": "https://ads.tiktok.com/business/library/Welcome_To_TikTok_Shop_One_Pager.pdf",
+            "checkedAt": "2026-09-17"
+          }
+        ]
+      },
+      "resource_kind": "guide",
+      "purpose": "在 TikTok 内连接内容、创作者与商品经营；短视频、直播或可购买内容只是经营的一部分，仍需要卖家验证、仓库/退货地址、收款、履约和售后。"
+    },
+    {
+      "id": "r365.resource.public-knowledge-search",
+      "slug": "public-knowledge-search",
+      "tags": [
+        "知识",
+        "公开接口",
+        "只读",
+        "检索"
+      ],
+      "type": "resource",
+      "title": "入行365公开知识检索",
+      "status": "current",
+      "purpose": "为当前 Workflow 节点补充少量公开证据和下一步材料。",
+      "summary": "通过公开只读接口检索少量、与当前任务明显相关的知识资产摘要。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/public-knowledge-search.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2026-11-12"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/api/knowledge/search",
+      "contentPath": "content/resources/public-knowledge-search.json",
+      "match_terms": [
+        "资料",
+        "知识",
+        "教程",
+        "研究",
+        "证据",
+        "入行之路"
+      ],
+      "capabilities": [
+        "public-search",
+        "evidence-retrieval"
+      ],
+      "applicability": {
+        "goals": [
+          "research",
+          "knowledge",
+          "content-growth",
+          "customer-insight"
+        ],
+        "identities": [
+          "creator",
+          "local-business",
+          "office-worker",
+          "job-seeker"
+        ],
+        "constraints": [
+          "read-only",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "evidence-list",
+          "weekly-content-kit",
+          "customer-feedback-review"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ],
+        "excluded_constraints": [
+          "offline-only",
+          "private-source-required"
+        ]
+      },
+      "resource_kind": "knowledge",
+      "repository_url": null,
+      "schema_version": "1.0.0",
+      "resource_version": "public-v1",
+      "upstream_license": "per-result",
+      "completion_criteria": [
+        "查询只包含完成任务所需的短语。",
+        "只保留公开白名单字段和明显相关结果。",
+        "服务不可用时明确降级，不虚构检索结果。"
+      ]
+    },
+    {
+      "id": "r365.resource.rhzl-creator-ip-industry-cognition",
+      "slug": "rhzl-creator-ip-industry-cognition",
+      "tags": [
+        "RHZL",
+        "Web",
+        "自媒体",
+        "行业认知",
+        "Workflow 运行时"
+      ],
+      "type": "resource",
+      "title": "RHZL 自媒体 / IP 行业认知运行时",
+      "status": "current",
+      "purpose": "在 RHZL 中执行带状态恢复、证据包和成果保存的完整行业认知 Workflow。",
+      "summary": "承载当前五步 Workflow 的详细证据、节点状态、Result 与用户确认后的 Asset；公开 Catalog 不复制这些运行时数据。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/rhzl-creator-ip-industry-cognition.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2026-11-12"
+      },
+      "source_url": "https://rhzl.ruhang365.cn/core-loop?entry=creator-ip-industry-cognition",
+      "contentPath": "content/resources/rhzl-creator-ip-industry-cognition.json",
+      "match_terms": [
+        "入行之路",
+        "自媒体",
+        "个人IP",
+        "行业认知地图",
+        "七天验证"
+      ],
+      "capabilities": [
+        "workflow-runtime",
+        "state-continuity",
+        "result-and-asset"
+      ],
+      "applicability": {
+        "goals": [
+          "industry-cognition",
+          "career-entry",
+          "creator-positioning"
+        ],
+        "identities": [
+          "creator",
+          "career-switcher",
+          "brand-content-operator"
+        ],
+        "constraints": [
+          "account-required",
+          "stateful-web-runtime",
+          "no-guaranteed-outcome"
+        ],
+        "deliverables": [
+          "industry-cognition-map",
+          "seven-day-validation-task"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "excluded_constraints": [
+          "offline-only"
+        ]
+      },
+      "resource_kind": "service",
+      "repository_url": null,
+      "schema_version": "1.0.0",
+      "resource_version": "current-production-contract",
+      "upstream_license": "service-terms",
+      "completion_criteria": [
+        "用户完成五个节点并形成行业认知地图。",
+        "用户明确选择唯一七天验证任务。",
+        "只有用户确认后才把 Result 保存为 Asset。"
+      ]
+    },
+    {
+      "id": "r365.resource.visual-prompt-router",
+      "slug": "visual-prompt-router",
+      "tags": [
+        "Skill",
+        "视觉",
+        "Prompt",
+        "封面",
+        "海报"
+      ],
+      "type": "resource",
+      "title": "Ruhang365 Visual Prompt Router",
+      "status": "current",
+      "purpose": "为生成或改图任务准备权利感知、可核验的视觉 Prompt。",
+      "summary": "先确定用途、比例、准确文字和素材边界，再形成任务专属视觉 Prompt。",
+      "version": "1.0.0",
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/visual-prompt-router.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2027-02-12"
+      },
+      "source_url": "https://github.com/fzy2012/ruhang365-visual-prompt-skill",
+      "contentPath": "content/resources/visual-prompt-router.json",
+      "match_terms": [
+        "封面",
+        "海报",
+        "信息图",
+        "图片",
+        "生图",
+        "改图",
+        "视觉"
+      ],
+      "verified_at": "2026-08-12",
+      "capabilities": [
+        "visual-brief",
+        "image-prompt",
+        "rights-aware-reference"
+      ],
+      "applicability": {
+        "goals": [
+          "visual-content",
+          "product-promotion",
+          "image-prompt"
+        ],
+        "identities": [
+          "creator",
+          "local-business",
+          "content-operator"
+        ],
+        "constraints": [
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "product-visual-kit",
+          "cover-direction",
+          "image-prompt"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ],
+        "excluded_constraints": [
+          "missing-product-facts"
+        ]
+      },
+      "resource_kind": "skill",
+      "repository_url": "https://github.com/fzy2012/ruhang365-visual-prompt-skill",
+      "schema_version": "1.0.0",
+      "resource_version": "858d8dd1ab49",
+      "upstream_license": "MIT",
+      "completion_criteria": [
+        "Prompt 明确用途、比例和准确文字。",
+        "参考素材与许可证边界被保留。",
+        "没有把生成成功描述成最终视觉已验收。"
+      ]
+    },
+    {
+      "id": "r365.prompt.customer-feedback-review",
+      "slug": "customer-feedback-review",
+      "tags": [
+        "Prompt",
+        "顾客反馈",
+        "证据",
+        "服务改进"
+      ],
+      "type": "prompt",
+      "title": "顾客反馈证据化整理 Prompt",
+      "status": "current",
+      "purpose": "把脱敏反馈整理为有证据边界的结论和改进动作。",
+      "summary": "对脱敏顾客反馈做可回溯分类，不把样本频率夸大成普遍结论。",
+      "version": "1.0.0",
+      "template": "请分析以下已经脱敏的 {{feedback_items}}。样本边界是 {{sample_scope}}。先按优势、问题、期待、例外分类；每条结论引用反馈编号并标注出现次数，不得把小样本写成普遍事实。最后按影响、频率、成本和可逆性提出三条动作，并给出各自的验证信号。",
+      "variables": [
+        "feedback_items",
+        "sample_scope"
+      ],
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/prompts/customer-feedback-review.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2027-02-12"
+      },
+      "contentPath": "content/prompts/customer-feedback-review.json",
+      "match_terms": [
+        "评论整理",
+        "差评分析",
+        "用户反馈",
+        "顾客洞察"
+      ],
+      "resource_ids": [],
+      "applicability": {
+        "goals": [
+          "customer-insight",
+          "service-improvement"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner"
+        ],
+        "constraints": [
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "customer-feedback-review"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate"
+        ],
+        "excluded_constraints": [
+          "contains-private-customer-data"
+        ]
+      },
+      "schema_version": "1.0.0",
+      "completion_criteria": [
+        "输出区分优势、问题、期待和例外。",
+        "每条结论都引用脱敏证据编号。",
+        "动作优先级说明影响、频率、成本与验证方式。"
+      ]
+    },
+    {
+      "id": "r365.prompt.local-business-visual-brief",
+      "slug": "local-business-visual-brief",
+      "tags": [
+        "Prompt",
+        "视觉",
+        "海报",
+        "封面",
+        "本地生活"
+      ],
+      "type": "prompt",
+      "title": "本地小店视觉任务 Brief",
+      "status": "current",
+      "purpose": "生成一条不虚构产品信息、包含准确文字与核验要求的视觉任务 Prompt。",
+      "summary": "把真实产品事实、用途和版式约束编译成可交给视觉工具或设计师的任务 Prompt。",
+      "version": "1.0.0",
+      "template": "为 {{business_type}} 的 {{product_name}} 制作 {{use_case}} 视觉，画面比例 {{aspect_ratio}}。必须准确出现文字：{{exact_text}}。核心卖点只使用：{{verified_claims}}。视觉重点：{{visual_focus}}。禁止：{{negative_constraints}}。生成后逐字核验文字，并检查产品信息、商标、人物和参考素材权利边界；不确定内容留空，不得补写。",
+      "variables": [
+        "business_type",
+        "product_name",
+        "use_case",
+        "aspect_ratio",
+        "exact_text",
+        "verified_claims",
+        "visual_focus",
+        "negative_constraints"
+      ],
+      "governance": {
+        "stale": false,
+        "review": {
+          "status": "approved",
+          "reviewed_at": "2026-08-12"
+        },
+        "rights": {
+          "status": "full"
+        },
+        "source": {
+          "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/prompts/local-business-visual-brief.json",
+          "kind": "owned"
+        },
+        "license": {
+          "spdx": "CC-BY-4.0",
+          "attribution": "入行365"
+        },
+        "updated_at": "2026-08-12",
+        "maintainers": [
+          "ruhang365-maintainers"
+        ],
+        "stale_after": "2027-02-12"
+      },
+      "contentPath": "content/prompts/local-business-visual-brief.json",
+      "match_terms": [
+        "门店海报",
+        "产品视觉",
+        "封面",
+        "中文排版",
+        "生图 Prompt"
+      ],
+      "resource_ids": [
+        "r365.resource.visual-prompt-router"
+      ],
+      "applicability": {
+        "goals": [
+          "visual-content",
+          "product-promotion",
+          "content-growth"
+        ],
+        "identities": [
+          "local-business",
+          "small-business-owner",
+          "creator"
+        ],
+        "constraints": [
+          "low-budget",
+          "no-private-data",
+          "cross-carrier"
+        ],
+        "deliverables": [
+          "product-visual-kit",
+          "cover-direction",
+          "weekly-content-kit"
+        ],
+        "experience_levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ],
+        "excluded_constraints": [
+          "missing-product-facts"
+        ]
+      },
+      "schema_version": "1.0.0",
+      "completion_criteria": [
+        "用途、比例、准确文字和视觉重点齐全。",
+        "产品事实与禁用项来自用户确认。",
+        "输出包含生成后文字与事实核验要求。"
+      ]
+    }
+  ]
+}

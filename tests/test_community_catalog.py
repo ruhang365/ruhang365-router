@@ -308,7 +308,7 @@ class CatalogMatcherTests(unittest.TestCase):
             def __exit__(self, *_args):
                 return None
 
-            def read(self):
+            def read(self, size=-1):
                 return json.dumps(snapshot, ensure_ascii=False).encode("utf-8")
 
         def opener(request, timeout):
@@ -547,5 +547,5 @@ class _Response:
     def __exit__(self, *_args):
         return None
 
-    def read(self):
+    def read(self, size=-1):
         return self.body

@@ -21,10 +21,13 @@ if str(SCRIPT_DIR) not in sys.path:
 
 from community_catalog import (  # noqa: E402
     DEFAULT_CATALOG_PATH,
+    FULL_CATALOG_PATH,
     load_catalog,
     match_catalog,
     resolve_catalog,
+    fetch_asset_detail,
 )
+from guidance import evaluate_guidance, current_item
 
 
 DEFAULT_BASE_URL = "https://rhzl.ruhang365.cn"
@@ -94,7 +97,9 @@ PROMPT_FIELDS = (
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--query", required=True, help="Short task-oriented query.")
+    parser.add_argument("--query", default="", help="Optional question or task; omit to start guided discovery.")
+    parser.add_argument("--guide", choices=("welcome", "career-change", "work-growth", "cross-border"), help="Start or continue career guidance.")
+    parser.add_argument("--answer", action="append", default=[], help="Local-only choice, question_id=option_value; repeat to continue.")
     parser.add_argument("--intent", choices=INTENTS, default="auto")
     parser.add_argument("--limit", type=int, default=3)
     parser.add_argument(
@@ -125,13 +130,23 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Skip remote retrieval and return the local route only.",
     )
+    parser.add_argument("--read", help="Read one matched Community asset by stable id (public detail only).")
     return parser.parse_args()
 
 
 def validate_args(args: argparse.Namespace) -> None:
     query = args.query.strip()
-    if not 2 <= len(query) <= 240:
+    if not 2 <= len(query) <= 240 and not (not query or getattr(args, "guide", None)):
         raise ValueError("query must contain 2 to 240 characters")
+    if len(query) > 240:
+        raise ValueError("query must contain at most 240 characters")
+    read_id = getattr(args, "read", None)
+    if read_id is not None and (not read_id.strip() or len(read_id) > 200 or not re.fullmatch(r"r365\.(?:scenario|workflow|resource|prompt)\.[A-Za-z0-9._-]+", read_id.strip())):
+        raise ValueError("read must be a valid Community stable id")
+    for answer in getattr(args, "answer", []):
+        key, sep, value = answer.partition("=")
+        if not sep or not key.strip() or not value.strip() or len(answer) > 240:
+            raise ValueError("answer must be question_id=option_value")
     if not 1 <= args.limit <= 5:
         raise ValueError("limit must be between 1 and 5")
     if not 0 < args.timeout <= 60:
@@ -412,6 +427,19 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
     source_status = "offline" if args.offline else "catalog_local_match"
     sources = {name: {"status": source_status, "items": []} for name in capabilities}
     warnings = [resolution["warning"]] if resolution["warning"] else []
+    detail = None
+    read_id = getattr(args, "read", None)
+    if read_id:
+        target = next((item for item in catalog.get("items", []) if item.get("id") == read_id), None)
+        if not target:
+            warnings.append("指定的 Community 资料不在当前目录版本中。")
+        elif args.offline:
+            warnings.append("离线模式只提供目录摘要；联网后再次使用 --read 读取正文。")
+        else:
+            try:
+                detail = fetch_asset_detail(args.base_url, target, timeout=args.timeout)
+            except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, OSError, ValueError, json.JSONDecodeError) as error:
+                warnings.append(f"Community 资料正文暂时不可用（{type(error).__name__}）。")
 
     return {
         "schemaVersion": "0.3",
@@ -422,6 +450,7 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
             "specialists": specialists,
             "scenarios": scenarios,
             "communityMatches": community_matches,
+            "detail": detail,
         },
         "sources": sources,
         "warnings": warnings,
@@ -432,6 +461,100 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
             "credentialsAccepted": False,
         },
     }
+
+
+def route_guidance(args: argparse.Namespace) -> dict[str, Any]:
+    audience = getattr(args, "guide", None) or "welcome"
+    execution = {"mode": "community", "remoteModelCalled": False, "writePerformed": False, "credentialsAccepted": False}
+    welcome = "我可以帮你看懂职业变化、梳理已有经验，找到适合自己的方向和学习资料；也可以结合你当前的工作，看看哪里值得改善。"
+    if audience == "welcome" and not getattr(args, "read", None):
+        return {"schemaVersion": "0.4", "displayName": "入行365｜职业成长向导", "introduction": welcome,
+            "guidance": {"status": "welcome", "question": {"id": "audience", "prompt": "你现在更接近哪种情况？", "options": [
+                {"value": "career-change", "label": "想了解新方向"},
+                {"value": "work-growth", "label": "想把当前工作做得更好"},
+                {"value": "cross-border", "label": "想开始跨境电商"},
+                {"value": "unknown", "label": "暂时说不清"}]}}, "resources": [], "warnings": [], "execution": execution}
+    answers = dict(answer.split("=", 1) for answer in getattr(args, "answer", []))
+    guidance_snapshot = args.catalog if args.catalog != DEFAULT_CATALOG_PATH else FULL_CATALOG_PATH
+    resolution = resolve_catalog(args.base_url, snapshot_path=guidance_snapshot, timeout=args.timeout, offline=args.offline)
+    catalog = resolution["catalog"]
+    guidance = ({"status": "reading", "question": None, "recommendations": [],
+                 "coverageNote": "按资料 ID 继续阅读，无需重新完成引导。"}
+                if audience == "welcome" else evaluate_guidance(catalog, audience, answers))
+    references = {ref for rec in guidance["recommendations"] for ref in rec["resourceIds"]}
+    if getattr(args, "read", None):
+        references.add(args.read)
+    resources = [{"id": item["id"], "title": item["title"], "summary": item["summary"],
+                  "sourceUrl": item.get("governance", {}).get("source", {}).get("url"),
+                  "guidance": item.get("guidance")}
+                 for item in catalog["items"] if item["id"] in references and current_item(item)]
+    warnings = [resolution["warning"]] if resolution["warning"] else []
+    detail = None
+    read_id = getattr(args, "read", None)
+    if read_id:
+        target = next((item for item in catalog["items"] if item.get("id") == read_id), None)
+        if target and not args.offline:
+            try:
+                detail = fetch_asset_detail(args.base_url, target, timeout=args.timeout)
+            except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, OSError, ValueError, json.JSONDecodeError) as error:
+                warnings.append(f"Community 资料正文暂时不可用（{type(error).__name__}）。")
+        elif args.offline:
+            warnings.append("离线模式只提供目录摘要；联网后再次使用 --read 读取正文。")
+        else:
+            warnings.append("指定的 Community 资料不在当前目录版本中。")
+    return {"schemaVersion": "0.4", "displayName": "入行365｜职业成长向导", "introduction": welcome,
+        "catalogVersion": catalog["catalogVersion"], "contentDigest": catalog["contentDigest"],
+        "catalogSource": resolution["source"], "guidance": guidance, "resources": resources, "detail": detail,
+        "warnings": warnings, "execution": execution}
+
+
+def print_guidance_markdown(result: dict[str, Any]) -> None:
+    print(f"# {result['displayName']}\n\n{result['introduction']}")
+    guidance = result["guidance"]
+    if guidance.get("question"):
+        question = guidance["question"]
+        print(f"\n{question['prompt']}")
+        for option in question["options"]:
+            print(f"- {option['label']} (`{option['value']}`)")
+        print("\n可以选不确定、跳过，或用自己的话补充；此前答案也可以修改。")
+    for recommendation in guidance.get("recommendations", []):
+        print(f"\n## {recommendation['title']}\n\n{recommendation['reason']}")
+        for caution in recommendation["cautions"]:
+            print(f"- {caution}")
+    for resource in result["resources"]:
+        print(f"\n### {resource['title']}\n\n{resource['summary']}")
+        data = resource.get("guidance") or {}
+        if data.get("kind") == "career":
+            direction = data["direction"]
+            print(f"\n实际做什么：{direction['whatItDoes']}")
+            for field, label in (("transferableExperience", "可迁移经验"), ("entryThreshold", "进入门槛"), ("learnNext", "接下来了解")):
+                print(f"\n{label}：" + "；".join(direction[field]))
+            for entry in direction["resources"]:
+                href = entry['href']
+                if href.startswith('/'):
+                    href = 'https://rhzl.ruhang365.cn' + href
+                print(f"- [{entry['label']}]({href})：{entry['note']}")
+            for signal in direction["signals"]:
+                print(f"- {signal['kind']}：{signal['statement']}（{signal.get('observedAt', '日期待补')}；{signal.get('region', '地区待补')}）")
+                if signal.get("sourceUrl"):
+                    print(f"  来源：{signal['sourceUrl']}")
+            print(f"\n证据边界：{direction['evidenceNote']}")
+        elif data.get("kind") == "platform":
+            for field, label in (("fitFor", "适合先了解的情况"), ("requirements", "需要核对的条件"), ("cautions", "适用边界")):
+                print(f"\n{label}：" + "；".join(data[field]))
+            for source in data["sources"]:
+                print(f"- [{source['label']}]({source['url']})（核验：{source['checkedAt']}）")
+    detail = result.get("detail")
+    if isinstance(detail, dict):
+        print(f"\n## 资料正文：{detail.get('title', detail.get('id', ''))}")
+        if detail.get("body"):
+            print(f"\n{detail['body']}")
+        else:
+            print("\n正文受访问条件或授权限制，请从原始来源继续。")
+    if guidance.get("coverageNote"):
+        print(f"\n{guidance['coverageNote']}")
+    for warning in result.get("warnings", []):
+        print(f"\n{warning}")
 
 
 def print_markdown(result: dict[str, Any]) -> None:
@@ -468,6 +591,11 @@ def print_markdown(result: dict[str, Any]) -> None:
                 f"(`{item['id']}` @ `{item['version']}`；匹配：{reasons})"
             )
 
+    detail = route.get("detail")
+    if isinstance(detail, dict):
+        print(f"\n## 资料正文：{detail.get('title', detail.get('id', ''))}")
+        print(detail.get("body") or "正文受访问条件或授权限制，请从原始来源继续。")
+
     labels = {"knowledge": "公开资料", "skills": "Skill 推荐", "prompts": "视觉 Prompt"}
     for source_name, source in result["sources"].items():
         print(f"\n## {labels[source_name]}（{source['status']}）")
@@ -502,13 +630,16 @@ def main() -> int:
     args = parse_args()
     try:
         validate_args(args)
-        result = route_task(args)
+        result = route_guidance(args) if getattr(args, "guide", None) or not args.query else route_task(args)
     except ValueError as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
 
     if args.format == "markdown":
-        print_markdown(result)
+        if "guidance" in result:
+            print_guidance_markdown(result)
+        else:
+            print_markdown(result)
     else:
         json.dump(result, sys.stdout, ensure_ascii=False, indent=2)
         print()
