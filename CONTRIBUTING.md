@@ -1,6 +1,6 @@
 # 贡献指南
 
-感谢帮助改进入行365能力路由器。
+感谢帮助改进入行365｜职业成长向导。公开 Router 与离线目录可以独立贡献和验证；无需 RHZL 账号、Supabase 权限或维护者数据库访问。
 
 ## 开发流程
 
@@ -8,6 +8,8 @@
 2. 修改代码、Skill 或公开合同。
 3. 运行 `./scripts/validate.sh`。
 4. 提交 Pull Request，说明用户场景、行为变化和验证证据。
+
+本地验收只依赖 Python 与随仓快照。可先复现 README 的三条离线命令，再运行 `./scripts/validate.sh`；网络可选，托管服务不可用不应阻塞离线贡献。记录实际命令、退出码、目录版本及观察到的行为；未运行的检查明确标注。不要把目录项数、clone 数或安装成功当成真实采用。用户试用按 [试用记录](docs/trial-tasks.md) 单独记录。
 
 ## Community 内容贡献
 
@@ -18,7 +20,7 @@
 3. 完整填写来源、SPDX 许可证、署名、Maintainer、审核日期、更新时间、失效日期、适用 / 不适用条件和完成标准。
 4. 专项 Skill 或工具保持独立仓库；Resource 只登记稳定 ID、用途、版本、适用性、来源与链接。
 5. 长文章继续留在 RHZL 或原始来源，用 `source_url` 引用；不要复制全文来填充 Catalog。
-6. 运行 `python3 scripts/build_catalog.py --write` 只用于验证建议结构；不得把本地生成的 Catalog 当作生产快照。
+6. 运行 `python3 scripts/build_catalog.py > /dev/null` 验证建议结构，不写随仓快照；不得把本地生成的 Catalog 当作生产快照。构建输出是内容候选，不会录入数据库。
 7. 运行 `./scripts/validate.sh` 并在 PR 中记录结果。审核通过后由维护者在 Supabase 发布，自动快照 PR 只读取 RHZL API。
 
 维护者审核时会把 `governance.review.status` 固定为 `approved`。未获批准、来源或许可证不清、引用断裂、含内部路径 / 凭证 / 用户数据的内容不得合并。
@@ -33,3 +35,5 @@
 - 不提交用户 Profile、Run、Result、Asset、Feedback、会员 / Pro 数据；RHZL 到本仓只允许公开 Catalog 快照，不包含用户数据。
 
 Bug 请提供最小可复现输入和脱敏后的结构化输出，不要粘贴请求头或环境变量。
+
+本仓不接受个人简历、联系方式、公司内部材料或个性化画像上传。反馈只需匿名试用编号、使用入口、首次成功、帮助程度和失败点；公开同一 Catalog 版本不表示服务端收集了个性化答案。RHZL 私有网站和服务端修改不在本仓贡献范围。

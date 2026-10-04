@@ -9,6 +9,8 @@
 
 `ruhang365-router` 保留现有安装与调用兼容。Codex 是一个载体，而不是唯一入口：公开核心也提供 Python CLI、JSON 输出和离线目录。
 
+本仓开源的是可移植 Router、Skill、公开协议与离线快照；RHZL 网站、托管 Catalog 服务及其私有数据库不是本仓开源范围。无需账号、会员凭据或维护者数据库权限即可运行离线 CLI；在线目录来自 RHZL 的公开只读接口。
+
 > 发布状态：职业成长引导与全内容目录 1.1.0 已上线。公开 Web 入口：[入行365｜职业成长向导](https://rhzl.ruhang365.cn/career/guide)。
 
 ## 能提供什么帮助
@@ -72,7 +74,7 @@ https://github.com/ruhang365/ruhang365-router/tree/main/skills/ruhang365-router
 
 个人回答与匹配留在当前环境，不向 Catalog API 发送问题或用户画像，不读取会员 Token、Cookie 或 API Key。
 
-客户端校验协议、公开字段和摘要；在线失败时使用有效离线快照。未知协议或损坏数据不能覆盖有效旧快照。离线内容不代表实时规则，平台条件仍需核验时效。
+服务端发布时校验公开字段；客户端复核协议、引导字段和摘要，在线失败时使用有效离线快照。未知协议或损坏数据不能覆盖有效旧快照。离线内容不代表实时规则，平台条件仍需核验时效。
 
 ```text
 GET https://rhzl.ruhang365.cn/api/community/catalog
@@ -123,6 +125,23 @@ python3 skills/ruhang365-router/scripts/route_ruhang365.py \
 
 CLI 提供可检查的引导和匹配结果，多轮自然语言交互由宿主 AI 承载。
 
+### 三个可复现的离线例子
+
+在仓库根目录运行，无需安装 Skill 或登录账号。下列选择是演示输入，不代表对你的实际情况作判断：
+
+```bash
+# AI 产品方向
+python3 skills/ruhang365-router/scripts/route_ruhang365.py --offline --guide career-change --answer route=new-role --answer new-role-focus=product --format json
+# 工作成长：从现有产品工作出发
+python3 skills/ruhang365-router/scripts/route_ruhang365.py --offline --guide work-growth --answer purpose=understand --answer role=product --format json
+# 跨境入行：有供货基础，先了解 B2B
+python3 skills/ruhang365-router/scripts/route_ruhang365.py --offline --guide cross-border --answer model=b2b --answer supply=factory --format json
+```
+
+随仓 `1.1.0` 快照中，三条命令均返回 `guidance.status=ready`、`catalogSource=offline_snapshot`，资源 ID 依次为 `r365.resource.career-ai-product`、`r365.resource.career-product-manager-ai-upgrade`、`r365.resource.platform-alibaba-com`。不带 `--answer` 可查看真实问题与选项；每次继续需保留此前答案。离线结果包含摘要、引导与来源链接，不承诺可离线读取原站全文。
+
+真实试用任务和空白记录表见 [三项试用](docs/trial-tasks.md)；目前状态为 **NOT RUN**，上述命令检查不算用户采用。
+
 ### 验证
 
 ```bash
@@ -131,14 +150,18 @@ CLI 提供可检查的引导和匹配结果，多轮自然语言交互由宿主 
 
 验证包含 Python 编译、单元测试、非覆盖式安装测试及环境可用时的官方 Skill 校验。模拟测试不计作真实外部用户采用。
 
-更新稳定快照：
+只读检查托管目录（需要网络；不写快照）：
 
 ```bash
-python3 scripts/update_catalog_snapshot.py
+python3 scripts/update_catalog_snapshot.py --check
 ./scripts/validate.sh
 ```
 
+维护者确认要更新离线分发版本时才运行不带 `--check` 的更新命令。它仅消费已发布 API，不写 RHZL 数据库；有效本地快照提供条件 ETag，304 保留原 JSON。仅网络错误及 502/503/504 最多尝试三次（含首次）；失败或下载期间目标文件被改动时保留原文件，成功更新采用同目录临时文件原子替换。不要用本地内容构建结果覆盖托管快照。
+
 ## English overview
+
+This repository open-sources the portable Router, Skill, contracts, and offline snapshots, not the hosted RHZL website, server, or private database. Offline CLI use requires no account or maintainer database access.
 
 Ruhang365 Career Guide is an open-source guidance and content-discovery layer for career exploration and professional growth. It combines explicit guidance rules with a versioned catalog to help users understand choices and find relevant resources without requiring a predefined task. Codex is one host; Python CLI, JSON output, and offline snapshots are also supported.
 

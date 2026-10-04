@@ -3,3 +3,4 @@ __pycache__/
 .DS_Store
 .venv/
 .coverage
+skills/ruhang365-router/catalog/.*.snapshot.lock

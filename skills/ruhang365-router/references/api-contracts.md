@@ -10,7 +10,13 @@ CLI 可传入 `--identity`、`--goal`、`--experience`、可重复的 `--constra
 
 Catalog 由 Supabase 当前不可变 release 生成，不包含用户状态或授权信息。完整 Schema 位于仓库根目录 `schemas/`。
 
+有效快照可为 Catalog 请求提供条件 `If-None-Match`（`catalogVersion:contentDigest` 的 SHA-256，带双引号）。200 校验新目录；304 使用已校验快照，仍记录 `catalogSource=online`。没有有效快照的 304 不可接受。显式离线为 `offline_snapshot`，在线异常降级为 `offline_fallback`。
+
+快照更新器的 `--check` 只读；网络错误与 502/503/504 最多尝试三次（含首次），其他 HTTP、协议和摘要错误不重试。这不是运行时 Router 的重试策略。更新在目标文件未被并行改动时原子替换，失败保留旧快照；304 不重写 JSON。
+
 ## RHZL 公开只读接口
+
+RHZL 是托管后端，不是本仓开源服务器；无需账号即可读取公开目录，离线 CLI 和贡献校验无需后端或数据库权限。相同发布版本可供 Web / Skill / CLI 消费，不上传个性化答案；旧快照不保证与在线最新目录一致。
 
 默认基地址：`https://rhzl.ruhang365.cn`
 
@@ -20,7 +26,7 @@ Catalog 接口不接受查询参数，不接收用户问题或 Profile。客户�
 
 ## 共同约束
 
-- Catalog 请求头仅包含 `Accept`、`Accept-Encoding: gzip` 和公开的 `User-Agent`；客户端受限解压后仍校验完整摘要，不发送 `Authorization`、Cookie 或模型密钥。
+- Catalog 请求头仅包含 `Accept`、`Accept-Encoding: gzip`、公开的 `User-Agent`，以及有有效快照时的 `If-None-Match`；客户端受限解压后仍校验完整摘要，不发送 `Authorization`、Cookie 或模型密钥。
 - 请求 URL 固定为 `/api/community/catalog`，无查询参数；正文按需读取 `/api/community/assets/<stable_id>`。
 - 输出顶层记录 `remoteModelCalled=false`、`writePerformed=false`、`credentialsAccepted=false`。
 - 公共投影通过后执行本地相关性匹配；没有明显匹配时返回空结果，不用热门但无关的结果填充。
