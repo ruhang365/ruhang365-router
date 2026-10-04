@@ -26,8 +26,10 @@ from community_catalog import (  # noqa: E402
     match_catalog,
     resolve_catalog,
     fetch_asset_detail,
+    public_content_allowed,
+    catalog_read_projection,
 )
-from guidance import evaluate_guidance, current_item
+from guidance import evaluate_guidance, current_item, guidance_matching_profile
 
 
 DEFAULT_BASE_URL = "https://rhzl.ruhang365.cn"
@@ -433,13 +435,8 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
         target = next((item for item in catalog.get("items", []) if item.get("id") == read_id), None)
         if not target:
             warnings.append("指定的 Community 资料不在当前目录版本中。")
-        elif args.offline:
-            warnings.append("离线模式只提供目录摘要；联网后再次使用 --read 读取正文。")
         else:
-            try:
-                detail = fetch_asset_detail(args.base_url, target, timeout=args.timeout)
-            except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, OSError, ValueError, json.JSONDecodeError) as error:
-                warnings.append(f"Community 资料正文暂时不可用（{type(error).__name__}）。")
+            detail = read_public_asset(args, catalog, target, warnings)
 
     return {
         "schemaVersion": "0.3",
@@ -463,6 +460,22 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def read_public_asset(args: argparse.Namespace, catalog: dict[str, Any], target: dict[str, Any],
+                      warnings: list[str]) -> dict[str, Any]:
+    detail = catalog_read_projection(catalog, target)
+    if args.offline:
+        warnings.append("离线模式保留目录已有公开结构；未获取额外正文。")
+    elif public_content_allowed(target):
+        try:
+            remote = fetch_asset_detail(args.base_url, target, timeout=args.timeout)
+            if remote.get("access", "public") == "public" and not remote.get("gated"):
+                if remote.get("body"):
+                    detail["body"] = remote["body"]
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, OSError, ValueError, json.JSONDecodeError) as error:
+            warnings.append(f"Community 资料正文暂时不可用（{type(error).__name__}）；保留目录已有公开结构。")
+    return detail
+
+
 def route_guidance(args: argparse.Namespace) -> dict[str, Any]:
     audience = getattr(args, "guide", None) or "welcome"
     execution = {"mode": "community", "remoteModelCalled": False, "writePerformed": False, "credentialsAccepted": False}
@@ -484,28 +497,44 @@ def route_guidance(args: argparse.Namespace) -> dict[str, Any]:
     references = {ref for rec in guidance["recommendations"] for ref in rec["resourceIds"]}
     if getattr(args, "read", None):
         references.add(args.read)
-    resources = [{"id": item["id"], "title": item["title"], "summary": item["summary"],
-                  "sourceUrl": item.get("governance", {}).get("source", {}).get("url"),
-                  "guidance": item.get("guidance")}
+    resources = [{**catalog_read_projection(catalog, item),
+                  "guidance": item.get("guidance") if public_content_allowed(item) else None}
                  for item in catalog["items"] if item["id"] in references and current_item(item)]
+    matching_profile = guidance_matching_profile(catalog, audience, answers, getattr(args, "query", ""))
+    community_matches = match_catalog(catalog, matching_profile, limit_per_type=args.limit, exclude_guidance=True)
+    community_matches["catalogSource"] = resolution["source"]
+    community_matches["boundary"] = "仅按已确认有效选项与自由查询匹配目录关键词；不是职业适配、能力或收益判断。"
     warnings = [resolution["warning"]] if resolution["warning"] else []
     detail = None
     read_id = getattr(args, "read", None)
     if read_id:
         target = next((item for item in catalog["items"] if item.get("id") == read_id), None)
-        if target and not args.offline:
-            try:
-                detail = fetch_asset_detail(args.base_url, target, timeout=args.timeout)
-            except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, OSError, ValueError, json.JSONDecodeError) as error:
-                warnings.append(f"Community 资料正文暂时不可用（{type(error).__name__}）。")
-        elif args.offline:
-            warnings.append("离线模式只提供目录摘要；联网后再次使用 --read 读取正文。")
+        if target:
+            detail = read_public_asset(args, catalog, target, warnings)
         else:
             warnings.append("指定的 Community 资料不在当前目录版本中。")
     return {"schemaVersion": "0.4", "displayName": "入行365｜职业成长向导", "introduction": welcome,
         "catalogVersion": catalog["catalogVersion"], "contentDigest": catalog["contentDigest"],
         "catalogSource": resolution["source"], "guidance": guidance, "resources": resources, "detail": detail,
+        "communityMatches": community_matches,
         "warnings": warnings, "execution": execution}
+
+
+def print_public_detail(detail: dict[str, Any]) -> None:
+    print(f"\n## 资料内容：{detail.get('title', detail.get('id', ''))}")
+    print(detail.get("body") or detail.get("summary", ""))
+    structured = detail.get("structured", {})
+    if structured:
+        print("\n```json")
+        print(json.dumps(structured, ensure_ascii=False, indent=2))
+        print("```")
+    for entry in detail.get("related", []):
+        print(f"- 关联资料：[{entry['title']}]({entry.get('entryUrl') or entry.get('sourceUrl') or ''}) (`{entry['id']}`)")
+    print(f"\n访问：{detail.get('access', 'public')}；授权：{detail.get('rights', {}).get('status', '未核实')}")
+    if detail.get("entryUrl"):
+        print(f"\n可用入口：{detail['entryUrl']}")
+    if detail.get("sourceUrl"):
+        print(f"\n原始来源：{detail['sourceUrl']}")
 
 
 def print_guidance_markdown(result: dict[str, Any]) -> None:
@@ -546,11 +575,13 @@ def print_guidance_markdown(result: dict[str, Any]) -> None:
                 print(f"- [{source['label']}]({source['url']})（核验：{source['checkedAt']}）")
     detail = result.get("detail")
     if isinstance(detail, dict):
-        print(f"\n## 资料正文：{detail.get('title', detail.get('id', ''))}")
-        if detail.get("body"):
-            print(f"\n{detail['body']}")
-        else:
-            print("\n正文受访问条件或授权限制，请从原始来源继续。")
+        print_public_detail(detail)
+    matches = result.get("communityMatches", {})
+    if matches:
+        print(f"\n目录关键词：{matches['profile']['query']}\n\n{matches['boundary']}")
+        for group in ("scenarios", "workflows", "resources", "prompts"):
+            for item in matches[group]:
+                print(f"- [{item['title']}]({item.get('entryUrl') or item.get('sourceUrl') or ''}) (`{item['id']}`；匹配：{', '.join(item['matchReasons'])})")
     if guidance.get("coverageNote"):
         print(f"\n{guidance['coverageNote']}")
     for warning in result.get("warnings", []):
@@ -593,8 +624,7 @@ def print_markdown(result: dict[str, Any]) -> None:
 
     detail = route.get("detail")
     if isinstance(detail, dict):
-        print(f"\n## 资料正文：{detail.get('title', detail.get('id', ''))}")
-        print(detail.get("body") or "正文受访问条件或授权限制，请从原始来源继续。")
+        print_public_detail(detail)
 
     labels = {"knowledge": "公开资料", "skills": "Skill 推荐", "prompts": "视觉 Prompt"}
     for source_name, source in result["sources"].items():

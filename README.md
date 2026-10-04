@@ -13,6 +13,8 @@
 
 > 发布状态：职业成长引导与全内容目录 1.1.0 已上线。公开 Web 入口：[入行365｜职业成长向导](https://rhzl.ruhang365.cn/career/guide)。
 
+资源导航支持读取公开目录已有的完整方法步骤、提示词、填写变量与相关资料，Web 和 Skill 使用同一来源。选择方向或补充问题后，资料查找会说明关键词依据；是否适用仍需结合资料的条件判断。目录版本保持 1.1.0，软件发行版本与目录版本分别维护。
+
 ## 能提供什么帮助
 
 | 你的情况 | 得到的帮助 |
@@ -141,6 +143,8 @@ python3 skills/ruhang365-router/scripts/route_ruhang365.py --offline --guide cro
 随仓 `1.1.0` 快照中，三条命令均返回 `guidance.status=ready`、`catalogSource=offline_snapshot`，资源 ID 依次为 `r365.resource.career-ai-product`、`r365.resource.career-product-manager-ai-upgrade`、`r365.resource.platform-alibaba-com`。不带 `--answer` 可查看真实问题与选项；每次继续需保留此前答案。离线结果包含摘要、引导与来源链接，不承诺可离线读取原站全文。
 
 真实试用任务和空白记录表见 [三项试用](docs/trial-tasks.md)；目前状态为 **NOT RUN**，上述命令检查不算用户采用。
+
+2026-10-04 完成三个全新上下文的 **AI 模拟用户测试**，分别检查转型探索、反馈整理和企业客户供货的资料发现与理解。三个情境均观察到明确帮助，也记录了长句搜索、同名资料、受限路线与 B2B 原始流程为空的限制。该结果不是实际用户采用、岗位胜任或经营效果证明。
 
 ### 验证
 

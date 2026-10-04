@@ -71,7 +71,7 @@ class IntentTests(unittest.TestCase):
 class DirectReadingTests(unittest.TestCase):
     def test_read_id_without_query_or_guide_reads_instead_of_restarting_welcome(self):
         item = {"id": "r365.resource.example", "title": "Example", "summary": "Public summary",
-                "status": "current", "governance": {"stale": False}}
+                "status": "current", "governance": {"stale": False, "rights": {"status": "full"}}}
         catalog = {"catalogVersion": "1.1.0", "contentDigest": "a" * 64, "items": [item]}
         with mock.patch.object(router, "resolve_catalog", return_value={
             "catalog": catalog, "source": "online", "warning": None,
@@ -96,7 +96,8 @@ class DirectReadingTests(unittest.TestCase):
             result = router.route_guidance(arguments(query="", catalog=router.DEFAULT_CATALOG_PATH,
                 read=item["id"], offline=True))
         self.assertEqual(result["resources"][0]["summary"], "Public summary")
-        self.assertIsNone(result["detail"])
+        self.assertEqual(result["detail"]["summary"], "Public summary")
+        self.assertEqual(result["detail"]["structured"], {})
         fetch_detail.assert_not_called()
 
 
