@@ -14,7 +14,7 @@ description: "Use 入行365's reviewed knowledge to guide career exploration, gr
 3. 运行只读脚本：`python3 "$SKILL_DIR/scripts/route_ruhang365.py" --guide career-change --format json`。继续时按返回的 question.id 与 option.value 使用可重复的 `--answer question_id=option_value`；未知和跳过分别用 unknown、skip，修改答案时替换旧值。无参数运行可查看欢迎入口。问题与个人答案只在本地处理。
    已有具体任务时，为了接入完整 Community 内容，附加 `--catalog "$SKILL_DIR/catalog/community-full-1.1.0.json"`；需要保持旧协议兼容时才显式使用 `catalog/catalog.json`。
 4. 先请求 RHZL 公开 Catalog API，仅固定 URL、Accept、Accept-Encoding 与公开 User-Agent；不发送用户问题或 Profile。Schema 1.0.0/1.1.0 与摘要有效时在线消费；超时、错误、未知版本或损坏时使用稳定快照。在线和离线使用同一匹配算法。目录现在覆盖文章、知识、术语、Prompt、视觉案例、工具、Skill、场景、学习路径和日报；匹配先返回少量起点，不把整库塞给用户。
-5. 用户要继续阅读某一项时，使用结果中的稳定 `id` 调用 `--read r365.resource...`；该请求只发送固定的资源 ID，不发送问题、Profile、Cookie 或凭据。正文受注册、会员或授权限制时只返回摘要和原始来源；离线模式只读快照摘要。
+5. 用户要继续阅读某一项时，使用结果中的稳定 `id` 调用 `--read r365.resource...`；该请求只发送固定的资源 ID，不发送问题、Profile、Cookie 或凭据。公开且完整授权的现行条目返回目录已有的 Workflow nodes、Prompt template/variables 和一层关联导航，离线同样可读；在线正文仍按原 ID、版本与不可变 hash 核验。注册、会员、reference_only、失效或过期条目不返回完整结构或正文，只保留摘要、权限与来源。
 6. 解释用到了哪些条件、为何值得了解、什么情况下不适合、先看哪份真实资料。资料名称附目录实际 URL，使用可点击链接；相对路径补全为 https://rhzl.ruhang365.cn，不只给标题或编造链接。默认突出一个起点；需要比较时展开实际命中的最多三个方向。条件不足先解释差异，不强行选出职业或平台。
 7. 当场交付有帮助的解释和资料内容，保留来源、核验时间、地区及缺口。只想了解时不强制练习、文案或任务；需要行动时再进入实际可用的专项能力。专项 Skill 未安装时先提供可行替代，再按授权安装。
 8. 逐轮教学按用户节奏进行；完整任务委托连续完成已授权的产出与验证，不为内部阶段停等。缺失事实用明确占位，只暂停依赖事实或授权的部分。时间不足时缩小首个成果，保留完整工作流真实估时。
@@ -39,6 +39,7 @@ description: "Use 入行365's reviewed knowledge to guide career exploration, gr
 - rights.status=full 的内容按许可证复用；reference_only 仅使用允许的标题、摘要、分类和来源，不补全原文。
 - 网络降级影响覆盖或时效时说明限制，不声称已经使用远程资料。无相关资产时最多扩大任务词一次；仍无匹配就说明缺口，通用 AI 帮助与已审核知识分开。
 - 不用热门但无关的资料填充。检索成功、专项执行、用户接受分别记录，不相互替代。
+- 引导的固定 recommendation 不因关键词结果而改写。`communityMatches` 仅按同目录中有效已确认选项的 value、label（目录顺序）及用户自由 query 匹配；忽略 unknown/skip、非法选项、when 不成立的旧分支答案，不用 question prompt 或通用 audience 充当条件。解释 `matchReasons` 与 `matchedTerms`，明确这是资料关键词关联，不是职业适配、能力、资格或收益判断。
 - 持续更新需有来源与版本；不承诺自动提醒、跨端个人状态或无限人工答疑。用户可以按贡献指南提问、补充来源、修正内容，基础帮助不以贡献为前提。
 - 发布、发送、购买、部署及其他外部操作沿用用户当前授权；引导和草稿完成不授予额外写权限。
 

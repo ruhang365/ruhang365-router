@@ -114,6 +114,31 @@ def current_item(item: dict[str, Any]) -> bool:
     return not expiry or (isinstance(expiry, str) and expiry >= today)
 
 
+def guidance_matching_profile(catalog: dict[str, Any], audience: str,
+                              answers: dict[str, str], query: str = "") -> dict[str, Any]:
+    """Use only active, confirmed catalog options, never question copy or audience."""
+    terms = []
+    for item in catalog.get("items", []):
+        intake = item.get("guidance", {})
+        if not current_item(item) or intake.get("kind") != "intake" or intake.get("audience") != audience:
+            continue
+        validate_guidance(intake)
+        active = {}
+        for question in intake["questions"]:
+            if not all(active.get(key) in values for key, values in question.get("when", {}).items()):
+                continue
+            value = answers.get(question["id"])
+            option = next((o for o in question["options"] if o["value"] == value
+                           and value not in ("unknown", "skip")), None)
+            if option:
+                active[question["id"]] = value
+                terms.extend((option["value"], option["label"]))
+    if query.strip():
+        terms.append(query.strip())
+    return {"identity": "", "goal": "", "experience": "", "constraints": [],
+            "deliverable": "", "query": " ".join(terms)}
+
+
 def evaluate_guidance(catalog: dict[str, Any], audience: str, answers: dict[str, str]) -> dict[str, Any]:
     result: dict[str, Any] = {"status": "no_match", "audience": audience, "question": None,
         "recommendations": [], "coverageNote": ""}

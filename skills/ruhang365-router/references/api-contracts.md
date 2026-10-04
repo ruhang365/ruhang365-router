@@ -16,6 +16,16 @@ Catalog 由 Supabase 当前不可变 release 生成，不包含用户状态或�
 
 ## RHZL 公开只读接口
 
+### 公开结构与关联导航
+
+引导关键词匹配排除含 guidance 的条目（它们由固定 recommendation 单独返回），与 Web 相关资料一致。两端 tokenizer 排除泛词 `一个/怎么/什么/比较/了解/现有/已有/当前/这里/帮助/需要/可以/以及/相关/我们`，不改变权重、不排除职业/产品/运营/用户等实质关键词。
+
+`--read` 的 `detail.structured` 只来自当前已校验 catalog 的同 ID 条目，内部保持原 snake_case 字段。Workflow 保留完整 `nodes`（id/title/action/prompt_ids/resource_ids/completion_criteria）；Prompt 保留 `template`、`variables`、`resource_ids`。仅 current、未过期、未 stale、access=public（缺省为 public）且 governance.rights.status=full 可展示完整结构；受限资料仅摘要、来源、入口、访问与授权信息。`detail.related` 是同目录的一层有效引用投影，包含稳定 ID、title、entryUrl/sourceUrl、access/rights；不自动下载关联正文。在线只按现有详情合同取 body，原 ID/version/contentHash 校验不变，不要求或接受服务端新增 structured。
+
+引导新增顶层 `communityMatches`，固定 `guidance.recommendations` 不变。profile 的 identity/goal/experience/deliverable 为空、constraints 为空，query 由同 intake 中有效已确认选项按问题顺序拼接 `value label`，最后附自由 query。when 不成立的旧分支、unknown/skip、非法选项排除，不使用 question.prompt 或 audience。匹配沿用目录关键词算法，`matchReasons` 表示命中维度、`matchedTerms` 给出实际命中词，`boundary` 明确不代表职业适配或能力评估。所有个人输入只在本地处理。引导和无 query 的直接阅读使用完整 1.1.0 快照；旧任务默认快照不变，使用完整导航时显式传入 `--catalog catalog/community-full-1.1.0.json`。
+
+示例：`python3 scripts/route_ruhang365.py --offline --guide work-growth --answer purpose=improve --answer role=product --query 用户访谈`；推导 query 为 `improve 比较一个现有工作怎么改进 product 产品经理 / 产品运营 用户访谈`。`python3 scripts/route_ruhang365.py --offline --read r365.workflow.customer-feedback-review` 返回三步完整结构与关联 Prompt；不会下载关联资料，也不会调用模型。
+
 RHZL 是托管后端，不是本仓开源服务器；无需账号即可读取公开目录，离线 CLI 和贡献校验无需后端或数据库权限。相同发布版本可供 Web / Skill / CLI 消费，不上传个性化答案；旧快照不保证与在线最新目录一致。
 
 默认基地址：`https://rhzl.ruhang365.cn`

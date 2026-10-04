@@ -30,6 +30,8 @@ GROUPS = {
 }
 PROFILE_FIELDS = ("identity", "goal", "experience", "constraints", "deliverable")
 MAX_CATALOG_BYTES = 32 * 1024 * 1024
+MATCH_STOP_TERMS = {"一个", "怎么", "什么", "比较", "了解", "现有", "已有", "当前", "这里",
+                    "帮助", "需要", "可以", "以及", "相关", "我们"}
 
 
 def _read_catalog_response(response: Any) -> Any:
@@ -199,7 +201,7 @@ def _tokens(value: Any) -> set[str]:
                 sequence[index : index + size]
                 for index in range(len(sequence) - size + 1)
             )
-    return {token for token in tokens if len(token) > 1}
+    return {token for token in tokens if len(token) > 1 and token not in MATCH_STOP_TERMS}
 
 
 def _matches_value(profile_value: str, candidates: list[str]) -> bool:
@@ -320,8 +322,11 @@ def _project_match(item: dict[str, Any], score: int, reasons: list[str]) -> dict
         "contentKind": item.get("content_kind"),
         "detailRef": item.get("detail_ref"),
         "contentHash": item.get("content_hash"),
+        "rights": governance.get("rights", {}),
+        "license": governance.get("license", {}),
+        "entryUrl": item.get("source_url") or source.get("url"),
     }
-    if "guidance" in item:
+    if "guidance" in item and public_content_allowed(item):
         projected["guidance"] = item["guidance"]
     if item["type"] == "scenario":
         projected.update(
@@ -338,6 +343,7 @@ def _project_match(item: dict[str, Any], score: int, reasons: list[str]) -> dict
                 "goal": item.get("goal", item.get("summary", "")),
                 "estimatedMinutes": item.get("estimated_minutes"),
                 "scenarioIds": item.get("scenario_ids", []),
+                "nodes": public_structured(item).get("nodes", []),
             }
         )
     elif item["type"] == "resource":
@@ -354,12 +360,57 @@ def _project_match(item: dict[str, Any], score: int, reasons: list[str]) -> dict
         projected.update(
             {
                 "purpose": item.get("purpose", item.get("summary", "")),
-                "template": item.get("template"),
-                "variables": item.get("variables", {}),
+                "template": public_structured(item).get("template"),
+                "variables": public_structured(item).get("variables", []),
                 "resourceIds": item.get("resource_ids", []),
             }
         )
     return projected
+
+
+def public_content_allowed(item: dict[str, Any]) -> bool:
+    return (current_item(item) and item.get("access", "public") == "public"
+            and item.get("governance", {}).get("rights", {}).get("status") == "full")
+
+
+def public_structured(item: dict[str, Any], content: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Whitelist complete public structures without exposing internal extensions."""
+    if not public_content_allowed(item):
+        return {}
+    content = item if content is None else content
+    result = {key: content[key] for key in ("goal", "estimated_minutes", "scenario_ids", "workflow_ids",
+              "purpose", "template", "variables", "resource_ids", "deliverable", "next_intent") if key in content}
+    if "nodes" in content:
+        result["nodes"] = [{key: node[key] for key in ("id", "title", "action", "prompt_ids", "resource_ids",
+                           "completion_criteria") if key in node}
+                           for node in content["nodes"] if isinstance(node, dict)]
+    if "guidance" in content:
+        validate_guidance(content["guidance"])
+        result["guidance"] = content["guidance"]
+    return result
+
+
+def catalog_read_projection(catalog: dict[str, Any], item: dict[str, Any]) -> dict[str, Any]:
+    """Public offline detail and one-hop navigation; never download related content."""
+    source = item.get("governance", {}).get("source", {})
+    result = {"id": item["id"], "title": item["title"], "summary": item["summary"],
+              "version": item.get("version"), "contentHash": item.get("content_hash"),
+              "access": item.get("access", "public"), "rights": item.get("governance", {}).get("rights", {}),
+              "sourceUrl": source.get("url"), "entryUrl": item.get("source_url") or source.get("url"),
+              "structured": public_structured(item), "related": []}
+    if not public_content_allowed(item):
+        return result
+    refs = list(item.get("scenario_ids", [])) + list(item.get("workflow_ids", [])) + list(item.get("resource_ids", []))
+    for node in result["structured"].get("nodes", []):
+        refs.extend(node.get("prompt_ids", []))
+        refs.extend(node.get("resource_ids", []))
+    by_id = {entry["id"]: entry for entry in catalog["items"] if current_item(entry)}
+    for ref in dict.fromkeys(refs):
+        entry = by_id.get(ref)
+        if entry:
+            projected = _project_match(entry, 0, ["linked_id"])
+            result["related"].append(projected)
+    return result
 
 
 def match_catalog(
@@ -367,6 +418,7 @@ def match_catalog(
     profile: dict[str, Any],
     *,
     limit_per_type: int = 3,
+    exclude_guidance: bool = False,
 ) -> dict[str, Any]:
     if not 1 <= limit_per_type <= 10:
         raise ValueError("limit_per_type must be between 1 and 10")
@@ -378,11 +430,18 @@ def match_catalog(
     for item in items:
         if not isinstance(item, dict) or item.get("type") not in GROUPS:
             continue
+        if exclude_guidance and "guidance" in item:
+            continue
         scored = _score_item(item, normalized_profile)
         if scored is None:
             continue
         score, reasons = scored
-        groups[GROUPS[item["type"]]].append(_project_match(item, score, reasons))
+        projected = _project_match(item, score, reasons)
+        searchable = " ".join([str(item.get("title", "")), str(item.get("summary", "")),
+                               " ".join(item.get("tags", [])), " ".join(item.get("match_terms", []))])
+        query_terms = _tokens(" ".join(normalized_profile[field] for field in ("identity", "goal", "deliverable", "query")))
+        projected["matchedTerms"] = sorted(query_terms & _tokens(searchable))
+        groups[GROUPS[item["type"]]].append(projected)
     for matches in groups.values():
         matches.sort(key=lambda match: (-match["score"], match["id"], match["version"]))
         del matches[limit_per_type:]
