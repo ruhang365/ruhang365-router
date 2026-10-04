@@ -52,10 +52,15 @@ def validate_guidance(value: Any) -> None:
     resource = lambda v: _object(v, {"label": _text, "href": _link, "note": _text})
     career_resource = lambda v: _object(v, {"label": _text, "href": _link,
         "kind": _enum("article", "tool", "route", "daily"), "note": _text})
+    career_source = lambda v: _object(v, {"statement": _text, "sourceUrl": _link,
+        "sourceLabel": _text, "observedAt": _text, "region": _text,
+        "publishedAt": _text, "supports": _text, "doesNotShow": _text}, ("publishedAt",))
     signal = lambda v: _object(v, {"kind": _enum("招聘需求", "讨论热度", "商业需求"),
         "status": _enum("已接入站内资料", "已接入外部来源", "待补日期与地区来源"), "statement": _text,
-        "sourceUrl": _link, "sourceLabel": _text, "observedAt": _text, "region": _text},
-        ("sourceUrl", "sourceLabel", "observedAt", "region"))
+        "sourceUrl": _link, "sourceLabel": _text, "observedAt": _text, "region": _text,
+        "publishedAt": _text, "supports": _text, "doesNotShow": _text,
+        "additionalSources": _array(career_source)},
+        ("sourceUrl", "sourceLabel", "observedAt", "region", "publishedAt", "supports", "doesNotShow", "additionalSources"))
     direction = lambda v: _object(v, {
         **{key: _text for key in ("slug", "name", "shortName", "category", "categoryLabel", "priority", "eyebrow", "summary", "whatItDoes", "whyNow", "difference", "evidenceNote")},
         **{key: _strings for key in ("fitFor", "transferableExperience", "entryThreshold", "learnNext")},

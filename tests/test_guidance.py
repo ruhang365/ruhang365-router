@@ -24,7 +24,73 @@ def fixture():
             "resourceIds": ["resource"], "reason": "你的选择", "cautions": []}]}
 
 
+def career_fixture():
+    direction = {key: '说明' for key in ('slug', 'name', 'shortName', 'categoryLabel',
+                 'eyebrow', 'summary', 'whatItDoes', 'whyNow', 'difference', 'evidenceNote')}
+    direction.update(category='new-role', priority='重点首发', resources=[],
+                     fitFor=[], transferableExperience=[], entryThreshold=[], learnNext=[],
+                     signals=[{'kind': '招聘需求', 'status': '已接入外部来源', 'statement': '需求信号'}])
+    journey = {key: '说明' for key in ('slug', 'name', 'category', 'goal', 'summary')}
+    journey.update(legacySlugs=[], abilities=[], stages=[], problems=[], resources=[])
+    return {'kind': 'career', 'direction': direction, 'journey': journey}
+
+
+def career_source_fixture():
+    return {'statement': '来源说明', 'sourceUrl': 'https://example.org/source',
+            'sourceLabel': '公开来源', 'observedAt': '2026-10-02', 'region': '中国',
+            'supports': '支持需求存在', 'doesNotShow': '不证明收入'}
+
+
 class GuidanceContractTests(unittest.TestCase):
+    def test_career_evidence_extensions_accept_old_and_new_public_shapes(self):
+        value = career_fixture()
+        guidance.validate_guidance(value)
+        signal = value['direction']['signals'][0]
+        for key in ('publishedAt', 'supports', 'doesNotShow'):
+            signal[key] = '公开说明'
+            guidance.validate_guidance(value)
+        signal['additionalSources'] = []
+        guidance.validate_guidance(value)
+        signal['additionalSources'] = [career_source_fixture()]
+        guidance.validate_guidance(value)
+        signal['additionalSources'][0]['publishedAt'] = '2026-09-30'
+        guidance.validate_guidance(value)
+
+    def test_career_evidence_extensions_reject_invalid_or_private_nested_fields(self):
+        for key in ('publishedAt', 'supports', 'doesNotShow'):
+            for invalid in ('', None, [], 42):
+                with self.subTest(key=key, invalid=invalid):
+                    value = career_fixture()
+                    value['direction']['signals'][0][key] = invalid
+                    with self.assertRaises(ValueError):
+                        guidance.validate_guidance(value)
+        for key in career_source_fixture():
+            with self.subTest(missing_source_field=key):
+                value = career_fixture()
+                source = career_source_fixture()
+                del source[key]
+                value['direction']['signals'][0]['additionalSources'] = [source]
+                with self.assertRaises(ValueError):
+                    guidance.validate_guidance(value)
+        for key, invalid in (('sourceUrl', 'javascript:evil'), ('sourceUrl', '//evil'),
+                             ('sourceUrl', 'file:///secret'), ('supports', ''),
+                             ('publishedAt', None), ('private', 'secret')):
+            with self.subTest(key=key, invalid=invalid):
+                value = career_fixture()
+                source = career_source_fixture()
+                source[key] = invalid
+                value['direction']['signals'][0]['additionalSources'] = [source]
+                with self.assertRaises(ValueError):
+                    guidance.validate_guidance(value)
+        for invalid in ({}, 'not-an-array', [None], [{'statement': 'incomplete'}]):
+            value = career_fixture()
+            value['direction']['signals'][0]['additionalSources'] = invalid
+            with self.assertRaises(ValueError):
+                guidance.validate_guidance(value)
+        value = career_fixture()
+        value['direction']['signals'][0]['private'] = 'secret'
+        with self.assertRaises(ValueError):
+            guidance.validate_guidance(value)
     def test_unknown_skip_and_invalid_are_not_positive_matches(self):
         intake = fixture()
         catalog = {"items": [{"id": "intake", "status": "current", "governance": {"stale": False}, "guidance": intake},
@@ -129,6 +195,19 @@ class ActualCandidateParityTests(unittest.TestCase):
 
     def test_actual_guidance_schema_validation_matches_ts(self):
         cases = [copy.deepcopy(i["guidance"]) for i in self.catalog["items"] if "guidance" in i]
+        evidence = career_fixture()
+        evidence['direction']['signals'][0].update(publishedAt='2026-09-30', supports='支持',
+            doesNotShow='不证明', additionalSources=[career_source_fixture()])
+        cases.append(evidence)
+        for key, invalid in (('sourceUrl', 'file:///secret'), ('supports', ''),
+                             ('publishedAt', None), ('private', 'secret')):
+            bad = copy.deepcopy(evidence)
+            bad['direction']['signals'][0]['additionalSources'][0][key] = invalid
+            cases.append(bad)
+        for key in career_source_fixture():
+            bad = copy.deepcopy(evidence)
+            del bad['direction']['signals'][0]['additionalSources'][0][key]
+            cases.append(bad)
         career = next(g for g in cases if g["kind"] == "career")
         mutations = [("category", "invalid"), ("priority", "invalid")]
         for key, value in mutations:

@@ -87,6 +87,49 @@ def load_catalog(path: str | Path | None = None) -> dict[str, Any]:
     return validate_catalog(payload)
 
 
+def fetch_catalog(url: str, *, snapshot: dict[str, Any] | None = None,
+                  timeout: float = 12.0, opener: Any = urllib.request.urlopen,
+                  user_agent: str = "ruhang365-router/0.3 catalog-read-only") -> tuple[dict[str, Any], bool]:
+    """Public conditional GET. A 304 is usable only with a validated snapshot."""
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc or parsed.username is not None or parsed.password is not None or parsed.query or parsed.fragment:
+        raise ValueError("unsafe public catalog URL")
+    headers = {"Accept": "application/json", "Accept-Encoding": "gzip", "User-Agent": user_agent}
+    if snapshot is not None:
+        validate_catalog(snapshot)
+        tag = hashlib.sha256(f"{snapshot['catalogVersion']}:{snapshot['contentDigest']}".encode("utf-8")).hexdigest()
+        headers["If-None-Match"] = f'"{tag}"'
+
+    def confirmed_snapshot(response_headers: Any) -> tuple[dict[str, Any], bool]:
+        if snapshot is None:
+            raise ValueError("304 without validated snapshot")
+        etag = (response_headers or {}).get("ETag")
+        if etag is not None:
+            # If-None-Match uses weak comparison, but a different release is
+            # never evidence that this snapshot has been confirmed online.
+            etag = etag.strip()
+            if etag.startswith("W/"):
+                etag = etag[2:]
+            if etag != headers["If-None-Match"]:
+                raise ValueError("304 catalog ETag mismatch")
+        return snapshot, True
+
+    request = urllib.request.Request(url, headers=headers)
+    try:
+        with opener(request, timeout=timeout) as response:
+            status = getattr(response, "status", 200)
+            if status == 304:
+                return confirmed_snapshot(getattr(response, "headers", {}))
+            if status != 200:
+                raise ValueError("unexpected catalog response status")
+            return validate_catalog(_read_catalog_response(response)), False
+    except urllib.error.HTTPError as error:
+        error.close()
+        if error.code == 304:
+            return confirmed_snapshot(error.headers)
+        raise
+
+
 def resolve_catalog(
     base_url: str,
     *,
@@ -100,17 +143,8 @@ def resolve_catalog(
         return {"catalog": snapshot, "source": "offline_snapshot", "warning": None}
 
     catalog_url = f"{base_url.rstrip('/')}/api/community/catalog"
-    request = urllib.request.Request(
-        catalog_url,
-        headers={
-            "Accept": "application/json",
-            "Accept-Encoding": "gzip",
-            "User-Agent": "ruhang365-router/0.3 catalog-read-only",
-        },
-    )
     try:
-        with opener(request, timeout=timeout) as response:
-            online = validate_catalog(_read_catalog_response(response))
+        online, _ = fetch_catalog(catalog_url, snapshot=snapshot, timeout=timeout, opener=opener)
         return {"catalog": online, "source": "online", "warning": None}
     except (
         urllib.error.HTTPError,
