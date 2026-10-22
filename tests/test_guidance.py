@@ -138,6 +138,18 @@ class ActualCandidateParityTests(unittest.TestCase):
         cls.catalog = json.loads(cls.path.read_text())
         cls.rhzl = cls.path.parents[2]
 
+    def test_full_skill_snapshot_matches_web_including_all_career_evidence(self):
+        skill = json.loads((ROOT / 'skills/ruhang365-router/catalog/community-full-1.1.0.json').read_text())
+        web_full = json.loads((self.rhzl / 'src/data/community-full-catalog.json').read_text())
+        self.assertEqual(skill, web_full)
+        self.assertEqual(skill['catalogVersion'], self.catalog['catalogVersion'])
+        shared = {item['id']: item for item in skill['items']}
+        careers = [item for item in self.catalog['items'] if item.get('guidance', {}).get('kind') == 'career']
+        self.assertEqual(len(careers), 9)
+        for item in careers:
+            with self.subTest(id=item['id']):
+                self.assertEqual(shared[item['id']]['guidance'], item['guidance'])
+
     def ts(self, mode, cases):
         script = '''
           import {evaluateGuidance} from "./src/lib/community/guidance.ts";
