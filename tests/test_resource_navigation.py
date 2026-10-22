@@ -18,9 +18,9 @@ class ResourceNavigationTests(unittest.TestCase):
         self.catalog = matcher.load_catalog(matcher.FULL_CATALOG_PATH)
 
     def test_release_and_full_workflow_prompt_navigation_remain_immutable(self):
-        self.assertEqual(self.catalog["catalogVersion"], "1.1.0")
+        self.assertEqual(self.catalog["catalogVersion"], "1.2.22")
         self.assertEqual(len(self.catalog["items"]), 11658)
-        self.assertEqual(self.catalog["contentDigest"], "f68e6602bb00f8c39302add001623ac090666b05e4f27607597c4768832571cb")
+        self.assertEqual(self.catalog["contentDigest"], "cf8114d89c3fac1306e69153b2b50f8e3ae8b0a35f67b226c10b2e04655d98fc")
         before = copy.deepcopy(self.catalog)
         item = next(x for x in self.catalog["items"] if x["id"] == "r365.workflow.customer-feedback-review")
         detail = matcher.catalog_read_projection(self.catalog, item)
