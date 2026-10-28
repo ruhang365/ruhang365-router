@@ -130,7 +130,7 @@ class GuidanceContractTests(unittest.TestCase):
             guidance.validate_guidance(value)
 
 
-@unittest.skipUnless(CANDIDATE, "set RHZL_CATALOG_PATH for actual 30-item TS/Python parity")
+@unittest.skipUnless(CANDIDATE, "set RHZL_CATALOG_PATH for actual editorial TS/Python parity")
 class ActualCandidateParityTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -173,7 +173,7 @@ class ActualCandidateParityTests(unittest.TestCase):
         return json.loads(run.stdout)
 
     def test_complete_results_match_for_all_option_combinations_and_failures(self):
-        self.assertEqual(len(self.catalog["items"]), 30)
+        self.assertEqual(len(self.catalog["items"]), 54)
         cases = []
         for item in self.catalog["items"]:
             g = item.get("guidance", {})

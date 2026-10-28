@@ -1,6 +1,6 @@
 ---
 name: ruhang365-router
-description: "Use 入行365's reviewed knowledge to guide career exploration, growth in an existing role, or cross-border business entry. Help users understand their situation and match suitable directions, learning paths and resources, including when they do not yet have a specific task."
+description: "Use 入行365's reviewed knowledge to explore career directions, improve current work, or solve a concrete problem. Understand the user's conditions, check suitable resources, and give a reasoned starting point or practical next step."
 ---
 
 # 入行365｜职业成长向导
@@ -9,16 +9,18 @@ description: "Use 入行365's reviewed knowledge to guide career exploration, gr
 
 ## 工作流
 
-1. 首次主动打开且没有需求时，先介绍：“我可以帮你看懂职业变化、梳理已有经验，找到适合自己的方向和学习资料；也可以结合你当前的工作，看看哪里值得改善。”再问：“你现在更接近哪种情况：想了解新方向、想把当前工作做得更好、想开始跨境电商，还是暂时说不清？”无需先要求用户构造任务。已有明确需要或返回继续时直接使用已知信息。
-2. 使用目录引导：career-change（探索/转行）、work-growth（在岗成长）、cross-border（跨境入行）。先读 JSON 获得实际问题与选项，每轮复用会话答案。只问会改变推荐的问题，允许不确定、跳过、修改、自由补充和直接看内容。自由表达含义明确时才映射成已有选项；其余保留未知，不推测用户资历、预算。
-3. 运行只读脚本：`python3 "$SKILL_DIR/scripts/route_ruhang365.py" --guide career-change --format json`。继续时按返回的 question.id 与 option.value 使用可重复的 `--answer question_id=option_value`；未知和跳过分别用 unknown、skip，修改答案时替换旧值。无参数运行可查看欢迎入口。问题与个人答案只在本地处理。
-   已有具体任务时，为了接入完整 Community 内容，附加 `--catalog "$SKILL_DIR/catalog/community-full-1.1.0.json"`；需要保持旧协议兼容时才显式使用 `catalog/catalog.json`。
+1. 从用户已有表达识别这轮需要：探索或比较方向、改善当前工作、完成具体任务。途中可以切换。首次没有需求时，简短介绍帮助并问当前更想了解新方向、改善工作、开始跨境还是暂时说不清；已有明确需要或返回继续时直接使用已知信息。
+2. 对自由表达、方向比较或条件变化，先读 [入行与成长发现合同](references/scenario-discovery.md)。用一两句话概括与建议有关的经验、目标、时间、预算、已有资源和明确排除项，供用户随时纠正。未说的条件保留未知；只追问会改变路线或第一步的信息，不要求填齐问卷。
+3. 宿主 AI 负责理解，脚本负责检索和校验。将需要整理成正向主题、已有事实与限制，使用现有 `--guide` 或 `--query` 获取候选。否定、拒绝和假设不能成为正向检索依据；时间与预算需在最终建议中核对，脚本分数不证明它们已被理解。目录返回的题目是可用的追问依据，不是必须逐题完成的流程。
+   引导入口：`python3 "$SKILL_DIR/scripts/route_ruhang365.py" --guide career-change --format json`；另有 work-growth、cross-border。只将含义明确的事实映射到当前返回的 question.id 与 option.value，用可重复的 `--answer question_id=option_value` 携带有效答案；unknown/skip 不构成正向依据。修改答案时替换旧值，并移除不再适用的旧分支答案。无参数可查看欢迎入口。
+   引导条件使用可重复的 `--condition key=value`，与 Web 的“你的情况”选项相同；例如 `--condition experience=product --condition coding=none --condition weeklyHours=4 --condition budget=0`。只传用户明确选择的条件；未说的不填，同一键修改时替换旧值。结果中的 `conditions` 与各资料 `conditionNotes` 是条件解释，不是个人能力评分。选项取值见发现合同。
+   明确问题使用 `--query`，按实际需要显式选 discover/writing/visual/tool/knowledge；现有 `--identity`、`--goal`、`--experience`、`--constraint`、`--deliverable` 可细化检索，不添加用户未表达的资历、资格或成果。使用完整目录时附加 `--catalog "$SKILL_DIR/catalog/community-full-1.1.0.json"`；旧协议兼容才使用 `catalog/catalog.json`。
 4. 先请求 RHZL 公开 Catalog API，仅固定 URL、Accept、Accept-Encoding 与公开 User-Agent；不发送用户问题或 Profile。Schema 1.0.0/1.1.0 与摘要有效时在线消费；超时、错误、未知版本或损坏时使用稳定快照。在线和离线使用同一匹配算法。目录现在覆盖文章、知识、术语、Prompt、视觉案例、工具、Skill、场景、学习路径和日报；匹配先返回少量起点，不把整库塞给用户。
-5. 用户要继续阅读某一项时，使用结果中的稳定 `id` 调用 `--read r365.resource...`；该请求只发送固定的资源 ID，不发送问题、Profile、Cookie 或凭据。公开且完整授权的现行条目返回目录已有的 Workflow nodes、Prompt template/variables 和一层关联导航，离线同样可读；在线正文仍按原 ID、版本与不可变 hash 核验。注册、会员、reference_only、失效或过期条目不返回完整结构或正文，只保留摘要、权限与来源。
-6. 解释用到了哪些条件、为何值得了解、什么情况下不适合、先看哪份真实资料。资料名称附目录实际 URL，使用可点击链接；相对路径补全为 https://rhzl.ruhang365.cn，不只给标题或编造链接。默认突出一个起点；需要比较时展开实际命中的最多三个方向。条件不足先解释差异，不强行选出职业或平台。
-7. 当场交付有帮助的解释和资料内容，保留来源、核验时间、地区及缺口。只想了解时不强制练习、文案或任务；需要行动时再进入实际可用的专项能力。专项 Skill 未安装时先提供可行替代，再按授权安装。
-8. 逐轮教学按用户节奏进行；完整任务委托连续完成已授权的产出与验证，不为内部阶段停等。缺失事实用明确占位，只暂停依赖事实或授权的部分。时间不足时缩小首个成果，保留完整工作流真实估时。
-9. 以用户是否看懂关系、能比较选择、找到适用内容或完成所需行动说明帮助范围。阅读、收藏、自评或短练习不等于职业胜任。用户接受与内容完成分别说明，不重复确认已知事实。
+5. 给出具体建议前读取所选资料：使用稳定 `id` 调用 `--read`，每轮最多读取五项，只读与当前判断有关的内容。先看适用条件与来源，再看正文或已有结构；不能只凭标题、分数或摘要承诺完整方法。公开且获准完整使用的现行条目返回目录已有 Workflow nodes、Prompt template/variables 和一层关联导航，离线同样可读；在线正文按原 ID、版本与 hash 核验。注册、会员、reference_only、失效或过期条目只保留允许的摘要、入口、权限与来源。
+6. 再做适用性判断：说明哪些用户条件和资料吻合、哪些不吻合或未知，过滤只有词面关联的候选。真实案例需有可追溯的经历或结果，并解释相似条件与差异；教程、模板和职业介绍按各自用途呈现，没有相似案例就说明缺口。引用实际资源 ID、标题与 URL；相对路径补全为 https://rhzl.ruhang365.cn。
+7. 按需要交付。探索类突出一个值得优先了解的方向，按需给最多两个对照方向及取舍；只想理解时，清楚的比较或排除结果即可完成帮助。问题类给当前能做的一步、所需材料与可观察完成标准，并说明卡住后怎样调整；完整任务委托则完成授权范围内全部产出与直接验证。内容不足时明确区分目录依据与通用 AI 建议。
+8. 需要持续学习或实践时才展开阶段计划，按实际可投入时间细化第一周，后续根据完成、卡住或条件变化调整。估时是可修正的安排，不是资料已验证的耗时；把阅读、操作与复核算入预算。保留完整工作流的真实范围，时间不足时缩小首个成果。专项 Skill 未安装时先提供可行替代，再按授权安装。
+9. 继续时复用当前会话的条件与进度，修改目标后重新判断相关资料和下一步。用户需要跨会话继续时，提供可复制保存的简短 Markdown 摘要：当前目标、相关条件、排除项、已做／卡住、资源 ID 与链接、下一步及未核实项。由用户决定是否保存，不承诺自动同步或提醒。阅读、收藏、自评或手动完成不等于职业胜任；用户接受与内容完成分别说明。
 
 ## 路由规则
 
@@ -33,13 +35,13 @@ description: "Use 入行365's reviewed knowledge to guide career exploration, gr
 
 ## 执行边界
 
-- 仅消费无鉴权、只读的 /api/community/catalog 和按资源 ID 读取的 /api/community/assets/<id>；不接收、读取、存储或传输会员 Token、API Key、Cookie、登录凭据、原始问题、Profile、客户资料或私人素材。
+- 仅消费无鉴权、只读的 /api/community/catalog 和按资源 ID 读取的 /api/community/assets/<id>；不向这些接口发送原始问题、Profile、客户资料、私人素材或凭据。用户自愿描述的条件只在当前会话理解，不要求提供简历或私人原件；不接收、读取、存储或传输会员 Token、API Key、Cookie 或登录凭据。
 - 只使用公开白名单字段；不展示或缓存额外内部字段，不推断会员正文。职业/平台 guidance 的嵌套字段同样必须通过校验。
 - Supabase 是 Community 可编辑主源；公开 release 与离线快照是分发产物。候选版本明确标为本地体验，不伪装成正式在线资料。
 - rights.status=full 的内容按许可证复用；reference_only 仅使用允许的标题、摘要、分类和来源，不补全原文。
 - 网络降级影响覆盖或时效时说明限制，不声称已经使用远程资料。无相关资产时最多扩大任务词一次；仍无匹配就说明缺口，通用 AI 帮助与已审核知识分开。
 - 不用热门但无关的资料填充。检索成功、专项执行、用户接受分别记录，不相互替代。
-- 引导的固定 recommendation 不因关键词结果而改写。`communityMatches` 仅按同目录中有效已确认选项的 value、label（目录顺序）及用户自由 query 匹配；忽略 unknown/skip、非法选项、when 不成立的旧分支答案，不用 question prompt 或通用 audience 充当条件。解释 `matchReasons` 与 `matchedTerms`，明确这是资料关键词关联，不是职业适配、能力、资格或收益判断。
+- 引导推荐使用同目录规则和 Web 条件说明；在岗升级先展示已有推荐里的原岗位升级，比较组内的方向同等呈现，不擅自把第一项当结论。`relatedLinks` 是方向资料的显式来源链接；`communityMatches` 的 `linked_id` 是所选方向、关联方法及节点模板，`query_coverage` 只用于用户主动查询且要求足够主题覆盖。不再把答案标签拼成搜索词；普通具体任务保留原关键词路由。条件不足可比较或停止，不用无关热门内容填充。
 - 持续更新需有来源与版本；不承诺自动提醒、跨端个人状态或无限人工答疑。用户可以按贡献指南提问、补充来源、修正内容，基础帮助不以贡献为前提。
 - 发布、发送、购买、部署及其他外部操作沿用用户当前授权；引导和草稿完成不授予额外写权限。
 
