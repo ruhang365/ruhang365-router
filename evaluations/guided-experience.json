@@ -2,16 +2,37 @@
   "skill": "ruhang365-router",
   "version": "1.1",
   "latest_local_verification": {
-    "date": "2026-09-17",
-    "scope": "Local unreleased revision; simulated interactions, not external customer adoption",
+    "date": "2026-10-10",
+    "scope": "Local navigation-intent candidate based on v0.6.0; offline AI simulations, not external customer adoption",
+    "catalog_version": "1.1.0",
+    "content_digest": "f68e6602bb00f8c39302add001623ac090666b05e4f27607597c4768832571cb",
     "observed": [
-      "Recruitment CLI with beginner experience returns no unrelated assets, including after one broader query",
-      "Coffee CLI retains the local-business content route",
-      "Independent agent simulation delivers recruitment preparation in one response and distinguishes general capability from Catalog coverage",
-      "Coffee simulation produces a twenty-minute first draft without claiming completion of the sixty-minute workflow",
-      "34 unit tests, official Skill validation and diff whitespace check pass"
+      "Three independent read-only agents generated actual replies using the candidate instructions and local CLI, without reading evaluation expectations",
+      "Product-manager exploration preserves experience, four hours per week and the no-creator exclusion; comparison does not force a learning plan",
+      "Changing the goal to interview review drops the old career-change branch and labels adapted customer-feedback methods as an adaptation, not a matching real case",
+      "Customer-feedback intake requests sanitized evidence, delivers a usable input shape and completion criteria, and continues from conflicting comments within the remaining twenty minutes",
+      "Low-budget cross-border comparison explains retail versus B2B without promising immediate business feasibility or assuming creator cooperation",
+      "A two-hour total investment does not become a two-week Offer promise; unknown experience remains a necessary condition",
+      "Marine diesel-diagnostics queries produce unrelated lexical matches; the assistant rejects them after one broader lookup and identifies the coverage gap",
+      "Offline reading uses existing public structures without claiming an additional body; a real reference-only item returns no body or full structure even when the simulated user claims membership",
+      "Main-agent direct readback confirmed the selected IDs, public structures, restricted empty structure and false remote-model/write/credential flags",
+      "Incremental exploration retest obtained both IDs from actual topic-query results, made no guessed-ID call and did not encode route=new-role",
+      "A copyable continuation summary retained the changed interview goal, four-hour budget, exclusions, resource IDs, missing materials and next step without writing files or claiming sync",
+      "75 regression tests ran: 73 passed and two optional TypeScript/Python parity checks skipped; official Skill validation and diff whitespace check passed"
     ],
-    "not_verified": ["Real customer acceptance", "Commercial outcomes", "All semantic relevance cases", "Published or installed skill behavior"]
+    "issues_and_adjustments": [
+      "An exploration agent guessed one nonexistent resource ID and then recovered; instructions now prohibit title-derived IDs and explain detail=null",
+      "An exploration agent used the new-role branch while the user only wanted to understand; instructions now require topic search instead of treating exploration as a decision to change roles",
+      "Keyword retrieval remains noisy; host applicability checks are required and this change does not alter ranking or the public CLI"
+    ],
+    "not_verified": [
+      "Real customer acceptance or commercial outcomes",
+      "Online API, live external pages, current local hiring or platform qualification",
+      "Actual interview or customer-feedback results: no real material was supplied",
+      "All semantic relevance cases or behavior across other host models",
+      "Published or installed candidate behavior",
+      "Optional TypeScript/Python parity: RHZL_CATALOG_PATH was not supplied"
+    ]
   },
   "evaluations": [
     {

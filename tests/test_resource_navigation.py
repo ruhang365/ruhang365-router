@@ -18,9 +18,9 @@ class ResourceNavigationTests(unittest.TestCase):
         self.catalog = matcher.load_catalog(matcher.FULL_CATALOG_PATH)
 
     def test_release_and_full_workflow_prompt_navigation_remain_immutable(self):
-        self.assertEqual(self.catalog["catalogVersion"], "1.2.23")
-        self.assertEqual(len(self.catalog["items"]), 11658)
-        self.assertEqual(self.catalog["contentDigest"], "3840ebe092460cfcbaa8fb92533fd70dc3ecd4ee42aa5ed334aa6d56dabf248c")
+        self.assertEqual(self.catalog["catalogVersion"], "1.2.24")
+        self.assertEqual(len(self.catalog["items"]), 11682)
+        self.assertEqual(self.catalog["contentDigest"], "c2337b91838481c3db159112639d9bbbbbc6c1540e5891d9f1578042592d79b5")
         before = copy.deepcopy(self.catalog)
         item = next(x for x in self.catalog["items"] if x["id"] == "r365.workflow.customer-feedback-review")
         detail = matcher.catalog_read_projection(self.catalog, item)
@@ -56,7 +56,7 @@ class ResourceNavigationTests(unittest.TestCase):
         self.assertNotIn("private", structured["nodes"][0])
         self.assertIn("action", structured["nodes"][0])
 
-    def test_guidance_query_uses_catalog_labels_codes_and_free_query_only(self):
+    def test_legacy_profile_remains_available_but_guide_does_not_search_answer_labels(self):
         profile = router.guidance_matching_profile(self.catalog, "work-growth",
             {"purpose": "improve", "role": "product"}, "用户访谈")
         self.assertEqual(profile["query"], "improve 比较一个现有工作怎么改进 product 产品经理 / 产品运营 用户访谈")
@@ -67,13 +67,13 @@ class ResourceNavigationTests(unittest.TestCase):
             self.assertEqual(profile["query"], "")
         result = router.route_guidance(arguments(query="用户访谈", guide="work-growth",
             catalog=matcher.FULL_CATALOG_PATH, answer=["purpose=improve", "role=product"]))
-        self.assertEqual(result["communityMatches"]["profile"]["query"],
-                         "improve 比较一个现有工作怎么改进 product 产品经理 / 产品运营 用户访谈".casefold())
+        self.assertEqual(result["communityMatches"]["profile"]["query"], "用户访谈")
         for group in ("scenarios", "workflows", "resources", "prompts"):
             for item in result["communityMatches"][group]:
-                self.assertEqual(item["matchReasons"], ["terms"])
-                self.assertTrue(item["matchedTerms"])
-                self.assertNotIn("guidance", item)
+                self.assertIn(item["matchReasons"], (["linked_id"], ["query_coverage"]))
+                if item["matchReasons"] == ["query_coverage"]:
+                    self.assertTrue(item["matchedTerms"])
+        self.assertNotIn("r365.scenario.weekly-content-kit", [item["id"] for item in result["communityMatches"]["scenarios"]])
 
     def test_generic_option_words_do_not_establish_creator_ip_relevance(self):
         matches = matcher.match_catalog(self.catalog, {"query": "比较一个现有工作怎么改进"}, exclude_guidance=True)

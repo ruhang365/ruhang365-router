@@ -30,6 +30,8 @@ from community_catalog import (  # noqa: E402
     catalog_read_projection,
 )
 from guidance import evaluate_guidance, current_item, guidance_matching_profile
+from guide_recommendations import (parse_conditions, allowed_guide_items,
+    refine_recommendations, condition_notes, recommended_links, linked_guide_matches)
 
 
 DEFAULT_BASE_URL = "https://rhzl.ruhang365.cn"
@@ -102,6 +104,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--query", default="", help="Optional question or task; omit to start guided discovery.")
     parser.add_argument("--guide", choices=("welcome", "career-change", "work-growth", "cross-border"), help="Start or continue career guidance.")
     parser.add_argument("--answer", action="append", default=[], help="Local-only choice, question_id=option_value; repeat to continue.")
+    parser.add_argument("--condition", action="append", default=[],
+                        help="Local-only Web guide condition, key=value; experience/coding/weeklyHours/budget/supplyChain.")
     parser.add_argument("--intent", choices=INTENTS, default="auto")
     parser.add_argument("--limit", type=int, default=3)
     parser.add_argument(
@@ -149,6 +153,9 @@ def validate_args(args: argparse.Namespace) -> None:
         key, sep, value = answer.partition("=")
         if not sep or not key.strip() or not value.strip() or len(answer) > 240:
             raise ValueError("answer must be question_id=option_value")
+    parse_conditions(getattr(args, "condition", []) or [])
+    if getattr(args, "condition", []) and query and not getattr(args, "guide", None):
+        raise ValueError("condition is for --guide; task matching uses the existing profile parameters")
     if not 1 <= args.limit <= 5:
         raise ValueError("limit must be between 1 and 5")
     if not 0 < args.timeout <= 60:
@@ -478,6 +485,7 @@ def read_public_asset(args: argparse.Namespace, catalog: dict[str, Any], target:
 
 def route_guidance(args: argparse.Namespace) -> dict[str, Any]:
     audience = getattr(args, "guide", None) or "welcome"
+    conditions = parse_conditions(getattr(args, "condition", []) or [])
     execution = {"mode": "community", "remoteModelCalled": False, "writePerformed": False, "credentialsAccepted": False}
     welcome = "我可以帮你看懂职业变化、梳理已有经验，找到适合自己的方向和学习资料；也可以结合你当前的工作，看看哪里值得改善。"
     if audience == "welcome" and not getattr(args, "read", None):
@@ -486,7 +494,8 @@ def route_guidance(args: argparse.Namespace) -> dict[str, Any]:
                 {"value": "career-change", "label": "想了解新方向"},
                 {"value": "work-growth", "label": "想把当前工作做得更好"},
                 {"value": "cross-border", "label": "想开始跨境电商"},
-                {"value": "unknown", "label": "暂时说不清"}]}}, "resources": [], "warnings": [], "execution": execution}
+                {"value": "unknown", "label": "暂时说不清"}]}}, "conditions": conditions,
+                "conditionNotes": {}, "resources": [], "warnings": [], "execution": execution}
     answers = dict(answer.split("=", 1) for answer in getattr(args, "answer", []))
     guidance_snapshot = args.catalog if args.catalog != DEFAULT_CATALOG_PATH else FULL_CATALOG_PATH
     resolution = resolve_catalog(args.base_url, snapshot_path=guidance_snapshot, timeout=args.timeout, offline=args.offline)
@@ -494,16 +503,26 @@ def route_guidance(args: argparse.Namespace) -> dict[str, Any]:
     guidance = ({"status": "reading", "question": None, "recommendations": [],
                  "coverageNote": "按资料 ID 继续阅读，无需重新完成引导。"}
                 if audience == "welcome" else evaluate_guidance(catalog, audience, answers))
-    references = {ref for rec in guidance["recommendations"] for ref in rec["resourceIds"]}
+    constraints = list(getattr(args, "constraint", []) or [])
+    if conditions["budget"] == "0":
+        constraints.append("free-only")
+    allowed_items = allowed_guide_items(catalog["items"], constraints)
+    guidance["recommendations"] = refine_recommendations(guidance["recommendations"], catalog["items"],
+        {item["id"] for item in allowed_items}, conditions, audience == "work-growth" or answers.get("route") == "upgrade")
+    if guidance["status"] == "ready" and not guidance["recommendations"]:
+        guidance["status"] = "no_match"
+    recommended_ids = [ref for rec in guidance["recommendations"] for ref in rec["resourceIds"]]
+    references = set(recommended_ids)
     if getattr(args, "read", None):
         references.add(args.read)
     resources = [{**catalog_read_projection(catalog, item),
                   "guidance": item.get("guidance") if public_content_allowed(item) else None}
                  for item in catalog["items"] if item["id"] in references and current_item(item)]
-    matching_profile = guidance_matching_profile(catalog, audience, answers, getattr(args, "query", ""))
-    community_matches = match_catalog(catalog, matching_profile, limit_per_type=args.limit, exclude_guidance=True)
+    links = recommended_links(allowed_items, recommended_ids)
+    community_matches = linked_guide_matches(catalog, recommended_ids, links, allowed_items,
+        getattr(args, "query", ""), args.limit)
     community_matches["catalogSource"] = resolution["source"]
-    community_matches["boundary"] = "仅按已确认有效选项与自由查询匹配目录关键词；不是职业适配、能力或收益判断。"
+    community_matches["boundary"] = "linked_id 是所选方向的显式目录关联；query_coverage 仅覆盖用户主动查询。答案标签不作为搜索词，不是职业适配、能力或收益判断。"
     warnings = [resolution["warning"]] if resolution["warning"] else []
     detail = None
     read_id = getattr(args, "read", None)
@@ -516,7 +535,8 @@ def route_guidance(args: argparse.Namespace) -> dict[str, Any]:
     return {"schemaVersion": "0.4", "displayName": "入行365｜职业成长向导", "introduction": welcome,
         "catalogVersion": catalog["catalogVersion"], "contentDigest": catalog["contentDigest"],
         "catalogSource": resolution["source"], "guidance": guidance, "resources": resources, "detail": detail,
-        "communityMatches": community_matches,
+        "conditions": conditions, "conditionNotes": {resource["id"]: condition_notes(resource, conditions) for resource in resources},
+        "relatedLinks": links, "communityMatches": community_matches,
         "warnings": warnings, "execution": execution}
 
 
@@ -552,6 +572,8 @@ def print_guidance_markdown(result: dict[str, Any]) -> None:
             print(f"- {caution}")
     for resource in result["resources"]:
         print(f"\n### {resource['title']}\n\n{resource['summary']}")
+        for note in result.get("conditionNotes", {}).get(resource["id"], []):
+            print(f"- 你的条件：{note}")
         data = resource.get("guidance") or {}
         if data.get("kind") == "career":
             direction = data["direction"]
@@ -567,6 +589,14 @@ def print_guidance_markdown(result: dict[str, Any]) -> None:
                 print(f"- {signal['kind']}：{signal['statement']}（{signal.get('observedAt', '日期待补')}；{signal.get('region', '地区待补')}）")
                 if signal.get("sourceUrl"):
                     print(f"  来源：{signal['sourceUrl']}")
+                for key, label in (("publishedAt", "发布时间"), ("supports", "支持"), ("doesNotShow", "不证明")):
+                    if signal.get(key):
+                        print(f"  {label}：{signal[key]}")
+                for source in signal.get("additionalSources", []):
+                    print(f"  - [{source['sourceLabel']}]({source['sourceUrl']})：{source['statement']}（核对：{source['observedAt']}；{source['region']}）")
+                    for key, label in (("publishedAt", "发布时间"), ("supports", "支持"), ("doesNotShow", "不证明")):
+                        if source.get(key):
+                            print(f"    {label}：{source[key]}")
             print(f"\n证据边界：{direction['evidenceNote']}")
         elif data.get("kind") == "platform":
             for field, label in (("fitFor", "适合先了解的情况"), ("requirements", "需要核对的条件"), ("cautions", "适用边界")):
@@ -578,7 +608,7 @@ def print_guidance_markdown(result: dict[str, Any]) -> None:
         print_public_detail(detail)
     matches = result.get("communityMatches", {})
     if matches:
-        print(f"\n目录关键词：{matches['profile']['query']}\n\n{matches['boundary']}")
+        print(f"\n主动查询：{matches['profile']['query'] or '未填写；仅使用显式关联'}\n\n{matches['boundary']}")
         for group in ("scenarios", "workflows", "resources", "prompts"):
             for item in matches[group]:
                 print(f"- [{item['title']}]({item.get('entryUrl') or item.get('sourceUrl') or ''}) (`{item['id']}`；匹配：{', '.join(item['matchReasons'])})")
