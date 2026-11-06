@@ -190,6 +190,16 @@ python3 scripts/update_catalog_snapshot.py --check
 
 这些案例支持“存在真实维护工作”，不证明已部署 API 自动化、获得资助或产生可量化节时收益。真实使用与反馈另见 [试用记录](docs/trial-tasks.md)。
 
+## 发布与安装验收（2026-11-06）
+
+本仓以 GitHub main、版本标签和 Release 分发 Skill / CLI，没有独立的网站部署任务。RHZL 网站与数据库由其所属项目发布；Router 合并或安装不会重新部署网站，也不会更新生产内容。
+
+本次补丁修正文档状态与作图指令：普通作图直接使用宿主原生图片工具，明确要求图库参考时才检索图库，不再依赖已退役的作图路由。目录保持 `1.2.24`，无需重新生成内容快照。维护时已用 `--check` 核对线上返回 304，与随仓版本和摘要一致；这不证明历史职业来源仍然有效。
+
+更新已有安装前，核对真实目录与符号链接，保留旧版及本机定制，再从已发布的固定版本更新。完成后新建 Codex 任务，输入“使用 $ruhang365-router，你能为我做什么？”，应看到职业探索、在岗成长和跨境入行的帮助入口。普通作图应直接进入原生图片工具；只有明确要求图库时才检索。宿主是否实际采用新指令须在新任务中观察，命令行测试不能代替该项验收。
+
+本次本地验证运行 89 项测试，85 项通过、4 项跨仓对照因未配置外部环境跳过，官方 Skill 格式校验通过。真人试用仍无结果记录，历史模拟和旧发布的全量对照不计作本次验证。
+
 ## English overview
 
 This repository open-sources the portable Router, Skill, contracts, and offline snapshots, not the hosted RHZL website, server, or private database. Offline CLI use requires no account or maintainer database access.
