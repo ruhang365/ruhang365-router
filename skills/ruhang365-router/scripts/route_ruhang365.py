@@ -21,6 +21,7 @@ if str(SCRIPT_DIR) not in sys.path:
 
 from community_catalog import (  # noqa: E402
     DEFAULT_CATALOG_PATH,
+    SUPPORTED_SCHEMA_VERSIONS,
     load_catalog,
     match_catalog,
     resolve_catalog,
@@ -50,6 +51,8 @@ RELEVANCE_STOP_TERMS = {
     "普通人",
     "自己的",
 }
+CREATOR_IP_SCENARIO_ID = "r365.scenario.creator-ip-industry-cognition"
+CREATOR_IP_WORKFLOW_ID = "r365.workflow.creator-ip-industry-cognition"
 
 KNOWLEDGE_FIELDS = (
     "id",
@@ -242,8 +245,68 @@ def specialist_matches(matches: dict[str, Any]) -> list[dict[str, Any]]:
             "reason": item["purpose"],
         }
         for item in matches["resources"]
-        if item["resourceKind"] == "skill" and item.get("repositoryUrl")
+        if (
+            item["resourceKind"] == "skill"
+            and item.get("repositoryUrl")
+            and item.get("integrationMode") in {"invoke_if_installed", "embedded"}
+            and item.get("rightsStatus") == "full"
+            and item.get("resourceSchemaVersion") in SUPPORTED_SCHEMA_VERSIONS
+            and (
+                item.get("resourceSchemaVersion") != "1.1.0"
+                or item.get("commercialUse") == "allowed"
+            )
+        )
     ]
+
+
+def external_references(matches: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        {
+            "id": item["id"],
+            "title": item["title"],
+            "status": "discovered_not_invoked",
+            "provider": item.get("provider"),
+            "upstreamLicense": item.get("upstreamLicense"),
+            "commercialUse": item.get("commercialUse"),
+            "rightsStatus": item.get("rightsStatus"),
+            "source": item.get("sourceUrl"),
+        }
+        for item in matches["resources"]
+        if item.get("integrationMode") == "reference_only"
+    ]
+
+
+def creator_ip_guided_start(matches: dict[str, Any]) -> dict[str, Any] | None:
+    scenario_ids = {item.get("id") for item in matches["scenarios"]}
+    workflow_ids = {item.get("id") for item in matches["workflows"]}
+    if CREATOR_IP_SCENARIO_ID not in scenario_ids or CREATOR_IP_WORKFLOW_ID not in workflow_ids:
+        return None
+    return {
+        "status": "in_progress",
+        "defaultRoute": {
+            "scenarioId": CREATOR_IP_SCENARIO_ID,
+            "workflowId": CREATOR_IP_WORKFLOW_ID,
+            "owner": "入行365 Workflow",
+        },
+        "fillBlock": [
+            {"field": "细分方向", "prompt": "你愿意连续观察或服务的一个具体主题是什么？"},
+            {"field": "目标人群", "prompt": "先写一类你今天能找到并交流的人。"},
+            {"field": "主阵地候选", "prompt": "选一个你愿意先测试的平台或线下触点。"},
+            {"field": "待验证问题", "prompt": "把不确定处写成七天内能得到反馈的一个问题。"},
+        ],
+        "sevenDayTask": {
+            "title": "7天个人 IP 问题验证",
+            "todayStart": "填完四项，并约到第 1 位目标人群做一次 15 分钟真实对话。",
+            "plan": "7天内完成 3 次真实对话，或发布 1 次最小内容测试，并记录原话反馈。",
+            "completionBoundary": "留下至少3条反馈（可回溯），再据此决定下一步是否调整方向。",
+            "noGuarantee": "这是低成本验证，不承诺收益、涨粉或职业结果。",
+        },
+        "completionEvidence": [
+            "四项填写结果与一个待验证问题。",
+            "3 条带来源的真实反馈，或一次最小内容测试的原始反馈记录。",
+            "外部链接、查看 dbskill 或阅读任何参考资料都不算任务证据。",
+        ],
+    }
 
 
 def relevance_terms(query: str) -> set[str]:
@@ -406,6 +469,8 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
     )
     community_matches["catalogSource"] = resolution["source"]
     specialists = specialist_matches(community_matches)
+    references = external_references(community_matches)
+    guided_start = creator_ip_guided_start(community_matches)
     scenarios = legacy_scenarios(community_matches) if intent == "discover" else None
     sources: dict[str, Any] = {}
 
@@ -413,16 +478,20 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
     sources = {name: {"status": source_status, "items": []} for name in capabilities}
     warnings = [resolution["warning"]] if resolution["warning"] else []
 
+    route = {
+        "intent": intent,
+        "capabilities": capabilities,
+        "specialists": specialists,
+        "externalReferences": references,
+        "scenarios": scenarios,
+        "communityMatches": community_matches,
+    }
+    if guided_start:
+        route["guidedStart"] = guided_start
     return {
         "schemaVersion": "0.3",
         "query": query,
-        "route": {
-            "intent": intent,
-            "capabilities": capabilities,
-            "specialists": specialists,
-            "scenarios": scenarios,
-            "communityMatches": community_matches,
-        },
+        "route": route,
         "sources": sources,
         "warnings": warnings,
         "execution": {
@@ -430,6 +499,7 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
             "remoteModelCalled": False,
             "writePerformed": False,
             "credentialsAccepted": False,
+            "externalSkillCalled": False,
         },
     }
 
@@ -437,6 +507,19 @@ def route_task(args: argparse.Namespace) -> dict[str, Any]:
 def print_markdown(result: dict[str, Any]) -> None:
     route = result["route"]
     print(f"# 入行365路由结果：{result['query']}")
+    guided_start = route.get("guidedStart")
+    if guided_start:
+        print("\n## 现在开始")
+        print("- 由入行365 Workflow 负责本次验证；先填下面四项，再做今天的第一步。")
+        for item in guided_start["fillBlock"]:
+            print(f"- {item['field']}：{item['prompt']}")
+        task = guided_start["sevenDayTask"]
+        print(f"- 今天：{task['todayStart']}")
+        print(f"- 七天任务：{task['plan']}")
+        print(f"- 完成证据：{task['completionBoundary']}")
+        for evidence in guided_start["completionEvidence"]:
+            print(f"- 证据要求：{evidence}")
+        print(f"- 边界：{task['noGuarantee']}")
     print(f"\n- 意图：`{route['intent']}`")
     print(f"- 能力：{', '.join(route['capabilities'])}")
 
@@ -444,6 +527,17 @@ def print_markdown(result: dict[str, Any]) -> None:
         print("\n## 建议专项 Skill")
         for item in route["specialists"]:
             print(f"- `{item['skill']}`：{item['reason']} ({item['repository']})")
+
+    if route["externalReferences"]:
+        print("\n## 已发现的外部参考（未调用）")
+        for item in route["externalReferences"]:
+            provider = item.get("provider") or {}
+            provider_name = provider.get("name", "未知提供方") if isinstance(provider, dict) else "未知提供方"
+            print(
+                f"- {item['title']}：已发现、未调用；提供方：{provider_name}；"
+                f"许可证：{item.get('upstreamLicense') or '-'}；商业使用：{item.get('commercialUse') or '-'}；"
+                f"来源：{item.get('source') or '-'}"
+            )
 
     scenarios = route.get("scenarios")
     if scenarios:

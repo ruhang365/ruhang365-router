@@ -21,6 +21,45 @@ GROUPS = {
     "prompt": "prompts",
 }
 PROFILE_FIELDS = ("identity", "goal", "experience", "constraints", "deliverable")
+SUPPORTED_SCHEMA_VERSIONS = {"1.0.0", "1.1.0"}
+PROVIDER_ID_PATTERN = re.compile(
+    r"[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?/[a-z0-9](?:[a-z0-9_.-]{0,98}[a-z0-9])?"
+)
+APPROVED_SPDX_IDENTIFIERS = {
+    "AGPL-3.0-only",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "CC0-1.0",
+    "CC-BY-4.0",
+    "CC-BY-NC-4.0",
+    "GPL-3.0-only",
+    "MIT",
+    "MPL-2.0",
+}
+PUBLIC_ITEM_FIELDS = (
+    "id",
+    "type",
+    "slug",
+    "version",
+    "title",
+    "summary",
+    "status",
+    "governance",
+    "applicability",
+    "completion_criteria",
+    "tags",
+    "match_terms",
+    "schema_version",
+)
+APPLICABILITY_FIELDS = (
+    "identities",
+    "goals",
+    "experience_levels",
+    "constraints",
+    "excluded_constraints",
+    "deliverables",
+)
 
 
 def _canonical_digest(items: list[dict[str, Any]]) -> str:
@@ -33,11 +72,169 @@ def _canonical_digest(items: list[dict[str, Any]]) -> str:
     return hashlib.sha256(canonical).hexdigest()
 
 
+def _schema_version_key(value: Any, field: str) -> tuple[int, int, int]:
+    if not isinstance(value, str) or value not in SUPPORTED_SCHEMA_VERSIONS:
+        raise ValueError(f"unsupported {field}")
+    return tuple(int(part) for part in value.split("."))
+
+
+def _require_string(item: dict[str, Any], field: str, *, minimum: int = 1) -> str:
+    value = item.get(field)
+    if not isinstance(value, str) or len(value.strip()) < minimum:
+        raise ValueError(f"invalid Community catalog item {field}")
+    return value
+
+
+def _require_string_list(item: dict[str, Any], field: str, *, minimum: int = 0) -> list[str]:
+    value = item.get(field)
+    if not isinstance(value, list) or len(value) < minimum or any(
+        not isinstance(entry, str) or not entry.strip() for entry in value
+    ):
+        raise ValueError(f"invalid Community catalog item {field}")
+    return value
+
+
+def _require_public_https_url(value: Any, field: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"invalid Community catalog item {field}")
+    parsed = urllib.parse.urlparse(value)
+    if (
+        parsed.scheme != "https"
+        or not parsed.netloc
+        or parsed.username
+        or parsed.password
+    ):
+        raise ValueError(f"invalid Community catalog item {field}")
+    return value
+
+
+def _validate_workflow_node(node: Any) -> None:
+    if not isinstance(node, dict):
+        raise ValueError("invalid Community catalog item workflow node")
+    for field in ("id", "title", "action"):
+        _require_string(node, field)
+    for field in ("resource_ids", "prompt_ids"):
+        _require_string_list(node, field)
+    _require_string_list(node, "completion_criteria", minimum=1)
+
+
+def _validate_public_item_structure(item: dict[str, Any]) -> None:
+    for field in PUBLIC_ITEM_FIELDS:
+        if field not in item:
+            raise ValueError(f"invalid Community catalog item {field}")
+    for field in ("id", "slug", "version", "title", "summary"):
+        _require_string(item, field)
+    if item["type"] not in GROUPS:
+        raise ValueError("invalid Community catalog item type")
+    if item["status"] not in {"current", "needs_review", "archived"}:
+        raise ValueError("invalid Community catalog item status")
+    governance = item["governance"]
+    if not isinstance(governance, dict):
+        raise ValueError("invalid Community catalog item governance")
+    source = governance.get("source")
+    rights = governance.get("rights")
+    if not isinstance(source, dict):
+        raise ValueError("invalid Community catalog item governance source")
+    _require_public_https_url(source.get("url"), "governance source URL")
+    if not isinstance(rights, dict) or rights.get("status") not in {"full", "reference_only"}:
+        raise ValueError("invalid Community catalog item governance rights")
+    if not isinstance(governance.get("stale"), bool):
+        raise ValueError("invalid Community catalog item governance stale")
+    applicability = item["applicability"]
+    if not isinstance(applicability, dict):
+        raise ValueError("invalid Community catalog item applicability")
+    for field in APPLICABILITY_FIELDS:
+        _require_string_list(applicability, field, minimum=1 if field in {"identities", "goals", "experience_levels", "deliverables"} else 0)
+    _require_string_list(item, "completion_criteria", minimum=1)
+    _require_string_list(item, "tags")
+    _require_string_list(item, "match_terms")
+
+    if item["type"] == "scenario":
+        _require_string(item, "deliverable")
+        _require_string(item, "next_intent")
+        _require_string_list(item, "workflow_ids", minimum=1)
+    elif item["type"] == "workflow":
+        _require_string(item, "goal")
+        estimated_minutes = item.get("estimated_minutes")
+        if not isinstance(estimated_minutes, int) or isinstance(estimated_minutes, bool) or estimated_minutes <= 0:
+            raise ValueError("invalid Community catalog item estimated_minutes")
+        _require_string_list(item, "scenario_ids", minimum=1)
+        nodes = item.get("nodes")
+        if not isinstance(nodes, list) or not nodes:
+            raise ValueError("invalid Community catalog item nodes")
+        for node in nodes:
+            _validate_workflow_node(node)
+    elif item["type"] == "resource":
+        if item.get("resource_kind") not in {"skill", "tool", "knowledge", "template", "service"}:
+            raise ValueError("invalid Community catalog item resource_kind")
+        _require_string(item, "purpose")
+        _require_string_list(item, "capabilities", minimum=1)
+        _require_string(item, "resource_version")
+        _require_public_https_url(item.get("source_url"), "source_url")
+        repository_url = item.get("repository_url")
+        if repository_url is not None:
+            _require_public_https_url(repository_url, "repository_url")
+    elif item["type"] == "prompt":
+        _require_string(item, "purpose")
+        _require_string(item, "template", minimum=8)
+        _require_string_list(item, "variables")
+        _require_string_list(item, "resource_ids")
+
+
+def _validate_v1_1_skill_resource(item: dict[str, Any]) -> None:
+    if item.get("schema_version") != "1.1.0" or item.get("type") != "resource" or item.get("resource_kind") != "skill":
+        return
+    provider = item.get("provider")
+    if not isinstance(provider, dict):
+        raise ValueError("invalid 1.1 resource provider")
+    provider_id = provider.get("id")
+    if not isinstance(provider_id, str) or not PROVIDER_ID_PATTERN.fullmatch(provider_id):
+        raise ValueError("invalid 1.1 resource provider id")
+    if not isinstance(provider.get("name"), str) or not provider["name"].strip():
+        raise ValueError("invalid 1.1 resource provider name")
+    provider_url = provider.get("url")
+    parsed_provider_url = urllib.parse.urlparse(provider_url) if isinstance(provider_url, str) else None
+    if (
+        not parsed_provider_url
+        or parsed_provider_url.scheme != "https"
+        or not parsed_provider_url.netloc
+        or parsed_provider_url.username
+        or parsed_provider_url.password
+    ):
+        raise ValueError("invalid 1.1 resource provider URL")
+    governance = item.get("governance")
+    if not isinstance(governance, dict):
+        raise ValueError("invalid 1.1 resource governance")
+    rights = governance.get("rights")
+    license_data = governance.get("license")
+    if not isinstance(rights, dict) or rights.get("status") not in {"full", "reference_only"}:
+        raise ValueError("invalid 1.1 resource rights")
+    if not isinstance(license_data, dict):
+        raise ValueError("invalid 1.1 resource license")
+    upstream_license = item.get("upstream_license")
+    if not isinstance(upstream_license, str) or upstream_license not in APPROVED_SPDX_IDENTIFIERS:
+        raise ValueError("invalid 1.1 resource upstream license")
+    if upstream_license != license_data.get("spdx"):
+        raise ValueError("invalid 1.1 resource upstream license mismatch")
+    commercial_use = item.get("commercial_use")
+    integration_mode = item.get("integration_mode")
+    if commercial_use not in {"allowed", "restricted", "unknown"}:
+        raise ValueError("invalid 1.1 resource commercial use")
+    if integration_mode not in {"reference_only", "invoke_if_installed", "embedded"}:
+        raise ValueError("invalid 1.1 resource integration mode")
+    if integration_mode == "reference_only" and rights["status"] != "reference_only":
+        raise ValueError("invalid 1.1 resource reference rights")
+    if integration_mode in {"invoke_if_installed", "embedded"} and (
+        commercial_use != "allowed" or rights["status"] != "full"
+    ):
+        raise ValueError("invalid 1.1 resource invocation rights")
+
+
 def validate_catalog(payload: Any) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError("Community catalog must be a JSON object")
-    if payload.get("schemaVersion") != "1.0.0":
-        raise ValueError("unsupported Community catalog schemaVersion")
+    schema_version = payload.get("schemaVersion")
+    top_level_schema_key = _schema_version_key(schema_version, "Community catalog schemaVersion")
     if not isinstance(payload.get("catalogVersion"), str):
         raise ValueError("Community catalogVersion is missing")
     items = payload.get("items")
@@ -46,6 +243,14 @@ def validate_catalog(payload: Any) -> dict[str, Any]:
     digest = payload.get("contentDigest")
     if not isinstance(digest, str) or digest != _canonical_digest(items):
         raise ValueError("Community catalog contentDigest mismatch")
+    for item in items:
+        _validate_public_item_structure(item)
+        item_schema_version = item.get("schema_version")
+        item_schema_key = _schema_version_key(item_schema_version, "Community catalog item schema_version")
+        if item_schema_key > top_level_schema_key:
+            raise ValueError("Community catalog item schema_version exceeds catalog schemaVersion")
+        if item_schema_version == "1.1.0":
+            _validate_v1_1_skill_resource(item)
     return payload
 
 
@@ -212,6 +417,7 @@ def _score_item(item: dict[str, Any], profile: dict[str, Any]) -> tuple[int, lis
 def _project_match(item: dict[str, Any], score: int, reasons: list[str]) -> dict[str, Any]:
     governance = item.get("governance", {})
     source = governance.get("source", {}) if isinstance(governance, dict) else {}
+    rights = governance.get("rights", {}) if isinstance(governance, dict) else {}
     projected: dict[str, Any] = {
         "id": item["id"],
         "type": item["type"],
@@ -224,6 +430,7 @@ def _project_match(item: dict[str, Any], score: int, reasons: list[str]) -> dict
         "matchReasons": reasons,
         "completionCriteria": item["completion_criteria"],
         "sourceUrl": source.get("url"),
+        "rightsStatus": rights.get("status"),
         "applicableIdentities": item["applicability"]["identities"],
     }
     if item["type"] == "scenario":
@@ -244,6 +451,9 @@ def _project_match(item: dict[str, Any], score: int, reasons: list[str]) -> dict
             }
         )
     elif item["type"] == "resource":
+        integration_mode = item.get("integration_mode")
+        if not isinstance(integration_mode, str):
+            integration_mode = "reference_only" if rights.get("status") == "reference_only" else "invoke_if_installed"
         projected.update(
             {
                 "resourceKind": item["resource_kind"],
@@ -251,6 +461,11 @@ def _project_match(item: dict[str, Any], score: int, reasons: list[str]) -> dict
                 "capabilities": item["capabilities"],
                 "repositoryUrl": item.get("repository_url"),
                 "resourceVersion": item["resource_version"],
+                "resourceSchemaVersion": item.get("schema_version", "1.0.0"),
+                "provider": item.get("provider"),
+                "upstreamLicense": item.get("upstream_license"),
+                "commercialUse": item.get("commercial_use", "unknown"),
+                "integrationMode": integration_mode,
             }
         )
     elif item["type"] == "prompt":

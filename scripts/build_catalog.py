@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 from datetime import date
 import hashlib
 import json
@@ -24,7 +25,7 @@ DEFAULT_OUTPUT = (
     / "catalog"
     / "catalog.json"
 )
-SCHEMA_VERSION = "1.0.0"
+SUPPORTED_SCHEMA_VERSIONS = {"1.0.0", "1.1.0"}
 SOURCE_REPOSITORY = "https://github.com/ruhang365/ruhang365-router"
 TYPE_DIRECTORIES = {
     "scenarios": "scenario",
@@ -62,6 +63,21 @@ FORBIDDEN_PRIVATE_FIELDS = {
     "token",
     "user_id",
 }
+PROVIDER_ID_PATTERN = re.compile(
+    r"[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?/[a-z0-9](?:[a-z0-9_.-]{0,98}[a-z0-9])?"
+)
+APPROVED_SPDX_IDENTIFIERS = {
+    "AGPL-3.0-only",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "CC0-1.0",
+    "CC-BY-4.0",
+    "CC-BY-NC-4.0",
+    "GPL-3.0-only",
+    "MIT",
+    "MPL-2.0",
+}
 
 
 class CatalogValidationError(ValueError):
@@ -73,6 +89,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--content-root", type=Path, default=DEFAULT_CONTENT_ROOT)
     parser.add_argument("--schema", type=Path, default=DEFAULT_SCHEMA)
     parser.add_argument("--catalog-version", default="1.0.0")
+    parser.add_argument(
+        "--schema-version",
+        default="1.0.0",
+        choices=sorted(SUPPORTED_SCHEMA_VERSIONS),
+        help="Catalog contract version; the checked-in offline snapshot remains 1.0.0.",
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--write", action="store_true")
@@ -255,6 +277,8 @@ def validate_type_fields(asset: dict[str, Any], path: Path) -> None:
         if repository_url is not None:
             validate_url(repository_url, "resource repository_url")
         require_string(asset.get("resource_version"), "resource resource_version")
+        if asset.get("schema_version") == "1.1.0" and asset.get("resource_kind") == "skill":
+            validate_v1_1_skill_resource(asset, path)
     elif asset_type == "prompt":
         require_string(asset.get("purpose"), "prompt purpose")
         template = require_string(asset.get("template"), "prompt template", minimum=8)
@@ -263,6 +287,42 @@ def validate_type_fields(asset: dict[str, Any], path: Path) -> None:
             if f"{{{{{variable}}}}}" not in template:
                 raise CatalogValidationError(f"missing prompt variable placeholder {variable} in {path}")
         require_string_list(asset.get("resource_ids"), "prompt resource_ids")
+
+
+def validate_v1_1_skill_resource(asset: dict[str, Any], path: Path) -> None:
+    provider = asset.get("provider")
+    if not isinstance(provider, dict):
+        raise CatalogValidationError(f"invalid provider in {path}: object required")
+    provider_id = require_string(provider.get("id"), "provider id")
+    if not PROVIDER_ID_PATTERN.fullmatch(provider_id):
+        raise CatalogValidationError(f"invalid provider id in {path}")
+    require_string(provider.get("name"), "provider name")
+    validate_url(provider.get("url"), "provider URL")
+
+    upstream_license = require_string(asset.get("upstream_license"), "upstream_license")
+    if upstream_license not in APPROVED_SPDX_IDENTIFIERS:
+        raise CatalogValidationError(f"invalid upstream_license in {path}")
+    governance_license = asset["governance"]["license"]["spdx"]
+    if upstream_license != governance_license:
+        raise CatalogValidationError(f"invalid upstream_license in {path}: must match governance license")
+
+    commercial_use = asset.get("commercial_use")
+    if commercial_use not in {"allowed", "restricted", "unknown"}:
+        raise CatalogValidationError(f"invalid commercial_use in {path}")
+    integration_mode = asset.get("integration_mode")
+    if integration_mode not in {"reference_only", "invoke_if_installed", "embedded"}:
+        raise CatalogValidationError(f"invalid integration_mode in {path}")
+    rights = asset["governance"]["rights"]["status"]
+    if integration_mode == "reference_only" and rights != "reference_only":
+        raise CatalogValidationError(f"invalid reference rights in {path}")
+    if integration_mode == "invoke_if_installed" and (
+        commercial_use != "allowed" or rights != "full"
+    ):
+        raise CatalogValidationError(f"invalid invoke commercial rights in {path}")
+    if integration_mode == "embedded" and (
+        commercial_use != "allowed" or rights != "full"
+    ):
+        raise CatalogValidationError(f"invalid embedded commercial rights in {path}")
 
 
 def validate_no_internal_or_secret_data(asset: dict[str, Any], path: Path) -> None:
@@ -343,15 +403,68 @@ def validate_references(assets: list[dict[str, Any]]) -> None:
             )
 
 
+def schema_version_key(value: Any) -> tuple[int, int, int]:
+    if not isinstance(value, str) or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", value):
+        raise CatalogValidationError("invalid asset schema version")
+    return tuple(int(part) for part in value.split("."))
+
+
+def project_assets_for_schema(
+    assets: list[dict[str, Any]],
+    target_schema_version: str,
+) -> list[dict[str, Any]]:
+    target_key = schema_version_key(target_schema_version)
+    retained = [
+        copy.deepcopy(asset)
+        for asset in assets
+        if schema_version_key(asset.get("schema_version")) <= target_key
+    ]
+    retained_ids = {asset["id"] for asset in retained}
+    for asset in retained:
+        if asset["type"] == "scenario":
+            asset["workflow_ids"] = [
+                item_id for item_id in asset["workflow_ids"] if item_id in retained_ids
+            ]
+        elif asset["type"] == "workflow":
+            asset["scenario_ids"] = [
+                item_id for item_id in asset["scenario_ids"] if item_id in retained_ids
+            ]
+            for node in asset["nodes"]:
+                node["resource_ids"] = [
+                    item_id for item_id in node["resource_ids"] if item_id in retained_ids
+                ]
+                node["prompt_ids"] = [
+                    item_id for item_id in node["prompt_ids"] if item_id in retained_ids
+                ]
+        elif asset["type"] == "prompt":
+            asset["resource_ids"] = [
+                item_id for item_id in asset["resource_ids"] if item_id in retained_ids
+            ]
+    return retained
+
+
+def validate_projected_assets(assets: list[dict[str, Any]], schema: dict[str, Any]) -> None:
+    for asset in assets:
+        path = Path(str(asset.get("contentPath", asset.get("id", "projected asset"))))
+        validate_schema_fields(asset, schema, path)
+        validate_type_fields(asset, path)
+
+
 def build_catalog(
     content_root: Path,
     schema_path: Path,
     catalog_version: str,
+    schema_version: str = "1.0.0",
 ) -> dict[str, Any]:
     if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", catalog_version):
         raise CatalogValidationError("invalid catalog version: semantic version required")
+    if schema_version not in SUPPORTED_SCHEMA_VERSIONS:
+        raise CatalogValidationError("unsupported catalog schema version")
     schema = load_json(schema_path)
     assets = discover_assets(content_root, schema)
+    validate_references(assets)
+    assets = project_assets_for_schema(assets, schema_version)
+    validate_projected_assets(assets, schema)
     validate_references(assets)
     assets.sort(key=lambda item: (TYPE_ORDER[item["type"]], item["id"], item["version"]))
     canonical_items = json.dumps(
@@ -361,7 +474,7 @@ def build_catalog(
         separators=(",", ":"),
     ).encode("utf-8")
     return {
-        "schemaVersion": SCHEMA_VERSION,
+        "schemaVersion": schema_version,
         "catalogVersion": catalog_version,
         "contentDigest": hashlib.sha256(canonical_items).hexdigest(),
         "sourceRepository": SOURCE_REPOSITORY,
@@ -376,7 +489,12 @@ def serialize_catalog(catalog: dict[str, Any]) -> str:
 def main() -> int:
     args = parse_args()
     try:
-        catalog = build_catalog(args.content_root, args.schema, args.catalog_version)
+        catalog = build_catalog(
+            args.content_root,
+            args.schema,
+            args.catalog_version,
+            args.schema_version,
+        )
         serialized = serialize_catalog(catalog)
         if args.check:
             if not args.output.is_file():

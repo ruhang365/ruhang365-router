@@ -43,7 +43,7 @@
       "id": "define-entry-context",
       "title": "5 分钟：明确方向、目标与起点",
       "action": "限定一个细分方向、一个主阵地候选和七天可验证问题。",
-      "resource_ids": ["r365.resource.rhzl-creator-ip-industry-cognition"],
+      "resource_ids": ["r365.resource.rhzl-creator-ip-industry-cognition", "r365.resource.dbskill-goal"],
       "prompt_ids": [],
       "completion_criteria": ["方向、目标、主阵地、起点和待验证问题齐全。"]
     },

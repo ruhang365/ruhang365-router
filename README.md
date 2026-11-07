@@ -151,6 +151,7 @@ GET https://rhzl.ruhang365.cn/api/community/catalog
 - 不接收图片、完整文章、客户资料或私人素材。
 - 不批量导出入行365资料库。
 - 不自动安装专项 Skill，不执行发布、发送、购买或部署。
+- 外部 `reference_only` Skill 只作为受治理的来源参考：明确显示已发现但未调用、提供方、许可证、商业限制和来源；自有 Scenario / Workflow 仍负责交付下一步，链接不是交付物。
 
 未来会员服务仍由 RHZL 服务端负责鉴权、配额和内容授权，不能通过本地开关绕过。
 

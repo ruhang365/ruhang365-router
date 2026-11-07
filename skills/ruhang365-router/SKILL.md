@@ -47,7 +47,7 @@ description: Use when a user has a vague AI need, wants to discover a practical 
 - 身份、目标、经验、约束、交付物和原始问题全部在本地匹配；不得发送图片、完整文章、客户资料、账号信息或其他私人素材。
 - 仅使用客户端白名单字段。即使服务返回额外内部字段，也不得展示、缓存或据此推断会员内容。
 - Community Catalog 只包含 Supabase 当前已发布 release 的公开投影；Router PR 只是离线快照，不得反向覆盖 Supabase。
-- `rights.status=full` 的 Prompt 可以按许可证改写；`reference_only` 只能使用标题、摘要、分类和来源，禁止补全或反推原文。
+- `rights.status=full` 的 Prompt 可以按许可证改写；`reference_only` 只能使用标题、摘要、分类和来源，禁止补全或反推原文。1.1 的 `reference_only` 外部 Skill 只报告“已发现、未调用”及提供方、许可证、商业限制和来源；不得调用其入口、自动安装，或把链接当成交付。
 - 服务失败时保留离线路由；只有故障会缩小覆盖或改变推荐时，才在任务引导之后用一句话说明远程检索不可用。不得声称已经使用远程资料。
 - 远程结果与查询没有明显词项匹配时标记 `no_relevant_results`；不得用热门但无关的资料填充答案。
 - 检索成功不代表专项 Skill 已执行，Skill 执行不代表用户成果已经验收。在内部保持状态分离；仅在影响用户判断或用户追问时用自然语言说明。

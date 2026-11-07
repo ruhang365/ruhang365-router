@@ -146,7 +146,12 @@ def write_assets(root: Path, assets: list[dict[str, object]]) -> None:
         )
 
 
-def run_builder(root: Path, output: Path) -> subprocess.CompletedProcess[str]:
+def run_builder(
+    root: Path,
+    output: Path,
+    *,
+    schema_version: str = "1.0.0",
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [
             sys.executable,
@@ -157,6 +162,8 @@ def run_builder(root: Path, output: Path) -> subprocess.CompletedProcess[str]:
             str(SCHEMA),
             "--catalog-version",
             "1.0.0",
+            "--schema-version",
+            schema_version,
             "--output",
             str(output),
             "--write",
@@ -165,6 +172,47 @@ def run_builder(root: Path, output: Path) -> subprocess.CompletedProcess[str]:
         capture_output=True,
         text=True,
     )
+
+
+def external_goal_resource() -> dict[str, object]:
+    resource = common_asset(
+        "resource",
+        "dbskill-goal",
+        identities=["creator"],
+        goals=["industry-cognition", "creator-positioning", "goal-clarification"],
+        deliverables=["industry-cognition-map", "seven-day-validation-task"],
+    )
+    resource.update(
+        {
+            "schema_version": "1.1.0",
+            "title": "dbskill dbs-goal 外部参考",
+            "summary": "用于目标仍模糊时的外部目标澄清参考；不复制正文，也不在 Router 中调用。",
+            "governance": {
+                **governance("content/resources/dbskill-goal.json"),
+                "source": {
+                    "kind": "reference_only",
+                    "url": "https://github.com/dontbesilent2025/dbskill/tree/main/skills/dbs-goal",
+                },
+                "license": {"spdx": "CC-BY-NC-4.0", "attribution": "dontbesilent2025/dbskill"},
+                "rights": {"status": "reference_only"},
+            },
+            "resource_kind": "skill",
+            "purpose": "在个人 IP 目标不清时，作为外部目标澄清参考。",
+            "capabilities": ["goal-clarification"],
+            "repository_url": "https://github.com/dontbesilent2025/dbskill",
+            "source_url": "https://github.com/dontbesilent2025/dbskill/tree/main/skills/dbs-goal",
+            "resource_version": "external-reference",
+            "provider": {
+                "id": "dontbesilent2025/dbskill",
+                "name": "dbskill",
+                "url": "https://github.com/dontbesilent2025/dbskill",
+            },
+            "upstream_license": "CC-BY-NC-4.0",
+            "commercial_use": "restricted",
+            "integration_mode": "reference_only",
+        }
+    )
+    return resource
 
 
 def load_matcher():
@@ -177,6 +225,50 @@ def load_matcher():
 
 
 class CatalogBuildTests(unittest.TestCase):
+    def test_target_projection_fails_when_a_required_cross_version_reference_is_removed(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            assets = valid_assets()
+            assets[1]["schema_version"] = "1.1.0"
+            write_assets(root, assets)
+
+            built = run_builder(root, root / "catalog-1.0.json", schema_version="1.0.0")
+
+        self.assertNotEqual(built.returncode, 0)
+        self.assertIn("workflow_ids", built.stderr)
+
+    def test_v1_0_target_projection_matches_the_checked_in_snapshot(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            output = Path(temporary_directory) / "catalog-1.0.json"
+            built = subprocess.run(
+                [
+                    sys.executable,
+                    str(BUILD_SCRIPT),
+                    "--schema-version",
+                    "1.0.0",
+                    "--output",
+                    str(output),
+                    "--write",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertEqual(built.returncode, 0, built.stderr)
+            projected = json.loads(output.read_text(encoding="utf-8"))
+
+        snapshot = json.loads(
+            (REPO_ROOT / "skills" / "ruhang365-router" / "catalog" / "catalog.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            {item["id"] for item in projected["items"]},
+            {item["id"] for item in snapshot["items"]},
+        )
+        self.assertNotIn("r365.resource.dbskill-goal", {item["id"] for item in projected["items"]})
+        self.assertFalse(any(item["schema_version"] == "1.1.0" for item in projected["items"]))
+        self.assertEqual(projected, snapshot)
+
     def test_builds_a_deterministic_sorted_catalog(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
@@ -294,8 +386,219 @@ class CatalogBuildTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("duplicate", result.stderr.casefold())
 
+    def test_builds_a_v1_1_external_skill_catalog_with_a_digest(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            output = root / "catalog.json"
+            assets = valid_assets() + [external_goal_resource()]
+            assets[1]["nodes"][0]["resource_ids"].append("r365.resource.dbskill-goal")  # type: ignore[index]
+            write_assets(root, assets)
+
+            built = run_builder(root, output, schema_version="1.1.0")
+
+            self.assertEqual(built.returncode, 0, built.stderr)
+            catalog = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(catalog["schemaVersion"], "1.1.0")
+            self.assertEqual(len(catalog["contentDigest"]), 64)
+            resource = next(item for item in catalog["items"] if item["id"] == "r365.resource.dbskill-goal")
+            self.assertEqual(resource["provider"]["id"], "dontbesilent2025/dbskill")
+            self.assertEqual(resource["commercial_use"], "restricted")
+
+    def test_rejects_invalid_v1_1_skill_provider_enums_and_combinations(self):
+        mutations: list[tuple[str, object, object]] = [
+            ("provider", None, None),
+            ("provider malformed", "dbskill", None),
+            ("commercial_use", "not-allowed", None),
+            ("integration_mode", "call-anyway", None),
+            ("reference rights", {"status": "full"}, None),
+            ("invoke commercial", "restricted", "invoke_if_installed"),
+            ("embedded commercial", "unknown", "embedded"),
+            ("upstream missing", None, None),
+            ("upstream empty", "", None),
+            ("upstream malformed", "not-a-license", None),
+            ("upstream mismatch", "MIT", None),
+        ]
+        for label, first_value, integration_mode in mutations:
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as temporary_directory:
+                root = Path(temporary_directory)
+                resource = external_goal_resource()
+                if label == "provider":
+                    del resource["provider"]
+                elif label == "provider malformed":
+                    resource["provider"]["id"] = first_value  # type: ignore[index]
+                elif label == "reference rights":
+                    resource["governance"]["rights"] = first_value  # type: ignore[index]
+                elif label == "integration_mode":
+                    resource["integration_mode"] = first_value
+                elif label.startswith("upstream"):
+                    if label == "upstream missing":
+                        del resource["upstream_license"]
+                    else:
+                        resource["upstream_license"] = first_value
+                else:
+                    resource["commercial_use"] = first_value
+                if integration_mode is not None:
+                    resource["integration_mode"] = integration_mode
+                assets = valid_assets() + [resource]
+                assets[1]["nodes"][0]["resource_ids"].append("r365.resource.dbskill-goal")  # type: ignore[index]
+                write_assets(root, assets)
+
+                result = run_builder(root, root / "catalog.json", schema_version="1.1.0")
+
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(label.split()[0], result.stderr.casefold())
+
 
 class CatalogMatcherTests(unittest.TestCase):
+    def test_loader_accepts_v1_0_and_v1_1_and_rejects_unknown_schema(self):
+        matcher = load_matcher()
+        self.assertEqual(matcher.load_catalog()["schemaVersion"], "1.0.0")
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            output = root / "catalog.json"
+            assets = valid_assets() + [external_goal_resource()]
+            assets[1]["nodes"][0]["resource_ids"].append("r365.resource.dbskill-goal")  # type: ignore[index]
+            write_assets(root, assets)
+            built = run_builder(root, output, schema_version="1.1.0")
+            self.assertEqual(built.returncode, 0, built.stderr)
+            self.assertEqual(matcher.load_catalog(output)["schemaVersion"], "1.1.0")
+
+            payload = json.loads(output.read_text(encoding="utf-8"))
+            payload["schemaVersion"] = "2.0.0"
+            output.write_text(json.dumps(payload), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "unsupported"):
+                matcher.load_catalog(output)
+
+    def test_v1_1_reference_only_resource_keeps_rights_in_match_projection(self):
+        matcher = load_matcher()
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            output = root / "catalog.json"
+            assets = valid_assets() + [external_goal_resource()]
+            assets[1]["nodes"][0]["resource_ids"].append("r365.resource.dbskill-goal")  # type: ignore[index]
+            write_assets(root, assets)
+            built = run_builder(root, output, schema_version="1.1.0")
+            self.assertEqual(built.returncode, 0, built.stderr)
+            catalog = matcher.load_catalog(output)
+
+        matches = matcher.match_catalog(
+            catalog,
+            {
+                "identity": "creator",
+                "goal": "目标不清的个人 IP 行业认知",
+                "experience": "beginner",
+                "constraints": [],
+                "deliverable": "industry-cognition-map",
+            },
+        )
+
+        resource = next(item for item in matches["resources"] if item["id"] == "r365.resource.dbskill-goal")
+        self.assertEqual(resource["rightsStatus"], "reference_only")
+        self.assertEqual(resource["integrationMode"], "reference_only")
+        self.assertEqual(resource["provider"]["id"], "dontbesilent2025/dbskill")
+
+    def test_loader_fail_closes_invalid_v1_1_resource_contracts(self):
+        matcher = load_matcher()
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            output = root / "catalog.json"
+            assets = valid_assets() + [external_goal_resource()]
+            assets[1]["nodes"][0]["resource_ids"].append("r365.resource.dbskill-goal")  # type: ignore[index]
+            write_assets(root, assets)
+            built = run_builder(root, output, schema_version="1.1.0")
+            self.assertEqual(built.returncode, 0, built.stderr)
+            catalog = json.loads(output.read_text(encoding="utf-8"))
+
+            mutations = {
+                "provider": lambda item: item.pop("provider"),
+                "license": lambda item: item.update({"upstream_license": "MIT"}),
+                "commercial": lambda item: item.update({"commercial_use": "not-allowed"}),
+                "integration": lambda item: item.update({"integration_mode": "invoke_if_installed"}),
+                "rights": lambda item: item["governance"].update({"rights": {"status": "full"}}),
+            }
+            for label, mutation in mutations.items():
+                with self.subTest(label=label):
+                    payload = json.loads(json.dumps(catalog))
+                    item = next(entry for entry in payload["items"] if entry["id"] == "r365.resource.dbskill-goal")
+                    mutation(item)
+                    payload["contentDigest"] = matcher._canonical_digest(payload["items"])
+                    output.write_text(json.dumps(payload), encoding="utf-8")
+                    with self.assertRaisesRegex(ValueError, "1.1|provider|license|commercial|integration|rights"):
+                        matcher.load_catalog(output)
+
+    def test_loader_rejects_cross_version_items_missing_schema_and_provider_credentials(self):
+        matcher = load_matcher()
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            output = root / "catalog.json"
+            assets = valid_assets() + [external_goal_resource()]
+            assets[1]["nodes"][0]["resource_ids"].append("r365.resource.dbskill-goal")  # type: ignore[index]
+            write_assets(root, assets)
+            built = run_builder(root, output, schema_version="1.1.0")
+            self.assertEqual(built.returncode, 0, built.stderr)
+            catalog = json.loads(output.read_text(encoding="utf-8"))
+
+            mutations = {
+                "missing schema": lambda payload: payload["items"][0].pop("schema_version"),
+                "unsupported schema": lambda payload: payload["items"][0].update({"schema_version": "9.0.0"}),
+                "cross version": lambda payload: payload.update({"schemaVersion": "1.0.0"}),
+                "provider credentials": lambda payload: next(
+                    item for item in payload["items"] if item["id"] == "r365.resource.dbskill-goal"
+                )["provider"].update({"url": "https://user:secret@github.com/dontbesilent2025/dbskill"}),
+            }
+            for label, mutation in mutations.items():
+                with self.subTest(label=label):
+                    payload = json.loads(json.dumps(catalog))
+                    mutation(payload)
+                    payload["contentDigest"] = matcher._canonical_digest(payload["items"])
+                    output.write_text(json.dumps(payload), encoding="utf-8")
+                    with self.assertRaisesRegex(ValueError, "schema|provider"):
+                        matcher.load_catalog(output)
+
+    def test_loader_rejects_missing_public_resource_fields_and_resolve_falls_back(self):
+        matcher = load_matcher()
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            output = root / "catalog.json"
+            assets = valid_assets() + [external_goal_resource()]
+            assets[1]["nodes"][0]["resource_ids"].append("r365.resource.dbskill-goal")  # type: ignore[index]
+            write_assets(root, assets)
+            built = run_builder(root, output, schema_version="1.1.0")
+            self.assertEqual(built.returncode, 0, built.stderr)
+            catalog = json.loads(output.read_text(encoding="utf-8"))
+
+            mutations = {
+                "title": lambda item: item.pop("title"),
+                "summary": lambda item: item.pop("summary"),
+                "completion_criteria": lambda item: item.pop("completion_criteria"),
+                "resource_version": lambda item: item.pop("resource_version"),
+            }
+            for label, mutation in mutations.items():
+                with self.subTest(label=label):
+                    payload = json.loads(json.dumps(catalog))
+                    item = next(entry for entry in payload["items"] if entry["id"] == "r365.resource.dbskill-goal")
+                    mutation(item)
+                    payload["contentDigest"] = matcher._canonical_digest(payload["items"])
+                    output.write_text(json.dumps(payload), encoding="utf-8")
+                    with self.assertRaisesRegex(ValueError, label):
+                        matcher.load_catalog(output)
+
+            invalid = json.loads(json.dumps(catalog))
+            item = next(entry for entry in invalid["items"] if entry["id"] == "r365.resource.dbskill-goal")
+            item.pop("title")
+            invalid["contentDigest"] = matcher._canonical_digest(invalid["items"])
+            resolved = matcher.resolve_catalog(
+                "https://rhzl.ruhang365.cn",
+                opener=lambda *_args, **_kwargs: _Response(json.dumps(invalid).encode("utf-8")),
+            )
+            self.assertEqual(resolved["source"], "offline_fallback")
+            self.assertEqual(resolved["catalog"], matcher.load_catalog())
+
+    def test_checked_in_snapshot_remains_v1_0_without_dbs_goal(self):
+        snapshot = load_matcher().load_catalog()
+        self.assertEqual(snapshot["schemaVersion"], "1.0.0")
+        self.assertNotIn("r365.resource.dbskill-goal", {item["id"] for item in snapshot["items"]})
+
     def test_online_catalog_request_contains_no_profile_or_private_data(self):
         matcher = load_matcher()
         snapshot = matcher.load_catalog()
@@ -380,6 +683,39 @@ class CatalogMatcherTests(unittest.TestCase):
             "deliverable": "weekly-content-kit",
         }
 
+        self.assertEqual(
+            matcher.match_catalog(online["catalog"], profile),
+            matcher.match_catalog(offline["catalog"], profile),
+        )
+
+    def test_online_and_offline_v1_1_catalogs_use_the_identical_matcher(self):
+        matcher = load_matcher()
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            output = root / "catalog.json"
+            assets = valid_assets() + [external_goal_resource()]
+            assets[1]["nodes"][0]["resource_ids"].append("r365.resource.dbskill-goal")  # type: ignore[index]
+            write_assets(root, assets)
+            built = run_builder(root, output, schema_version="1.1.0")
+            self.assertEqual(built.returncode, 0, built.stderr)
+            online = matcher.resolve_catalog(
+                "https://rhzl.ruhang365.cn",
+                snapshot_path=output,
+                opener=lambda *_args, **_kwargs: _Response(output.read_bytes()),
+            )
+            offline = matcher.resolve_catalog(
+                "https://rhzl.ruhang365.cn",
+                snapshot_path=output,
+                offline=True,
+            )
+
+        profile = {
+            "identity": "creator",
+            "goal": "目标不清的个人 IP 行业认知",
+            "experience": "beginner",
+            "constraints": [],
+            "deliverable": "industry-cognition-map",
+        }
         self.assertEqual(
             matcher.match_catalog(online["catalog"], profile),
             matcher.match_catalog(offline["catalog"], profile),

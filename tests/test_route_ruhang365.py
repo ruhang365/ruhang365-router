@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import redirect_stdout
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
@@ -15,6 +17,7 @@ from unittest import mock
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_DIR = REPO_ROOT / "skills" / "ruhang365-router"
 ROUTER_SCRIPT = SKILL_DIR / "scripts" / "route_ruhang365.py"
+BUILD_SCRIPT = REPO_ROOT / "scripts" / "build_catalog.py"
 
 
 def load_router_module():
@@ -258,6 +261,172 @@ class ProjectionTests(unittest.TestCase):
 
 
 class RoutingTests(unittest.TestCase):
+    def test_dbs_goal_is_an_external_reference_not_a_specialist_or_call(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            catalog_path = Path(temporary_directory) / "catalog-1.1.json"
+            built = subprocess.run(
+                [
+                    sys.executable,
+                    str(BUILD_SCRIPT),
+                    "--schema-version",
+                    "1.1.0",
+                    "--output",
+                    str(catalog_path),
+                    "--write",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(built.returncode, 0, built.stderr)
+            result = router.route_task(
+                arguments(
+                    query="我想做个人 IP，但目标很模糊，不知道今天先做什么",
+                    identity="creator",
+                    goal="industry-cognition",
+                    experience="beginner",
+                    deliverable="industry-cognition-map",
+                    catalog=catalog_path,
+                )
+            )
+
+        self.assertEqual(result["route"]["scenarios"]["recommendedScenarioId"], "creator-ip-industry-cognition")
+        self.assertEqual(result["route"]["communityMatches"]["workflows"][0]["id"], "r365.workflow.creator-ip-industry-cognition")
+        self.assertFalse(any(item["skill"] == "dbskill-goal" for item in result["route"]["specialists"]))
+        reference = next(item for item in result["route"]["externalReferences"] if item["id"] == "r365.resource.dbskill-goal")
+        self.assertEqual(reference["status"], "discovered_not_invoked")
+        self.assertEqual(reference["provider"]["id"], "dontbesilent2025/dbskill")
+        self.assertEqual(reference["upstreamLicense"], "CC-BY-NC-4.0")
+        self.assertEqual(reference["commercialUse"], "restricted")
+        self.assertIn("github.com/dontbesilent2025/dbskill", reference["source"])
+        self.assertFalse(result["execution"]["externalSkillCalled"])
+
+        guided_start = result["route"]["guidedStart"]
+        self.assertEqual(guided_start["status"], "in_progress")
+        self.assertEqual(
+            guided_start["defaultRoute"],
+            {
+                "scenarioId": "r365.scenario.creator-ip-industry-cognition",
+                "workflowId": "r365.workflow.creator-ip-industry-cognition",
+                "owner": "入行365 Workflow",
+            },
+        )
+        self.assertEqual(len(guided_start["fillBlock"]), 4)
+        self.assertEqual(
+            [item["field"] for item in guided_start["fillBlock"]],
+            ["细分方向", "目标人群", "主阵地候选", "待验证问题"],
+        )
+        self.assertNotIn("今天：", guided_start["sevenDayTask"]["todayStart"])
+        self.assertIn("7天", guided_start["sevenDayTask"]["plan"])
+        self.assertIn("3条反馈", guided_start["sevenDayTask"]["completionBoundary"])
+        self.assertIn("不承诺收益", guided_start["sevenDayTask"]["noGuarantee"])
+        self.assertTrue(any("dbskill" in item and "不算" in item for item in guided_start["completionEvidence"]))
+        rendered = io.StringIO()
+        with redirect_stdout(rendered):
+            router.print_markdown(result)
+        rendered_markdown = rendered.getvalue()
+        self.assertLess(rendered_markdown.index("## 现在开始"), rendered_markdown.index("## Community Catalog 匹配"))
+        self.assertEqual(rendered_markdown.count("今天："), 1)
+        self.assertIn("外部链接、查看 dbskill 或阅读任何参考资料都不算任务证据", rendered_markdown)
+
+    def test_direct_dbs_goal_request_remains_reference_only(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            catalog_path = Path(temporary_directory) / "catalog-1.1.json"
+            built = subprocess.run(
+                [sys.executable, str(BUILD_SCRIPT), "--schema-version", "1.1.0", "--output", str(catalog_path), "--write"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(built.returncode, 0, built.stderr)
+            result = router.route_task(arguments(query="请使用 dbs-goal 帮我定个人 IP 目标", catalog=catalog_path))
+
+        reference = next(item for item in result["route"]["externalReferences"] if item["id"] == "r365.resource.dbskill-goal")
+        self.assertEqual(reference["status"], "discovered_not_invoked")
+        self.assertFalse(result["execution"]["externalSkillCalled"])
+        self.assertFalse(any(item["skill"] == "dbskill-goal" for item in result["route"]["specialists"]))
+
+    def test_generic_routes_do_not_add_a_creator_ip_guided_start(self):
+        result = router.route_task(arguments(query="为咖啡店做一周获客内容", intent="discover"))
+
+        self.assertNotIn("guidedStart", result["route"])
+
+    def test_dbs_goal_is_bound_to_the_creator_ip_workflow_entry_node(self):
+        workflow = json.loads(
+            (REPO_ROOT / "content" / "workflows" / "creator-ip-industry-cognition.json").read_text(encoding="utf-8")
+        )
+        entry_node = next(node for node in workflow["nodes"] if node["id"] == "define-entry-context")
+        self.assertEqual(entry_node["resource_ids"][0], "r365.resource.rhzl-creator-ip-industry-cognition")
+        self.assertEqual(entry_node["resource_ids"][1], "r365.resource.dbskill-goal")
+
+    def test_legacy_rights_safely_derive_reference_or_specialist_routing(self):
+        reference_skill = {
+            "id": "r365.resource.legacy-reference",
+            "type": "resource",
+            "slug": "legacy-reference",
+            "version": "1.0.0",
+            "title": "Legacy reference",
+            "summary": "Legacy reference-only skill fixture.",
+            "status": "current",
+            "governance": {
+                "source": {"url": "https://example.com/reference"},
+                "rights": {"status": "reference_only"},
+                "stale": False,
+            },
+            "applicability": {
+                "identities": ["creator"],
+                "goals": ["goal-clarification"],
+                "experience_levels": ["beginner"],
+                "constraints": [],
+                "excluded_constraints": [],
+                "deliverables": ["industry-cognition-map"],
+            },
+            "completion_criteria": ["Reference is disclosed."],
+            "tags": ["legacy"],
+            "match_terms": ["目标"],
+            "resource_kind": "skill",
+            "purpose": "Legacy reference fixture.",
+            "capabilities": ["goal-clarification"],
+            "repository_url": "https://example.com/reference",
+            "resource_version": "1.0.0",
+        }
+        full_skill = json.loads(json.dumps(reference_skill))
+        full_skill["id"] = "r365.resource.legacy-specialist"
+        full_skill["slug"] = "legacy-specialist"
+        full_skill["governance"]["rights"] = {"status": "full"}
+        matches = router.match_catalog(
+            {"items": [reference_skill, full_skill], "catalogVersion": "1.0.0", "contentDigest": "fixture"},
+            {"identity": "creator", "goal": "目标", "experience": "beginner", "constraints": [], "deliverable": "industry-cognition-map"},
+        )
+
+        self.assertEqual(matches["resources"][0]["integrationMode"], "reference_only")
+        self.assertEqual(matches["resources"][1]["integrationMode"], "invoke_if_installed")
+        self.assertEqual([item["id"] for item in router.specialist_matches(matches)], ["r365.resource.legacy-specialist"])
+        self.assertEqual([item["id"] for item in router.external_references(matches)], ["r365.resource.legacy-reference"])
+
+    def test_specialist_matches_defensively_requires_full_rights_and_v1_1_commercial_use(self):
+        base = {
+            "id": "r365.resource.external-skill",
+            "slug": "external-skill",
+            "skill": "external-skill",
+            "resourceVersion": "1.1.0",
+            "repositoryUrl": "https://example.com/skill",
+            "purpose": "Fixture.",
+            "resourceKind": "skill",
+            "integrationMode": "invoke_if_installed",
+            "rightsStatus": "full",
+            "resourceSchemaVersion": "1.1.0",
+            "commercialUse": "restricted",
+        }
+        self.assertEqual(router.specialist_matches({"resources": [base]}), [])
+        base["commercialUse"] = "allowed"
+        self.assertEqual(router.specialist_matches({"resources": [base]})[0]["id"], base["id"])
+        base["rightsStatus"] = "reference_only"
+        self.assertEqual(router.specialist_matches({"resources": [base]}), [])
+        base["rightsStatus"] = "full"
+        base["resourceSchemaVersion"] = "9.0.0"
+        self.assertEqual(router.specialist_matches({"resources": [base]}), [])
+
     def test_offline_route_is_useful_and_performs_no_remote_or_write_action(self):
         result = router.route_task(arguments())
 

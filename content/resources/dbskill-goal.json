@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.1.0",
+  "id": "r365.resource.dbskill-goal",
+  "type": "resource",
+  "slug": "dbskill-goal",
+  "version": "1.1.0",
+  "title": "dbskill / dbs-goal 外部目标澄清参考",
+  "summary": "个人 IP 目标仍模糊时可参考其公开项目定位；Router 只发现来源，不复制内容或调用该 Skill。",
+  "status": "current",
+  "governance": {
+    "source": {
+      "kind": "reference_only",
+      "url": "https://github.com/dontbesilent2025/dbskill/tree/main/skills/dbs-goal"
+    },
+    "license": {
+      "spdx": "CC-BY-NC-4.0",
+      "attribution": "dontbesilent2025/dbskill"
+    },
+    "rights": {
+      "status": "reference_only"
+    },
+    "maintainers": ["ruhang365-maintainers"],
+    "review": {
+      "status": "approved",
+      "reviewed_at": "2026-08-16"
+    },
+    "updated_at": "2026-08-16",
+    "stale_after": "2026-11-16",
+    "stale": false
+  },
+  "applicability": {
+    "identities": ["creator", "career-switcher"],
+    "goals": ["industry-cognition", "creator-positioning", "goal-clarification"],
+    "experience_levels": ["beginner", "intermediate"],
+    "constraints": ["external-reference-only", "no-guaranteed-outcome"],
+    "excluded_constraints": [],
+    "deliverables": ["industry-cognition-map", "seven-day-validation-task"]
+  },
+  "completion_criteria": [
+    "Router 明确标注该外部资源已发现但未调用。",
+    "自有 RHZL Workflow 继续产出行业认知地图与七天验证任务。"
+  ],
+  "tags": ["dbskill", "dbs-goal", "外部参考", "目标澄清", "个人 IP"],
+  "match_terms": ["dbs-goal", "目标模糊", "个人IP", "个人 IP", "今天先做什么", "目标澄清"],
+  "resource_kind": "skill",
+  "purpose": "在个人 IP 目标不清时，作为外部目标澄清参考。",
+  "capabilities": ["goal-clarification"],
+  "repository_url": "https://github.com/dontbesilent2025/dbskill",
+  "source_url": "https://github.com/dontbesilent2025/dbskill/tree/main/skills/dbs-goal",
+  "resource_version": "external-reference",
+  "provider": {
+    "id": "dontbesilent2025/dbskill",
+    "name": "dbskill",
+    "url": "https://github.com/dontbesilent2025/dbskill"
+  },
+  "upstream_license": "CC-BY-NC-4.0",
+  "commercial_use": "restricted",
+  "integration_mode": "reference_only"
+}

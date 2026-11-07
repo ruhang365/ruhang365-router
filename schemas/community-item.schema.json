@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/ruhang365/ruhang365-router/schemas/community-item.schema.json",
   "title": "Ruhang365 Community Item",
-  "description": "Version 1.0.0 contract for reviewed public Community assets.",
+  "description": "Version 1.0.0 and 1.1.0 contract for reviewed public Community assets.",
   "type": "object",
   "required": [
     "schema_version",
@@ -21,7 +21,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "1.0.0"
+      "enum": ["1.0.0", "1.1.0"]
     },
     "id": {
       "type": "string",
@@ -85,6 +85,18 @@
     },
     "recommendation_weight": {
       "type": "integer"
+    },
+    "provider": {
+      "type": "object"
+    },
+    "upstream_license": {
+      "type": "string"
+    },
+    "commercial_use": {
+      "enum": ["allowed", "restricted", "unknown"]
+    },
+    "integration_mode": {
+      "enum": ["reference_only", "invoke_if_installed", "embedded"]
     }
   },
   "additionalProperties": true
