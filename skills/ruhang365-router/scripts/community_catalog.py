@@ -7,6 +7,7 @@ import hashlib
 import gzip
 import io
 import json
+import math
 from pathlib import Path
 import re
 import sys
@@ -32,6 +33,18 @@ PROFILE_FIELDS = ("identity", "goal", "experience", "constraints", "deliverable"
 MAX_CATALOG_BYTES = 32 * 1024 * 1024
 MATCH_STOP_TERMS = {"一个", "怎么", "什么", "比较", "了解", "现有", "已有", "当前", "这里",
                     "帮助", "需要", "可以", "以及", "相关", "我们"}
+# Question wording carries no topic. Removing it (instead of only dropping the
+# whole word) also stops boundary n-grams such as "是什" from matching.
+QUESTION_PHRASES = ("什么是", "是什么", "为什么", "怎么样", "怎么办", "怎么", "如何", "请问", "帮我", "我想", "想要", "一下")
+# Free-text relevance: share of the query's informative weight an item covers.
+# Long natural-language questions cover less, so the bar is relative to the
+# best match of the same type, with an absolute floor.
+MIN_QUERY_COVERAGE = 0.15
+RELATIVE_QUERY_COVERAGE = 0.4
+QUERY_TERM_WEIGHT = 60
+BODY_TERM_FACTOR = 0.7
+# (weight, {term: weight}, source word or Chinese run, character index or -1)
+QueryPosition = tuple[float, dict[str, float], str, int]
 
 
 def _read_catalog_response(response: Any) -> Any:
@@ -190,9 +203,15 @@ def _normalize_text(value: Any) -> str:
     return value.strip().casefold() if isinstance(value, str) else ""
 
 
+def _strip_question_phrases(text: str) -> str:
+    for phrase in QUESTION_PHRASES:
+        text = text.replace(phrase, " ")
+    return text
+
+
 def _tokens(value: Any) -> set[str]:
-    text = _normalize_text(value)
-    if not text:
+    text = _strip_question_phrases(_normalize_text(value))
+    if not text.strip():
         return set()
     tokens = set(re.findall(r"[a-z0-9][a-z0-9.+-]*|[\u4e00-\u9fff]+", text))
     for sequence in re.findall(r"[\u4e00-\u9fff]+", text):
@@ -237,7 +256,8 @@ def _profile(profile: dict[str, Any]) -> dict[str, Any]:
     return normalized
 
 
-def _score_item(item: dict[str, Any], profile: dict[str, Any]) -> tuple[int, list[str]] | None:
+def _score_item(item: dict[str, Any], profile: dict[str, Any],
+                coverage_match: tuple[float, list[str], float], min_coverage: float) -> tuple[int, list[str], list[str]] | None:
     if not current_item(item):
         return None
     governance = item.get("governance")
@@ -277,27 +297,107 @@ def _score_item(item: dict[str, Any], profile: dict[str, Any]) -> tuple[int, lis
         reasons.append("constraints")
 
     # Experience and constraints refine relevance; they cannot establish it.
-    profile_terms = _tokens(" ".join(profile[field] for field in ("identity", "goal", "deliverable", "query")))
-    searchable = " ".join(
-        [
-            str(item.get("title", "")),
-            str(item.get("summary", "")),
-            " ".join(item.get("tags", [])),
-            " ".join(item.get("tags", [])),
-            " ".join(item.get("match_terms", [])),
-        ]
-    )
-    term_matches = profile_terms & _tokens(searchable)
-    if term_matches:
-        score += min(20, len(term_matches) * 2)
+    coverage, matched_terms, precision = coverage_match
+    if coverage and coverage >= min_coverage:
+        # A title mostly made of the query is a closer match than a passing mention.
+        score += round(QUERY_TERM_WEIGHT * coverage + 10 * precision)
         reasons.append("terms")
+    else:
+        matched_terms = []
 
     if not set(reasons) & {"identity", "goal", "deliverable", "terms"}:
         return None
     recommendation_weight = item.get("recommendation_weight", 0)
     if isinstance(recommendation_weight, int) and not isinstance(recommendation_weight, bool):
-        score += max(0, min(20, recommendation_weight))
-    return score, reasons
+        weight = max(0, min(20, recommendation_weight))
+        # Editorial weight orders relevant items; it cannot lift a weak text match.
+        if not set(reasons) & {"identity", "goal", "deliverable"}:
+            weight = round(weight * coverage)
+        score += weight
+    return score, reasons, matched_terms
+
+
+def _index_entry(item: dict[str, Any]) -> tuple[set[str], set[str]]:
+    title = _tokens(item.get("title", ""))
+    body = _tokens(" ".join([
+        str(item.get("summary", "")),
+        " ".join(item.get("tags", [])),
+        " ".join(item.get("match_terms", [])),
+    ]))
+    return title, title | body
+
+
+def _query_model(text: str, document_frequency: dict[str, int], total: int) -> list[QueryPosition]:
+    """Weighted query positions: each ASCII word or Chinese character is one position.
+
+    A Chinese character is covered by any indexed 2/3-gram (or the whole run)
+    containing it, so overlapping n-grams are not counted twice; it weighs half
+    a word, since a Chinese word is usually two characters. Rare terms weigh
+    more than common ones; positions absent from the catalog are ignored.
+    """
+    def idf(term: str) -> float | None:
+        frequency = document_frequency.get(term, 0)
+        return math.log(1 + total / frequency) if frequency else None
+
+    positions: list[QueryPosition] = []
+    stripped = _strip_question_phrases(_normalize_text(text))
+    for match in re.finditer(r"[a-z0-9][a-z0-9.+-]*|[\u4e00-\u9fff]+", stripped):
+        token = match.group()
+        if not "\u4e00" <= token[0] <= "\u9fff":
+            weight = idf(token) if len(token) > 1 and token not in MATCH_STOP_TERMS else None
+            if weight:
+                positions.append((weight, {token: weight}, token, -1))
+            continue
+        grams: list[tuple[int, int, str]] = [(0, len(token), token)] if len(token) > 1 else []
+        for size in (2, 3):
+            grams.extend((start, start + size, token[start:start + size])
+                         for start in range(len(token) - size + 1))
+        for index in range(len(token)):
+            options = {}
+            for start, end, gram in grams:
+                if start <= index < end and gram not in MATCH_STOP_TERMS:
+                    weight = idf(gram)
+                    if weight:
+                        options[gram] = weight * 0.5
+            if options:
+                positions.append((max(options.values()), options, token, index))
+    return positions
+
+
+def _query_coverage(query_model: list[QueryPosition], index_entry: tuple[set[str], set[str]],
+                    title_text: str = "") -> tuple[float, list[str], float]:
+    """Return (coverage, readable matched query phrases, share of the title they fill)."""
+    total = sum(position[0] for position in query_model)
+    if not total:
+        return 0.0, [], 0.0
+    title, searchable = index_entry
+    covered = 0.0
+    hit: dict[str, set[int]] = {}
+    for _, options, source, index in query_model:
+        best = 0.0
+        for term, weight in options.items():
+            value = weight if term in title else weight * BODY_TERM_FACTOR if term in searchable else 0.0
+            best = max(best, value)
+        if best:
+            covered += best
+            hit.setdefault(source, set()).add(index)
+    phrases = []
+    for source, indexes in hit.items():
+        if -1 in indexes:
+            phrases.append(source)
+            continue
+        run = ""
+        for index in range(len(source) + 1):
+            if index in indexes:
+                run += source[index]
+            elif run:
+                if len(run) > 1:
+                    phrases.append(run)
+                run = ""
+    compact_title = re.sub(r"\s+", "", _normalize_text(title_text))
+    in_title = sum(len(phrase) for phrase in phrases if phrase in compact_title)
+    precision = min(1.0, in_title / len(compact_title)) if compact_title else 0.0
+    return covered / total, sorted(set(phrases)), precision
 
 
 def _project_match(item: dict[str, Any], score: int, reasons: list[str]) -> dict[str, Any]:
@@ -427,24 +527,42 @@ def match_catalog(
     items = catalog.get("items", [])
     if not isinstance(items, list):
         raise ValueError("Community catalog items are invalid")
-    for item in items:
-        if not isinstance(item, dict) or item.get("type") not in GROUPS:
-            continue
+    indexed = [(item, _index_entry(item)) for item in items
+               if isinstance(item, dict) and item.get("type") in GROUPS]
+    document_frequency: dict[str, int] = {}
+    for _, (_, searchable) in indexed:
+        for term in searchable:
+            document_frequency[term] = document_frequency.get(term, 0) + 1
+    query_text = " ".join(normalized_profile[field] for field in ("identity", "goal", "deliverable", "query"))
+    query_model = _query_model(query_text, document_frequency, len(indexed))
+    coverages = [_query_coverage(query_model, index_entry, str(item.get("title", "")))
+                 for item, index_entry in indexed]
+    # Each group is shown on its own, so the relative bar is set per group.
+    best: dict[str, float] = {}
+    for (item, _), match in zip(indexed, coverages):
+        best[item["type"]] = max(best.get(item["type"], 0.0), match[0])
+    for (item, _), coverage_match in zip(indexed, coverages):
         if exclude_guidance and "guidance" in item:
             continue
-        scored = _score_item(item, normalized_profile)
+        min_coverage = max(MIN_QUERY_COVERAGE, RELATIVE_QUERY_COVERAGE * best[item["type"]])
+        scored = _score_item(item, normalized_profile, coverage_match, min_coverage)
         if scored is None:
             continue
-        score, reasons = scored
+        score, reasons, matched_terms = scored
         projected = _project_match(item, score, reasons)
-        searchable = " ".join([str(item.get("title", "")), str(item.get("summary", "")),
-                               " ".join(item.get("tags", [])), " ".join(item.get("match_terms", []))])
-        query_terms = _tokens(" ".join(normalized_profile[field] for field in ("identity", "goal", "deliverable", "query")))
-        projected["matchedTerms"] = sorted(query_terms & _tokens(searchable))
+        projected["matchedTerms"] = matched_terms
         groups[GROUPS[item["type"]]].append(projected)
-    for matches in groups.values():
-        matches.sort(key=lambda match: (-match["score"], match["id"], match["version"]))
-        del matches[limit_per_type:]
+    for group, matches in groups.items():
+        matches.sort(key=lambda match: (-match["score"], ".db-" in match["id"], match["id"], match["version"]))
+        # Knowledge-base mirrors repeat originals; show one entry per title.
+        seen: set[str] = set()
+        unique = []
+        for match in matches:
+            key = re.sub(r"\s+", "", _normalize_text(match["title"]))
+            if key not in seen:
+                seen.add(key)
+                unique.append(match)
+        groups[group] = unique[:limit_per_type]
     return {
         "catalogVersion": catalog.get("catalogVersion"),
         "contentDigest": catalog.get("contentDigest"),
