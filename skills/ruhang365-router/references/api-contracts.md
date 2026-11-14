@@ -18,7 +18,9 @@ Catalog 由 Supabase 当前不可变 release 生成，不包含用户状态或�
 
 ### 公开结构与关联导航
 
-引导关键词匹配排除含 guidance 的条目（它们由固定 recommendation 单独返回），与 Web 相关资料一致。两端 tokenizer 排除泛词 `一个/怎么/什么/比较/了解/现有/已有/当前/这里/帮助/需要/可以/以及/相关/我们`，不改变权重、不排除职业/产品/运营/用户等实质关键词。
+引导关键词匹配排除含 guidance 的条目（它们由固定 recommendation 单独返回），与 Web 相关资料一致。两端 tokenizer 排除泛词 `一个/怎么/什么/比较/了解/现有/已有/当前/这里/帮助/需要/可以/以及/相关/我们`，不排除职业/产品/运营/用户等实质关键词。
+
+Router 的自由文本计分另外去掉提问与请求用语（如 `是什么/如何/怎么/推荐几个/有什么/能直接用/从哪开始`，完整列表见 `QUESTION_PHRASES`），按词在当前目录中的稀有度加权，每个词只计一份权重，标题命中高于摘要与标签；中文未分词，查询中以虚字开头或结尾、中间夹“的/了”或只在一个条目出现过的片段不参与计分；以条目覆盖查询信息量的比例计分，低于同类最佳结果 40% 或低于 15% 的不返回。同标题条目只保留一条，`matchedTerms` 给出命中的查询原词。identity/goal/deliverable 维度与固定 recommendation 不变。Web 的 `catalog-match.ts` 仍是旧的等权计分，两端自由文本排序可能不同，同步前不能声称一致。
 
 `--read` 的 `detail.structured` 只来自当前已校验 catalog 的同 ID 条目，内部保持原 snake_case 字段。Workflow 保留完整 `nodes`（id/title/action/prompt_ids/resource_ids/completion_criteria）；Prompt 保留 `template`、`variables`、`resource_ids`。仅 current、未过期、未 stale、access=public（缺省为 public）且 governance.rights.status=full 可展示完整结构；受限资料仅摘要、来源、入口、访问与授权信息。`detail.related` 是同目录的一层有效引用投影，包含稳定 ID、title、entryUrl/sourceUrl、access/rights；不自动下载关联正文。在线只按现有详情合同取 body，原 ID/version/contentHash 校验不变，不要求或接受服务端新增 structured。
 
