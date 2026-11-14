@@ -35,7 +35,9 @@ MATCH_STOP_TERMS = {"一个", "怎么", "什么", "比较", "了解", "现有", 
                     "帮助", "需要", "可以", "以及", "相关", "我们"}
 # Question wording carries no topic. Removing it (instead of only dropping the
 # whole word) also stops boundary n-grams such as "是什" from matching.
-QUESTION_PHRASES = ("什么是", "是什么", "为什么", "怎么样", "怎么办", "怎么", "如何", "请问", "帮我", "我想", "想要", "一下")
+QUESTION_PHRASES = ("什么是", "是什么", "为什么", "怎么样", "怎么办", "怎么", "如何", "请问", "帮我", "我想", "想要",
+                    "推荐几个", "推荐一些", "推荐一下", "有没有", "有什么", "能直接用", "直接用", "适合吗",
+                    "从哪里开始", "从哪开始", "一下")
 # Free-text relevance: share of the query's informative weight an item covers.
 # Long natural-language questions cover less, so the bar is relative to the
 # best match of the same type, with an absolute floor.
@@ -43,6 +45,18 @@ MIN_QUERY_COVERAGE = 0.15
 RELATIVE_QUERY_COVERAGE = 0.4
 QUERY_TERM_WEIGHT = 60
 BODY_TERM_FACTOR = 0.7
+# Without word segmentation, n-grams spanning a function character ("几个",
+# "我是", "的提示") look rare and would outweigh real topics, so query grams
+# may not start or end with one. Characters that open or close common topic
+# words (就业, 成就, 思想, 供给, 转让, 首都, 酒吧, 再就业) are left out.
+QUERY_NO_START = set("的了吗呢吧啊么们是我你他她它想哪几从把被让给很都也还又做")
+QUERY_NO_END = set("的了吗呢啊么们是我你他她它哪几从把被很也还又再做个")
+QUERY_INNER_PARTICLES = set("的了")
+# In a large catalog, a Chinese n-gram seen in only one entry is more often a
+# cross-word fragment than a topic word. Small catalogs and candidate subsets
+# are exempt, since a real word may appear only once there.
+MIN_GRAM_FREQUENCY = 2
+GRAM_FREQUENCY_MIN_CATALOG = 500
 # (weight, {term: weight}, source word or Chinese run, character index or -1)
 QueryPosition = tuple[float, dict[str, float], str, int]
 
@@ -331,14 +345,15 @@ def _query_model(text: str, document_frequency: dict[str, int], total: int) -> l
     """Weighted query positions: each ASCII word or Chinese character is one position.
 
     A Chinese character is covered by any indexed 2/3-gram (or the whole run)
-    containing it, so overlapping n-grams are not counted twice; it weighs half
-    a word, since a Chinese word is usually two characters. Rare terms weigh
+    containing it, so overlapping n-grams are not counted twice; a word's weight
+    is spread over its characters, so a Chinese word counts as much as an ASCII word. Rare terms weigh
     more than common ones; positions absent from the catalog are ignored.
     """
     def idf(term: str) -> float | None:
         frequency = document_frequency.get(term, 0)
         return math.log(1 + total / frequency) if frequency else None
 
+    min_frequency = MIN_GRAM_FREQUENCY if total >= GRAM_FREQUENCY_MIN_CATALOG else 1
     positions: list[QueryPosition] = []
     stripped = _strip_question_phrases(_normalize_text(text))
     for match in re.finditer(r"[a-z0-9][a-z0-9.+-]*|[\u4e00-\u9fff]+", stripped):
@@ -355,10 +370,14 @@ def _query_model(text: str, document_frequency: dict[str, int], total: int) -> l
         for index in range(len(token)):
             options = {}
             for start, end, gram in grams:
-                if start <= index < end and gram not in MATCH_STOP_TERMS:
+                if (start <= index < end and gram not in MATCH_STOP_TERMS
+                        and gram[0] not in QUERY_NO_START and gram[-1] not in QUERY_NO_END
+                        and not QUERY_INNER_PARTICLES & set(gram[1:-1])
+                        and document_frequency.get(gram, 0) >= min_frequency):
                     weight = idf(gram)
                     if weight:
-                        options[gram] = weight * 0.5
+                        # Spread a word's weight over its characters: one word counts once.
+                        options[gram] = weight / len(gram)
             if options:
                 positions.append((max(options.values()), options, token, index))
     return positions
