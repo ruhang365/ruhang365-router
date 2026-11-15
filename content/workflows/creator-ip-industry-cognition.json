@@ -15,9 +15,9 @@
     "license": {"spdx": "CC-BY-4.0", "attribution": "入行365"},
     "rights": {"status": "full"},
     "maintainers": ["ruhang365-maintainers"],
-    "review": {"status": "approved", "reviewed_at": "2026-08-12"},
+    "review": {"status": "approved", "reviewed_at": "2026-11-14"},
     "updated_at": "2026-08-12",
-    "stale_after": "2026-11-12",
+    "stale_after": "2027-02-14",
     "stale": false
   },
   "applicability": {

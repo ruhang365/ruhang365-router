@@ -96,7 +96,7 @@ class ResourceNavigationTests(unittest.TestCase):
         self.assertIn("r365.prompt.customer-feedback-review", output.getvalue())
 
     def test_online_structured_read_and_denied_read_do_not_download_related_items(self):
-        item = next(x for x in self.catalog["items"] if x["type"] == "workflow")
+        item = next(x for x in self.catalog["items"] if x["type"] == "workflow" and matcher.current_item(x))
         with mock.patch.object(router, "fetch_asset_detail", return_value={"access": "public", "body": "body",
                 "structured": {"nodes": [{"action": "not in catalog"}], "private": "secret"}}) as fetch:
             detail = router.read_public_asset(arguments(offline=False), self.catalog, item, [])
@@ -113,14 +113,14 @@ class ResourceNavigationTests(unittest.TestCase):
         self.assertEqual(detail["structured"], {})
 
     def test_remote_gated_response_never_adds_body_to_public_snapshot(self):
-        item = next(x for x in self.catalog["items"] if x["type"] == "workflow")
+        item = next(x for x in self.catalog["items"] if x["type"] == "workflow" and matcher.current_item(x))
         with mock.patch.object(router, "fetch_asset_detail", return_value={"access": "public", "gated": True, "body": "blocked body"}):
             detail = router.read_public_asset(arguments(offline=False), self.catalog, item, [])
         self.assertNotIn("body", detail)
         self.assertEqual(detail["structured"]["nodes"], item["nodes"])
 
     def test_original_detail_identity_version_hash_validation_remains_fail_closed(self):
-        item = next(x for x in self.catalog["items"] if x["type"] == "workflow")
+        item = next(x for x in self.catalog["items"] if x["type"] == "workflow" and matcher.current_item(x))
         for key in ("id", "version", "contentHash"):
             payload = {"id": item["id"], "version": item["version"], "contentHash": item["content_hash"], "body": "body"}
             payload[key] = "wrong"

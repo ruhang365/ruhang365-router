@@ -1,6 +1,6 @@
 {
   "catalogVersion": "1.0.0",
-  "contentDigest": "215d7ea85d81a01dfbcc2477403b2df8b5f5b967c05d93825165bdd43decf321",
+  "contentDigest": "06587787ff6941b77cc3d7d3f498e5c65f8202a90c9d8021e2de447485072d57",
   "items": [
     {
       "applicability": {
@@ -47,7 +47,7 @@
           "ruhang365-maintainers"
         ],
         "review": {
-          "reviewed_at": "2026-08-12",
+          "reviewed_at": "2026-11-14",
           "status": "approved"
         },
         "rights": {
@@ -58,7 +58,7 @@
           "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/scenarios/creator-ip-industry-cognition.json"
         },
         "stale": false,
-        "stale_after": "2026-11-12",
+        "stale_after": "2027-02-14",
         "updated_at": "2026-08-12"
       },
       "id": "r365.scenario.creator-ip-industry-cognition",
@@ -386,7 +386,7 @@
           "ruhang365-maintainers"
         ],
         "review": {
-          "reviewed_at": "2026-08-12",
+          "reviewed_at": "2026-11-14",
           "status": "approved"
         },
         "rights": {
@@ -397,7 +397,7 @@
           "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/workflows/creator-ip-industry-cognition.json"
         },
         "stale": false,
-        "stale_after": "2026-11-12",
+        "stale_after": "2027-02-14",
         "updated_at": "2026-08-12"
       },
       "id": "r365.workflow.creator-ip-industry-cognition",
@@ -993,7 +993,7 @@
           "ruhang365-maintainers"
         ],
         "review": {
-          "reviewed_at": "2026-08-12",
+          "reviewed_at": "2026-11-14",
           "status": "approved"
         },
         "rights": {
@@ -1004,7 +1004,7 @@
           "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/public-knowledge-search.json"
         },
         "stale": false,
-        "stale_after": "2026-11-12",
+        "stale_after": "2027-02-14",
         "updated_at": "2026-08-12"
       },
       "id": "r365.resource.public-knowledge-search",
@@ -1085,7 +1085,7 @@
           "ruhang365-maintainers"
         ],
         "review": {
-          "reviewed_at": "2026-08-12",
+          "reviewed_at": "2026-11-14",
           "status": "approved"
         },
         "rights": {
@@ -1096,7 +1096,7 @@
           "url": "https://github.com/ruhang365/ruhang365-router/blob/main/content/resources/rhzl-creator-ip-industry-cognition.json"
         },
         "stale": false,
-        "stale_after": "2026-11-12",
+        "stale_after": "2027-02-14",
         "updated_at": "2026-08-12"
       },
       "id": "r365.resource.rhzl-creator-ip-industry-cognition",
